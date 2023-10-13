@@ -35,7 +35,7 @@ $(info TARGET [$(TARGET)])
 
 HAL_LIB_DIR := $(ROOT_DIR)/libs
 ifeq ($(TARGET),arm)
-YLDFLAGS = -Wl,-rpath,$(HAL_LIB_DIR) -L$(HAL_LIB_DIR) -lhal_vlan 
+YLDFLAGS = -Wl,-rpath,$(HAL_LIB_DIR) -L$(HAL_LIB_DIR)
 endif
 
 .PHONY: clean list all
