@@ -37,55 +37,9 @@
 #include <string.h>
 #include "wifi_client_hal.h"
 
-void WiFi_InitPreReq(){
-    int ret = 0;
-    ret = wifi_init();
-    if (ret == 0)
-    {
-        UT_LOG("WiFi init returned success");
-    }
-    else
-    {
-        UT_LOG("WiFi init returned failure");
-        UT_FAIL("WiFi initialization with config pre-requisite failed");
-    }
-}
-
-void WiFi_InitWithConfigPreReq(){
-    int ret = 0;
-    wifi_halConfig_t *conf = (wifi_halConfig_t*)malloc(sizeof(wifi_halConfig_t));
-    if(conf != NULL){
-        ret = wifi_initWithConfig(conf);
-        if (ret == 0)
-        {
-            UT_LOG("WiFi init with config returned success");
-        }
-        else
-        {
-           UT_LOG("WiFi init with config returned failure");
-           UT_FAIL("WiFi initialization with config pre-requisite failed");
-        }        
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed");
-        UT_FAIL("Memory allocation with malloc failed");
-    }
-}
-
-void WiFi_UnInitPosReq(){
-    int ret = 0;
-    ret = wifi_uninit();
-    if (ret == 0)
-    {
-        UT_LOG("WiFi uninit returned success");
-    }
-    else
-    {
-        UT_LOG("WiFi uninit returned failure");
-        UT_FAIL("WiFi uninit post-requisite failed");
-    }
-}
+extern void WiFi_InitPreReq(void);
+extern void WiFi_InitWithConfigPreReq(void);
+extern void WiFi_UnInitPosReq(void);
 
 /**
 * @brief This function checks if wifi_getCliWpsConfigMethodsSupported works as expected, when invoked after calling wifi_init().
@@ -3302,30 +3256,3 @@ int test_wifi_client_hal_register(void)
     return 0;
 }
 
-int main(int argc, char** argv)
-{
-    int registerReturn = 0;
-    
-    /* Register tests as required, then call the UT-main to support switches and triggering */
-    UT_init( argc, argv );
-    /* Check if tests are registered successfully */
-    registerReturn = test_wifi_client_hal_register();
-    if (registerReturn == 0)
-    {
-        printf("test_wifi_client_hal_register() returned success");
-    }
-    else
-    {
-        printf("test_wifi_client_hal_register() returned failure");
-        return 1;
-    }
-    
-    WiFi_InitPreReq();
-    
-    /* Begin test executions */
-    UT_run_tests();
-    
-    WiFi_UnInitPosReq();
-   
-    return 0;
-}

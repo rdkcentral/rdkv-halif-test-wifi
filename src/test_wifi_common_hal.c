@@ -32,10 +32,13 @@
 
 #include <ut.h>
 #include <ut_log.h>
-#include<stdlib.h>
-#include<string.h>
-
+#include <stdlib.h>
+#include <string.h>
 #include "wifi_common_hal.h"
+
+extern void WiFi_InitPreReq(void);
+extern void WiFi_InitWithConfigPreReq(void);
+extern void WiFi_UnInitPosReq(void);
 
 #define MAX_OUTPUT_STRING_LEN 50
 #define MAX_LENGTH 256
@@ -43,60 +46,7 @@
 const char* secmode[] = {"None", "WEP", "WPA", "WPA2", "WPA3", "WPA-WPA2", "WPA2-WPA3", "WPA-Enterprise", "WPA2-Enterprise", "WPA-WPA2-Enterprise"};
 int freqList[] = {2412, 2417, 2422, 2427, 2432, 2437, 2442, 2447, 2452, 2457, 2462, 2467, 2472, 5160, 5180, 5200, 5220, 5240, 5260, 5280, 5300, 5320, 5340, 5480, 5500, 5520, 5540, 5560, 5580, 5600, 5620, 5640, 5660, 5680, 5700, 5720, 5745, 5765, 5785, 5805, 5825, 5845, 5865, 5885};
 const char* radiostatus[] = {"Up", "Down", "Unknown", "Dormant", "NotPresent", "LowerLayerDown"};
-
 const char* bandwidth[] = {"20MHz", "40MHz", "80MHz", "160MHz", "Auto"};
-
-int WiFi_InitPreReq(){
-    int ret = 0;
-    ret = wifi_init();
-    if (ret == 0)
-    {
-        UT_LOG("WiFi init returned success");
-    }
-    else
-    {
-        UT_LOG("WiFi init returned failure");
-        UT_FAIL("WiFi initialization with config pre-requisite failed");
-    }
-    return ret;
-}
- 
-void WiFi_InitWithConfigPreReq(){
-    int ret = 0;
-    wifi_halConfig_t *conf = (wifi_halConfig_t*)malloc(sizeof(wifi_halConfig_t));
-    if(conf != NULL){
-        ret = wifi_initWithConfig(conf);
-        if (ret == 0)
-        {
-            UT_LOG("WiFi init with config returned success");
-        }
-        else
-        {
-           UT_LOG("WiFi init with config returned failure");
-           UT_FAIL("WiFi initialization with config pre-requisite failed");
-        }        
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed");
-        UT_FAIL("Memory allocation with malloc failed");
-    }
-}
-
- 
-void WiFi_UnInitPosReq(){
-    int ret = 0;
-    ret = wifi_uninit();
-    if (ret == 0)
-    {
-        UT_LOG("WiFi uninit returned success");
-    }
-    else
-    {
-        UT_LOG("WiFi uninit returned failure");
-        UT_FAIL("WiFi uninit post-requisite failed");
-    }
-}
 
 
 int check_value(const char* target, const char* list[], int count) {
@@ -7076,34 +7026,3 @@ int test_wifi_common_hal_register(void)
     return 0;
 }
  
-int main(int argc, char** argv)
-{
-    int registerReturn = 0;
-	int prereqReturn = 0;
-    /* Register tests as required, then call the UT-main to support switches and triggering */
-    UT_init( argc, argv );
-    /* Check if tests are registered successfully */
-    registerReturn = test_wifi_common_hal_register();
-    if (registerReturn == 0)
-    {
-        printf("test_wifi_common_hal_register() returned success");
-    }
-    else
-    {
-        printf("test_wifi_common_hal_register() returned failure");
-        return 1;
-    }
-	prereqReturn = WiFi_InitPreReq();
-	if(prereqReturn == 0)
-	{
-		printf("wifi_init() returned success");
-	}
-	else
-	{
-		printf("wifi_init() failed");
-	    return 1;
-	}
-    /* Begin test executions */
-    UT_run_tests();
-    return 0;
-}
