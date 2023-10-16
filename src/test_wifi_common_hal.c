@@ -32,13 +32,14 @@
 
 #include <ut.h>
 #include <ut_log.h>
-#include <stdlib.h>
-#include <string.h>
+#include<stdlib.h>
+#include<string.h>
+
 #include "wifi_common_hal.h"
 
-extern void WiFi_InitPreReq(void);
-extern void WiFi_InitWithConfigPreReq(void);
-extern void WiFi_UnInitPosReq(void);
+extern void WiFi_InitPreReq(void);                               
+extern void WiFi_InitWithConfigPreReq(void);                     
+extern void WiFi_UnInitPosReq(void); 
 
 #define MAX_OUTPUT_STRING_LEN 50
 #define MAX_LENGTH 256
@@ -47,7 +48,6 @@ const char* secmode[] = {"None", "WEP", "WPA", "WPA2", "WPA3", "WPA-WPA2", "WPA2
 int freqList[] = {2412, 2417, 2422, 2427, 2432, 2437, 2442, 2447, 2452, 2457, 2462, 2467, 2472, 5160, 5180, 5200, 5220, 5240, 5260, 5280, 5300, 5320, 5340, 5480, 5500, 5520, 5540, 5560, 5580, 5600, 5620, 5640, 5660, 5680, 5700, 5720, 5745, 5765, 5785, 5805, 5825, 5845, 5865, 5885};
 const char* radiostatus[] = {"Up", "Down", "Unknown", "Dormant", "NotPresent", "LowerLayerDown"};
 const char* bandwidth[] = {"20MHz", "40MHz", "80MHz", "160MHz", "Auto"};
-
 
 int check_value(const char* target, const char* list[], int count) {
     for (int i = 0; i < count; i++) {
@@ -78,12 +78,11 @@ int check_value(const char* target, const char* list[], int count) {
 */
 void test_l1_wifi_common_hal_positive1_wifi_getHalVersion(void)
 {
+    UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getHalVersion...");
     /* Variables for test */
     CHAR output_test_string[20];
-    INT return_status;
-	
-   /* Start of Logging */
-    UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getHalVersion...");
+    INT return_status;	
+
     UT_LOG("Invoking wifi_getHalVersion with valid output_string buffer.");
     /* Call the wifi_getHalVersion function */
     return_status = wifi_getHalVersion(output_test_string);
@@ -153,17 +152,15 @@ void test_l1_wifi_common_hal_negative1_wifi_getHalVersion(void)
 void test_l1_wifi_common_hal_positive1_wifi_init( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_init...");
-
+    INT result;
 
     // Log the test description and result
     UT_LOG("Invoking wifi_init without any input parameters. Expecting RETURN_OK.");
 	WiFi_UnInitPosReq();
-    INT result = wifi_init();
+    result = wifi_init();
     UT_LOG("Returned value was %d", result);
-
     // Check the result
     UT_ASSERT_EQUAL(result, RETURN_OK);
-
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_init...\n");
 }
 
@@ -191,9 +188,8 @@ void test_l1_wifi_common_hal_positive1_wifi_initWithConfig(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_initWithConfig...");
 
 	strcpy(conf.wlan_Interface,"wlan0");
-	UT_LOG("Invoking wifi_initWithConfig with valid structure");
 	WiFi_UnInitPosReq();
-	
+	UT_LOG("Invoking wifi_initWithConfig with valid structure");	
 	result = wifi_initWithConfig(&conf);
     UT_LOG("Returned value was %d", result);
 	WiFi_UnInitPosReq();
@@ -321,17 +317,11 @@ void test_l1_wifi_common_hal_negative3_wifi_initWithConfig(void) {
 */
 void test_l1_wifi_common_hal_positive1_wifi_down() {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_down..");
-
-    // Assuming wifi_init() or wifi_initWithConfig() has been called before
-    UT_LOG("Invoking wifi_init without any input parameters. Expecting RETURN_OK.");
-
+    INT return_val;	
     UT_LOG("Invoking wifi_down().");
-    INT return_val = wifi_down();
-
+    return_val = wifi_down();
     UT_LOG("Invoking wifi_down(). Return value: %d\n", return_val);
-
     UT_ASSERT_EQUAL(return_val, RETURN_OK);
-
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_down...\n");
 }
 
@@ -355,10 +345,11 @@ void test_l1_wifi_common_hal_positive1_wifi_down() {
 */
 void test_l1_wifi_common_hal_negative1_wifi_down() {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_down...\n");
+    INT return_val;
     UT_LOG("Invoking wifi_down() without initialization.");
     // Assuming wifi_init() or wifi_initWithConfig() has not been called before
 	WiFi_UnInitPosReq();
-    INT return_val = wifi_down();
+    return_val = wifi_down();
 
     UT_LOG("Invoking wifi_down() without initialization. Return value: %d\n", return_val);
     WiFi_InitPreReq();
@@ -389,9 +380,9 @@ void test_l1_wifi_common_hal_negative1_wifi_down() {
 void test_l1_wifi_common_hal_positive1_wifi_uninit(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_uninit...");
-
+    int ret ;
     UT_LOG("Invoking wifi_uninit() after wifi_init()");
-    int ret = wifi_uninit();
+    ret = wifi_uninit();
     UT_LOG("Invoking wifi_uninit() after wifi_init(), Expected return value is RETURN_OK, got: %d", ret);
 	
     WiFi_InitPreReq();
@@ -426,18 +417,20 @@ void test_l1_wifi_common_hal_positive1_wifi_uninit(void)
 void test_l1_wifi_common_hal_positive2_wifi_uninit(void)
 {
 	wifi_halConfig_t conf;
+	
     UT_LOG("Entering test_l1_wifi_common_hal_positive2_wifi_uninit...");
-
+	int result;
+    int ret;
     WiFi_UnInitPosReq();
 
 	strcpy(conf.wlan_Interface,"wlan0");
 	UT_LOG("Invoking wifi_initWithConfig with valid structure");
-	int result = wifi_initWithConfig(&conf);
+    result = wifi_initWithConfig(&conf);
     UT_LOG("Returned value was %d", result);
 	
 	
     UT_LOG("Invoking wifi_uninit() after wifi_initWithConfig()");
-    int ret = wifi_uninit();
+    ret = wifi_uninit();
     UT_LOG("Invoking wifi_uninit() after wifi_initWithConfig(), Expected return value is RETURN_OK, got: %d", ret);
     UT_ASSERT_EQUAL(ret, RETURN_OK);
 	
@@ -467,11 +460,11 @@ void test_l1_wifi_common_hal_positive2_wifi_uninit(void)
 void test_l1_wifi_common_hal_negative1_wifi_uninit(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_uninit...");
-	
+    INT ret;	
 	WiFi_UnInitPosReq();
 	
     UT_LOG("Invoking wifi_uninit() without prior execution of wifi_init() or wifi_initWithConfig()");
-    INT ret = wifi_uninit();
+    ret = wifi_uninit();
     UT_LOG("Invoking wifi_uninit() without prior execution of wifi_init() or wifi_initWithConfig(), Expected return value is RETURN_ERR, got: %d", ret);
 	
 	WiFi_InitPreReq();
@@ -509,7 +502,7 @@ void test_l1_wifi_common_hal_positive1_getStats(void)
        UT_LOG("Invoking wifi_getStats with valid radioIndex=1 and valid &wifi_sta_stats buffer.\n");
        wifi_getStats(radioIndex, wifi_sta_stats); 
 
-       UT_LOG("Station status data :  sta_SSID = %s, sta_BSSID = %s, sta_BAND = %s, sta_SecMode %s, sta_Encryption = %s, sta_PhyRate = %f, sta_Noise = %f, sta_RSSI = %s, sta_Frequency = %d, sta_LastDataDownlinkRate = %d, sta_LastDataUplinkRate =%d, sta_Retransmissions = %d",wifi_sta_stats->sta_SSID, wifi_sta_stats->sta_BSSID, wifi_sta_stats->sta_BAND, wifi_sta_stats->sta_SecMode, wifi_sta_stats->sta_Encryption, wifi_sta_stats->sta_PhyRate, wifi_sta_stats->sta_Noise, wifi_sta_stats->sta_RSSI, wifi_sta_stats->sta_Frequency, wifi_sta_stats->sta_LastDataDownlinkRate, wifi_sta_stats->sta_Retransmissions);
+       UT_LOG("Station status data :  sta_SSID = %s, sta_BSSID = %s, sta_BAND = %s, sta_SecMode %s, sta_Encryption = %s, sta_PhyRate = %f, sta_Noise = %f, sta_RSSI = %f, sta_Frequency = %d, sta_LastDataDownlinkRate = %d, sta_LastDataUplinkRate =%d, sta_Retransmissions = %d",wifi_sta_stats->sta_SSID, wifi_sta_stats->sta_BSSID, wifi_sta_stats->sta_BAND, wifi_sta_stats->sta_SecMode, wifi_sta_stats->sta_Encryption, wifi_sta_stats->sta_PhyRate, wifi_sta_stats->sta_Noise, wifi_sta_stats->sta_RSSI, wifi_sta_stats->sta_Frequency, wifi_sta_stats->sta_LastDataDownlinkRate, wifi_sta_stats->sta_Retransmissions);
        if(!strcmp(wifi_sta_stats->sta_SSID,"") || !strcmp(wifi_sta_stats->sta_SSID,"valid_value"))   /*TODO need to replace with to valid value*/
         {
             UT_LOG("sta_SSID %s which is an valid value", wifi_sta_stats->sta_SSID);
@@ -762,17 +755,17 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioNumberOfEntries( void )
 
     //Initialize variables
     ULONG output;
-     
+    INT ret;    
     //Invoke API
     UT_LOG("Invoking wifi_getRadioNumberOfEntries with valid output reference.");
-    INT ret = wifi_getRadioNumberOfEntries(&output);
+    ret = wifi_getRadioNumberOfEntries(&output);
     if(output != 1)
 	{
 	UT_LOG("failed due to invalid RadioNumberOfEntries : %d",output);
     UT_FAIL("failed due to invalid RadioNumberOfEntries");
 	}
     //Log after invocation
-    UT_LOG("Invoking wifi_getRadioNumberOfEntries with valid output reference. Returned value: %d", ret);
+    UT_LOG("Returned value: %d", ret);
 
     //Check the return value
     UT_ASSERT_EQUAL(ret, RETURN_OK);
@@ -803,12 +796,12 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioNumberOfEntries( void )
 {
    //Start Logging
    UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioNumberOfEntries...");
-
+   INT ret;
    //Initialize variables
    ULONG *output = NULL;
       
    //Invoke API
-   INT ret = wifi_getRadioNumberOfEntries(output);
+   ret = wifi_getRadioNumberOfEntries(output);
 
    //Log after invocation
    UT_LOG("Invoking wifi_getRadioNumberOfEntries with NULL output reference. Returned value: %d", ret);
@@ -843,7 +836,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries( void )
 {
     //Start Logging
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries...");
-
+    INT ret;
     //Initialize variables
     ULONG output;
 	
@@ -851,7 +844,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries( void )
 	
     UT_LOG("Invoking wifi_getRadioNumberOfEntries without calling wifi_init");    
     //Invoke API
-    INT ret = wifi_getRadioNumberOfEntries(&output);
+    ret = wifi_getRadioNumberOfEntries(&output);
 
     //Log after invocation
     UT_LOG("Invoking wifi_getRadioNumberOfEntries without calling wifi_init or wifi_initWithConfig. Returned value: %d", ret);
@@ -887,9 +880,9 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDNumberOfEntries(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getSSIDNumberOfEntries...\n");
     ULONG ssidNumber;
-		
+    INT result;		
     UT_LOG("Invoking wifi_getSSIDNumberOfEntries with a valid pointer.");
-    INT result = wifi_getSSIDNumberOfEntries(&ssidNumber);
+    result = wifi_getSSIDNumberOfEntries(&ssidNumber);
     UT_LOG(" SSID Number: %lu, Return status: %d\n", ssidNumber, result);
     UT_ASSERT_EQUAL(result, RETURN_OK);
 	if(ssidNumber != 1)
@@ -922,10 +915,11 @@ void test_l1_wifi_common_hal_negative1_wifi_getSSIDNumberOfEntries(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getSSIDNumberOfEntries...\n");
     ULONG ssidNumber;
+    INT result;
 	WiFi_UnInitPosReq();
 	
     UT_LOG("Invoking wifi_getSSIDNumberOfEntries without initializing the Wi-Fi subsystem.");
-    INT result = wifi_getSSIDNumberOfEntries(&ssidNumber);
+    result = wifi_getSSIDNumberOfEntries(&ssidNumber);
     UT_LOG("Invoking wifi_getSSIDNumberOfEntries  Return status: %d\n", result);
     WiFi_InitPreReq();
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -953,9 +947,9 @@ void test_l1_wifi_common_hal_negative1_wifi_getSSIDNumberOfEntries(void)
 void test_l1_wifi_common_hal_negative2_wifi_getSSIDNumberOfEntries(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getSSIDNumberOfEntries...\n");
-	
+    INT result;	
     UT_LOG("Invoking wifi_getSSIDNumberOfEntries with a NULL pointer.");
-    INT result = wifi_getSSIDNumberOfEntries(NULL);
+    result = wifi_getSSIDNumberOfEntries(NULL);
     UT_LOG("Return status: %d\n", result);
 
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -984,16 +978,18 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioEnable( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioEnable...");
     BOOL output_bool;
+    INT ret;
+	INT radioIndex = 1;
 		
     UT_LOG("Invoking wifi_getRadioEnable with index 1.");	
-    INT ret = wifi_getRadioEnable(1, &output_bool);
+    ret = wifi_getRadioEnable(radioIndex, &output_bool);
 
     UT_LOG("Invoking wifi_getRadioEnable with index 1. Returned: %d, Output: %d", ret, output_bool);
     UT_ASSERT_EQUAL(ret, RETURN_OK);
     if((output_bool != '0') && (output_bool != '1'))
 	{
-	UT_LOG("failed due to invalid sta_BAND : %c",output_bool);
-    UT_FAIL("failed due to invalid sta_BAND");
+	UT_LOG("failed due to invalid Radio Enable value: %c",output_bool);
+    UT_FAIL("failed due to invalid Radio Enable value");
 	}
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getRadioEnable...");
 }
@@ -1020,16 +1016,17 @@ void test_l1_wifi_common_hal_positive2_wifi_getRadioEnable( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive2_wifi_getRadioEnable...");
     BOOL output_bool = 0;
-
+	INT radioIndex = 1;
+    INT ret;	
     UT_LOG("Invoking wifi_getRadioEnable with index 1.  output_bool =0");
-    INT ret = wifi_getRadioEnable(1, &output_bool);
+    ret = wifi_getRadioEnable(radioIndex, &output_bool);
 
     UT_LOG("Invoking wifi_getRadioEnable with index 1. Returned: %d, Output: %d", ret, output_bool);
     UT_ASSERT_EQUAL(ret, RETURN_OK);
     if((output_bool != '0') && (output_bool != '1'))
 	{
-	UT_LOG("failed due to invalid sta_BAND : %c",output_bool);
-    UT_FAIL("failed due to invalid sta_BAND");
+	UT_LOG("failed due to invalid Radio Enable value : %c",output_bool);
+    UT_FAIL("failed due to invalid Radio Enable value");
 	}
 
     UT_LOG("Exiting test_l1_wifi_common_hal_positive2_wifi_getRadioEnable...");
@@ -1057,16 +1054,17 @@ void test_l1_wifi_common_hal_positive3_wifi_getRadioEnable( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive3_wifi_getRadioEnable...");
     BOOL output_bool = 1;
-		
+	INT radioIndex = 1;
+    INT ret;
     UT_LOG("Invoking wifi_getRadioEnable with index 1.  output_bool =1");
-    INT ret = wifi_getRadioEnable(1, &output_bool);
+    ret = wifi_getRadioEnable(radioIndex, &output_bool);
 
     UT_LOG("Invoking wifi_getRadioEnable with index 1. Returned: %d, Output: %d", ret, output_bool);
     UT_ASSERT_EQUAL(ret, RETURN_OK);
     if((output_bool != '0') && (output_bool != '1'))
 	{
-	UT_LOG("failed due to invalid sta_BAND : %c",output_bool);
-    UT_FAIL("failed due to invalid sta_BAND");
+	UT_LOG("failed due to invalid Radio Enable value : %c",output_bool);
+    UT_FAIL("failed due to invalid Radio Enable value");
 	}
 
     UT_LOG("Exiting test_l1_wifi_common_hal_positive3_wifi_getRadioEnable...");
@@ -1094,9 +1092,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioEnable( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioEnable...");
     BOOL output_bool;
-		
+	INT radioIndex = 2;
+    INT ret;	
     UT_LOG("Invoking wifi_getRadioEnable with invalid index 2.");	
-    INT ret = wifi_getRadioEnable(2, &output_bool);
+    ret = wifi_getRadioEnable(radioIndex, &output_bool);
 
     UT_LOG("Invoking wifi_getRadioEnable with invalid index 2. Returned: %d", ret);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
@@ -1126,9 +1125,10 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioEnable( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioEnable...");
     BOOL *output_bool = NULL;
-		
+	INT radioIndex = 1;	
+    INT ret;	
     UT_LOG("Invoking wifi_getRadioEnable with NULL output_bool.");	
-    INT ret = wifi_getRadioEnable(1, output_bool);
+    ret = wifi_getRadioEnable(radioIndex, output_bool);
 
     UT_LOG("Invoking wifi_getRadioEnable with NULL output_bool. Returned: %d", ret);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
@@ -1158,9 +1158,10 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioEnable( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioEnable...");
     BOOL output_bool;
-	
+	INT radioIndex = -1;
+    INT ret;	
     UT_LOG("Invoking wifi_getRadioEnable with negative index -1.");	
-    INT ret = wifi_getRadioEnable(-1, &output_bool);
+    ret = wifi_getRadioEnable(radioIndex, &output_bool);
 
     UT_LOG("Invoking wifi_getRadioEnable with negative index -1. Returned: %d", ret);
     UT_ASSERT_EQUAL(ret, RETURN_ERR)
@@ -1189,12 +1190,13 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioEnable( void )
 void test_l1_wifi_common_hal_negative4_wifi_getRadioEnable( void ) 
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioEnable...");
+    INT ret;
     BOOL output_bool;
-	
+	INT radioIndex = 1;	
 	WiFi_UnInitPosReq();
 	
     UT_LOG("Invoking wifi_getRadioEnable before  wifi_init() or wifi_initWithConfig().");	
-    INT ret = wifi_getRadioEnable(1, &output_bool);
+    ret = wifi_getRadioEnable(radioIndex, &output_bool);
     
     UT_LOG("Invoking wifi_getRadioEnable with index 1. Returned: %d, Output: %d", ret, output_bool);
 	
@@ -1227,9 +1229,10 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioStatus(void){
 
     INT radioIndex = 1;
     CHAR output_string[20];
+    INT return_value;
 	
     UT_LOG("Invoking wifi_getRadioStatus with valid radio index. ");
-    INT return_value = wifi_getRadioStatus(radioIndex, output_string);
+    return_value = wifi_getRadioStatus(radioIndex, output_string);
 
     UT_LOG("Invoking wifi_getRadioStatus with valid radio index. output_string obtained: %s, return value: %d", output_string, return_value);
 
@@ -1265,14 +1268,14 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioStatus(void){
 void test_l1_wifi_common_hal_negative1_wifi_getRadioStatus(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioStatus...");
-
+    INT return_value;
     INT radioIndex = 1;
     CHAR output_string[20];
     // Call the API without initializing the wifi
 
     WiFi_UnInitPosReq();	
     UT_LOG("Invoking wifi_getRadioStatus without wifi initialization.");
-    INT return_value = wifi_getRadioStatus(radioIndex, output_string);
+    return_value = wifi_getRadioStatus(radioIndex, output_string);
 
     UT_LOG("return status: %d", return_value);
     WiFi_InitPreReq();
@@ -1303,12 +1306,12 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioStatus(void)
 void test_l1_wifi_common_hal_negative2_wifi_getRadioStatus(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioStatus...");
-
+    INT return_value;
     INT radioIndex = 2; // invalid radio index
     CHAR output_string[20];
 			
     UT_LOG("Invoking wifi_getRadioStatus with invalid radio index.");	
-    INT return_value = wifi_getRadioStatus(radioIndex, output_string);
+    return_value = wifi_getRadioStatus(radioIndex, output_string);
 
     UT_LOG("Invoking wifi_getRadioStatus with invalid radio index. return value: %d", return_value);
 
@@ -1341,9 +1344,10 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioStatus(void)
 
     INT radioIndex = 1;
     CHAR *output_string = NULL; 
-		
+    INT return_value;
+	
     UT_LOG("Invoking wifi_getRadioStatus with output_string as NULL");
-    INT return_value = wifi_getRadioStatus(radioIndex, output_string);
+    return_value = wifi_getRadioStatus(radioIndex, output_string);
 
     UT_LOG("Invoking wifi_getRadioStatus with output_string as NULL. return value: %d", return_value);
 
@@ -1374,9 +1378,10 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioStatus(void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioIfName() {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioIfName...");
     CHAR output_string[MAX_OUTPUT_STRING_LEN];
-		
+    INT status;
+    INT radioIndex = 1;	
     UT_LOG("Invoking wifi_getRadioIfName with valid radio index and valid CHAR pointer.");	
-    INT status = wifi_getRadioIfName(1, output_string);
+    status = wifi_getRadioIfName(radioIndex, output_string);
     UT_LOG(" The function status returned: %d, output string: %s", status, output_string);
     UT_ASSERT_EQUAL(status, RETURN_OK);
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getRadioIfName...");
@@ -1403,10 +1408,10 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioIfName() {
 void test_l1_wifi_common_hal_negative1_wifi_getRadioIfName() {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioIfName...");
     CHAR output_string[MAX_OUTPUT_STRING_LEN];
-	
+    INT radioIndex = 1;	
 	WiFi_UnInitPosReq();
     UT_LOG("Invoking wifi_getRadioIfName without calling either wifi_init or wifi_initWithConfig.");
-    INT status = wifi_getRadioIfName(1, output_string);
+    INT status = wifi_getRadioIfName(radioIndex, output_string);
     UT_LOG(" The function status returned: %d", status);
 	WiFi_InitPreReq();
     UT_ASSERT_EQUAL(status, RETURN_ERR);
@@ -1434,9 +1439,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioIfName() {
 void test_l1_wifi_common_hal_negative2_wifi_getRadioIfName() {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioIfName...");
     CHAR output_string[MAX_OUTPUT_STRING_LEN];
-	
+    INT radioIndex = 0;	
+    INT status;	
     UT_LOG("Invoking wifi_getRadioIfName with invalid radio index.");	
-    INT status = wifi_getRadioIfName(0, output_string);
+    status = wifi_getRadioIfName(radioIndex, output_string);
     UT_LOG("The function status returned: %d", status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getRadioIfName...");
@@ -1464,9 +1470,10 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioIfName() {
 void test_l1_wifi_common_hal_negative3_wifi_getRadioIfName() {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioIfName...");
     CHAR output_string[MAX_OUTPUT_STRING_LEN];
-		
+    INT radioIndex = 2;
+    INT status;	
     UT_LOG("Invoking wifi_getRadioIfName with invalid radio index.");	
-    INT status = wifi_getRadioIfName(2, output_string);
+    status = wifi_getRadioIfName(radioIndex, output_string);
     UT_LOG("The function status returned: %d", status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getRadioIfName...");
@@ -1493,9 +1500,10 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioIfName() {
 */
 void test_l1_wifi_common_hal_negative4_wifi_getRadioIfName() {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioIfName...");
-		
+    INT radioIndex = 1;	
+    INT status;	
     UT_LOG("Invoking wifi_getRadioIfName with valid radio index and NULL CHAR pointer.");	
-    INT status = wifi_getRadioIfName(1, NULL);
+    status = wifi_getRadioIfName(radioIndex, NULL);
     UT_LOG("Invoking wifi_getRadioIfName with valid radio index and NULL CHAR pointer. The function status returned: %d", status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative4_wifi_getRadioIfName...");
@@ -1525,11 +1533,12 @@ void test_l1_wifi_common_hal_negative5_wifi_getRadioIfName() {
     UT_LOG("Entering test_l1_wifi_common_hal_negative5_wifi_getRadioIfName...");
     INT radioIndex = 1; 
     CHAR *output_string = NULL;
+    INT status;
     WiFi_UnInitPosReq();
 	WiFi_InitWithConfigPreReq();
 		
     UT_LOG("Invoking wifi_getRadioIfName after wifi_initWithConfig with valid radio index and NULL CHAR pointer.");	
-    INT status = wifi_getRadioIfName(radioIndex, output_string);
+    status = wifi_getRadioIfName(radioIndex, output_string);
     UT_LOG("Invoking wifi_getRadioIfName after wifi_initWithConfig with valid radio index and NULL CHAR pointer. The function status returned: %d", status);
     WiFi_UnInitPosReq();
     WiFi_InitPreReq();	
@@ -1560,15 +1569,17 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate(void)
         UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate...");
         CHAR outputVal[50]; // Size can be adjusted if necessary
         INT bitrate;
+        INT status;
+        INT radioIndex = 1;
         UT_LOG("Invoking wifi_getRadioMaxBitRate with valid radioIndex 1.");
-        INT status = wifi_getRadioMaxBitRate(1, outputVal);
+        status = wifi_getRadioMaxBitRate(radioIndex, outputVal);
         UT_LOG("The returned bit rate is %s, and the return status is %d", outputVal, status);
         UT_ASSERT_EQUAL(status, RETURN_OK);
 		bitrate = atoi(outputVal);
-		if((bitrate >= 0) && (bitrate < 2458) ) 
+		if((bitrate < 0) || (bitrate > 2458) ) 
 		{
-    	    UT_LOG("failed due to invalid outputVal : %s",outputVal);
-            UT_FAIL("failed due to invalid outputVal");
+    	    UT_LOG("failed due to invalid output_string : %s",outputVal);
+            UT_FAIL("failed due to invalid output_string");
 		}
 
         UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate...");
@@ -1596,9 +1607,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate...");
     CHAR outputVal[50];  // Size can be adjusted if necessary
-		
+    INT radioIndex = 2;	
+    INT status;	
     UT_LOG("Invoking wifi_getRadioMaxBitRate with invalid radioIndex 2");
-    INT status = wifi_getRadioMaxBitRate(2, outputVal);
+    status = wifi_getRadioMaxBitRate(radioIndex, outputVal);
     UT_LOG("The return status is %d", status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
 
@@ -1627,11 +1639,12 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioMaxBitRate(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioMaxBitRate...");
     CHAR outputVal[50];  // Size can be adjusted if necessary
-
+    INT radioIndex = 1;
+    INT status;
     WiFi_UnInitPosReq();
     UT_LOG("Invoking wifi_getRadioMaxBitRate without meeting the precondition of calling wifi_init().");    
     // precondition not met, but it's hard to simulate this in unit test without invoking wifi_init() intentionally
-    INT status = wifi_getRadioMaxBitRate(1, outputVal);
+    status = wifi_getRadioMaxBitRate(radioIndex, outputVal);
     
     UT_LOG("The return status is %d", status);
 	WiFi_InitPreReq();
@@ -1661,9 +1674,10 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioMaxBitRate(void)
 void test_l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate...");
-
+    INT radioIndex = 1;
+    INT status;
     UT_LOG("Invoking wifi_getRadioMaxBitRate with NULL output_string.");
-    INT status = wifi_getRadioMaxBitRate(1, NULL);    
+    status = wifi_getRadioMaxBitRate(radioIndex, NULL);    
     UT_LOG("Invoking wifi_getRadioMaxBitRate with NULL output_string. The return status is %d", status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
     
@@ -1877,9 +1891,10 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand(void)
 
     CHAR output_string[32];
     INT radioIndex = 1;
+    INT result;
 	
     UT_LOG("Invoking wifi_getRadioOperatingFrequencyBand with radioIndex 1");
-    INT result = wifi_getRadioOperatingFrequencyBand(radioIndex, output_string);
+    result = wifi_getRadioOperatingFrequencyBand(radioIndex, output_string);
 
     UT_LOG("Returned: status: %d, output_string: %s", result, output_string);
     UT_ASSERT_EQUAL(result, RETURN_OK);
@@ -1916,9 +1931,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand(void)
 
     CHAR output_string[32];
     INT radioIndex = 0;
-
+    INT result;
+	
     UT_LOG("Invoking wifi_getRadioOperatingFrequencyBand with radioIndex 0");
-    INT result = wifi_getRadioOperatingFrequencyBand(radioIndex, output_string);
+    result = wifi_getRadioOperatingFrequencyBand(radioIndex, output_string);
 
     UT_LOG("Returned: status: %d, output_string: %s", result, output_string);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -1950,10 +1966,11 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioOperatingFrequencyBand(void)
 
     CHAR output_string[32];
     INT radioIndex = 1;
+    INT result;
+	
     WiFi_UnInitPosReq();	
     UT_LOG("Invoking wifi_getRadioOperatingFrequencyBand without calling wifi_init.");
-    INT result = wifi_getRadioOperatingFrequencyBand(radioIndex, output_string);
-
+    result = wifi_getRadioOperatingFrequencyBand(radioIndex, output_string);
     UT_LOG("Returned: status: %d, output_string: %s", result, output_string);
     WiFi_InitPreReq();
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -1985,9 +2002,10 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand(void)
 
     CHAR *output_string = NULL;
     INT radioIndex = 1;
-
+    INT result;
+	
     UT_LOG("Invoking wifi_getRadioOperatingFrequencyBand with Buffer is NULL.");
-    INT result = wifi_getRadioOperatingFrequencyBand(radioIndex, output_string);
+    result = wifi_getRadioOperatingFrequencyBand(radioIndex, output_string);
 
     UT_LOG("Returned: status: %d", result);
 
@@ -2018,9 +2036,11 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards ... \n"); 
     CHAR output_string[100];
-		
+	INT radioIndex = 1;	
+    int status;
+	
     UT_LOG("Invoking wifi_getRadioSupportedStandards with valid input parameters.");
-    int status = wifi_getRadioSupportedStandards(1, output_string);
+    status = wifi_getRadioSupportedStandards(radioIndex, output_string);
     UT_LOG("Returned status: %d, output_string: %s \n", status, output_string);
 
     UT_ASSERT_EQUAL(status, RETURN_OK);
@@ -2053,10 +2073,11 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards(void)
 void test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards(void){
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards ... \n");
     CHAR output_string[100];
-
+	INT radioIndex = 0;
+    int status;	
 	
     UT_LOG("Invoking wifi_getRadioSupportedStandards with invalid radio index 0");	
-    int status = wifi_getRadioSupportedStandards(0, output_string);
+    status = wifi_getRadioSupportedStandards(radioIndex, output_string);
     UT_LOG("Invoking wifi_getRadioSupportedStandards with invalid radio index. Returned status: %d\n", status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards ...\n");
@@ -2083,8 +2104,11 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards(void){
 void test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedStandards(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedStandards ... \n");
+	INT radioIndex = 1;
+    int status;
+	
     UT_LOG("Invoking wifi_getRadioSupportedStandards with output_string as NULL. ");	
-    int status = wifi_getRadioSupportedStandards(1, NULL);
+    status = wifi_getRadioSupportedStandards(radioIndex, NULL);
     UT_LOG("Returned status: %d\n", status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedStandards ...\n");
@@ -2113,10 +2137,12 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioSupportedStandards(void)
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioSupportedStandards ... \n");
     // Add code to ensure wifi is *not* initialized before this test
     CHAR output_string[100];
+    int status;
+	INT radioIndex = 1;
 	
 	WiFi_UnInitPosReq();
     UT_LOG("Invoking wifi_getRadioSupportedStandards without initializing wifi.");	
-    int status = wifi_getRadioSupportedStandards(1, output_string);
+    status = wifi_getRadioSupportedStandards(radioIndex, output_string);
     UT_LOG("Returned status: %d\n", status);
 	WiFi_InitPreReq();
     UT_ASSERT_EQUAL(status, RETURN_ERR);
@@ -2148,9 +2174,10 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioStandard(void)
     INT radioIndex = 1;
     CHAR output_string[50];
     BOOL gOnly, nOnly, acOnly;
+    INT retStatus;
 	
     UT_LOG("Invoking wifi_getRadioStandard with radioIndex 1. Output Buffer is NOT NULL."); 
-    INT retStatus = wifi_getRadioStandard(radioIndex, output_string, &gOnly, &nOnly, &acOnly);
+    retStatus = wifi_getRadioStandard(radioIndex, output_string, &gOnly, &nOnly, &acOnly);
     
     UT_LOG("Return status is %d", retStatus);
     
@@ -2189,9 +2216,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioStandard(void)
     INT radioIndex = 2;
     CHAR output_string[50];
     BOOL gOnly, nOnly, acOnly;
-
+    INT retStatus;
+	
     UT_LOG("Invoking wifi_getRadioStandard with radioIndex 2.");
-    INT retStatus = wifi_getRadioStandard(radioIndex, output_string, &gOnly, &nOnly, &acOnly);
+    retStatus = wifi_getRadioStandard(radioIndex, output_string, &gOnly, &nOnly, &acOnly);
 
     UT_LOG("Return status is %d", retStatus);
 
@@ -2227,10 +2255,11 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioStandard(void)
     INT radioIndex = 1;
     CHAR output_string[50];
     BOOL gOnly, nOnly, acOnly;
+    INT retStatus;
 	
 	WiFi_UnInitPosReq();
     UT_LOG("Invoking wifi_getRadioStandard without prior calling of wifi_init() or wifi_initWithConfig().");
-    INT retStatus = wifi_getRadioStandard(radioIndex, output_string, &gOnly, &nOnly, &acOnly);
+    retStatus = wifi_getRadioStandard(radioIndex, output_string, &gOnly, &nOnly, &acOnly);
     
     UT_LOG("Return status is %d", retStatus);
     WiFi_InitPreReq();
@@ -2263,9 +2292,10 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioStandard(void)
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioStandard...");
 
     INT radioIndex = 1;
+    INT retStatus;
 	
     UT_LOG("Invoking wifi_getRadioStandard with radioIndex 1. All Output Buffers are NULL.");
-    INT retStatus = wifi_getRadioStandard(radioIndex, NULL, NULL, NULL, NULL);
+    retStatus = wifi_getRadioStandard(radioIndex, NULL, NULL, NULL, NULL);
     
     UT_LOG("Return status is %d", retStatus);
 
@@ -2482,10 +2512,11 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse...");
     CHAR output_string[MAX_LENGTH];
-
+    INT returnValue;
+	INT radioIndex = 1;
     /* Assume wifi_init() has been successfully called */
     UT_LOG("Invoking wifi_getRadioChannelsInUse with valid radioIndex (1) and valid output_string buffer.");
-    INT returnValue = wifi_getRadioChannelsInUse(1, output_string);
+    returnValue = wifi_getRadioChannelsInUse(radioIndex, output_string);
     UT_LOG("Return Value: %d, output_string: %s", returnValue, output_string);
     UT_ASSERT_EQUAL(returnValue, RETURN_OK);
     if((strcmp(output_string,"1-13") != 0) && (strcmp(output_string,"36-64,100-165") != 0))
@@ -2519,9 +2550,12 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioChannelsInUse( void )
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioChannelsInUse...");
     /* Assume wifi_init() or wifi_initWithConfig() hasn't been called here */
     CHAR output_string[MAX_LENGTH];
+	INT radioIndex = 1;
+    INT returnValue;
+	
 	WiFi_UnInitPosReq();
     UT_LOG("Invoking wifi_getRadioChannelsInUse without calling wifi_init() or wifi_initWithConfig().");	
-    INT returnValue = wifi_getRadioChannelsInUse(1, output_string);
+    returnValue = wifi_getRadioChannelsInUse(radioIndex, output_string);
     UT_LOG("Return Value: %d", returnValue);
 	WiFi_InitPreReq();
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
@@ -2553,10 +2587,12 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioChannelsInUse( void )
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioChannelsInUse...");
 
     CHAR output_string[MAX_LENGTH];
-
+	INT radioIndex = 2;
+    INT returnValue;
+	
     /* Test with invalid radioIndex */
     UT_LOG("Invoking wifi_getRadioChannelsInUse with invalid radioIndex (2).");
-    INT returnValue = wifi_getRadioChannelsInUse(2, output_string);
+    returnValue = wifi_getRadioChannelsInUse(radioIndex, output_string);
     UT_LOG("Return Value: %d", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
 
@@ -2585,10 +2621,11 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioChannelsInUse( void )
 void test_l1_wifi_common_hal_negative3_wifi_getRadioChannelsInUse( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioChannelsInUse...");
-
+	INT radioIndex = 1;
+    INT returnValue;
     /* Test with NULL output_string */
     UT_LOG("Invoking wifi_getRadioChannelsInUse with NULL output_string.");
-    INT returnValue = wifi_getRadioChannelsInUse(1, NULL);
+    returnValue = wifi_getRadioChannelsInUse(radioIndex, NULL);
     UT_LOG("Return Value: %d", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
 
@@ -2618,12 +2655,12 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioChannelsInUse( void )
 void test_l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse...");
-
+	INT radioIndex = 1;
     CHAR output_string[2]; /* buffer having insufficient size */
-
+    INT returnValue;
     /* Test with output_string having insufficient size */
     UT_LOG("Invoking wifi_getRadioChannelsInUse with insufficient output_string buffer size.");
-    INT returnValue = wifi_getRadioChannelsInUse(1, output_string);
+    returnValue = wifi_getRadioChannelsInUse(radioIndex, output_string);
     UT_LOG("Return Value: %d", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
 
@@ -2651,15 +2688,34 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse( void )
 void test_l1_wifi_common_hal_positive1_wifi_getRadioChannel( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioChannel...");
-
+	INT radioIndex = 1;
     ULONG output_ulong;
-	
+    INT returnValue;	
     UT_LOG("Invoking wifi_getRadioChannel with valid input parameters. ");
-    INT returnValue = wifi_getRadioChannel(1, &output_ulong);
+    returnValue = wifi_getRadioChannel(radioIndex, &output_ulong);
 
     UT_LOG("The returned channel number is %lu and return status is %d", output_ulong, returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_OK);
-    
+	if(output_ulong >= 1 && output_ulong <= 13)
+	{
+		UT_LOG("valid Radio channel %lu ",output_ulong);
+		UT_PASS("valid Radio channel");
+	}
+	else if(output_ulong >= 36 && output_ulong <= 64)
+	{
+		UT_LOG("valid Radio channel %lu ",output_ulong);
+		UT_PASS("valid Radio channel");		
+	}	
+	else if(output_ulong >= 100 && output_ulong <= 165)
+	{
+		UT_LOG("valid Radio channel %lu ",output_ulong);
+		UT_PASS("valid Radio channel");		
+	}
+	else
+	{
+		UT_LOG("invalid Radio channel %lu ",output_ulong);
+		UT_FAIL("invalid Radio channel");	
+	}
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getRadioChannel...");
 }
 
@@ -2686,9 +2742,11 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioChannel( void )
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioChannel...");
 
     ULONG output_ulong;
+	INT radioIndex = 2;
+    INT returnValue;
 	
     UT_LOG("Invoking wifi_getRadioChannel with invalid radioIndex input.");
-    INT returnValue = wifi_getRadioChannel(2, &output_ulong);
+    returnValue = wifi_getRadioChannel(radioIndex, &output_ulong);
 
     UT_LOG("Return status is %d", returnValue);
 
@@ -2720,8 +2778,11 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioChannel( void )
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioChannel...");
 
     ULONG *output_ulong = NULL;
+	INT radioIndex = 1;
+    INT returnValue;
+
     UT_LOG("Invoking wifi_getRadioChannel with NULL output_ulong pointer.");
-    INT returnValue = wifi_getRadioChannel(1, output_ulong);
+    returnValue = wifi_getRadioChannel(radioIndex, output_ulong);
 
     UT_LOG("Return status is %d", returnValue);
 
@@ -2754,10 +2815,11 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioChannel( void )
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioChannel...");
 	INT radioIndex = 1;
     ULONG output_ulong;
+    INT returnValue;
 	//wifi_uninit
 	WiFi_UnInitPosReq();
     UT_LOG("Invoking wifi_getRadioChannel before wifi_init() or wifi_initWithConfig() ");
-    INT returnValue = wifi_getRadioChannel(radioIndex, &output_ulong);
+    returnValue = wifi_getRadioChannel(radioIndex, &output_ulong);
 
     UT_LOG("The returned channel number is %lu and return status is %d", output_ulong, returnValue);
     WiFi_InitPreReq();
@@ -2790,9 +2852,10 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelSupported(void)
 
     INT radioIndex = 1;
     BOOL output_bool;
-
+    INT result;
+	
     UT_LOG("Invoking wifi_getRadioAutoChannelSupported with valid radioIndex and non-null output_bool");
-    INT result = wifi_getRadioAutoChannelSupported(radioIndex, &output_bool);
+    result = wifi_getRadioAutoChannelSupported(radioIndex, &output_bool);
 
     UT_LOG("return status: %d, output_bool: %d", result, output_bool);
 
@@ -2830,10 +2893,12 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelSupported(void)
 
     INT radioIndex = 1;
     BOOL output_bool;
+    INT result;	
+	
     WiFi_UnInitPosReq();
     // Assume wiFi is not initialized
     UT_LOG("Invoking wifi_getRadioAutoChannelSupported with no WiFi initialization.");
-    INT result = wifi_getRadioAutoChannelSupported(radioIndex, &output_bool);
+    result = wifi_getRadioAutoChannelSupported(radioIndex, &output_bool);
 
     UT_LOG("return status: %d", result);
     WiFi_InitPreReq();
@@ -2866,11 +2931,12 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelSupported(void)
 
     INT radioIndex = 2; // Invalid radioIndex
     BOOL output_bool;
+    INT result;
+	
     UT_LOG("Invoking wifi_getRadioAutoChannelSupported with invalid radioIndex.");
-    INT result = wifi_getRadioAutoChannelSupported(radioIndex, &output_bool);
+    result = wifi_getRadioAutoChannelSupported(radioIndex, &output_bool);
 
     UT_LOG("Returned value was :  %d", result);
-
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelSupported...");
@@ -2898,9 +2964,10 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelSupported(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelSupported...");
     INT radioIndex = 1;
+    INT result;
     // Passing NULL for output_bool
     UT_LOG("Invoking wifi_getRadioAutoChannelSupported with NULL output_bool.");
-    INT result = wifi_getRadioAutoChannelSupported(radioIndex, NULL);
+    result = wifi_getRadioAutoChannelSupported(radioIndex, NULL);
     UT_LOG("Returned value was : %d ",result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelSupported...");
@@ -2923,22 +2990,29 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelSupported(void)
 * **Test Procedure:**@n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | :---------: | :----------: | :--------------: | :-----: |
-* | 01 | Invoke wifi_getRadioAutoChannelSupported api with output_bool not 0 or 1. | radioIndex = 1, output_bool = 3 |  RETURN_ERR | Should be a failure |
+* | 01 | Invoke wifi_getRadioAutoChannelSupported api with output_bool not 0 or 1. | radioIndex = 1, output_bool = 3 |  RETURN_OK | Should be a failure |
 */
-void test_l1_wifi_common_hal_negative4_wifi_getRadioAutoChannelSupported(void)
+void test_l1_wifi_common_hal_positive2_wifi_getRadioAutoChannelSupported(void)
 {
-    UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioAutoChannelSupported...");
+    UT_LOG("Entering test_l1_wifi_common_hal_positive2_wifi_getRadioAutoChannelSupported...");
 
     INT radioIndex = 1;
     BOOL output_bool = 3; // output_bool not 0 or 1
-    UT_LOG("Invoking wifi_getRadioAutoChannelSupported with invalid output_bool. ");
-    INT result = wifi_getRadioAutoChannelSupported(radioIndex, &output_bool);
+    INT result;
+	
+    UT_LOG("Invoking wifi_getRadioAutoChannelSupported with  output_bool = 3 ");
+    result = wifi_getRadioAutoChannelSupported(radioIndex, &output_bool);
 
     UT_LOG("Returned value was: %d", result);
 
-    UT_ASSERT_EQUAL(result, RETURN_ERR);
+    UT_ASSERT_EQUAL(result, RETURN_OK);
+    if((output_bool != '0') && (output_bool != '1'))
+	{
+	    UT_LOG("failed due to invalid output_bool : %c",output_bool);
+        UT_FAIL("failed due to invalid output_bool");		
+	}
 
-    UT_LOG("Exiting test_l1_wifi_common_hal_negative4_wifi_getRadioAutoChannelSupported...");
+    UT_LOG("Exiting test_l1_wifi_common_hal_positive2_wifi_getRadioAutoChannelSupported...");
 }
 
 /**
@@ -2963,12 +3037,12 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelEnable( void )
 {
     BOOL output_bool;
     INT ret;
-    
+    INT radioIndex = 1;
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelEnable...");
 
     // The wifi_init or wifi_initWithConfig function call is assumed to be successful before this point.
     UT_LOG("Invoking wifi_getRadioAutoChannelEnable(1, &output_bool)");   
-    ret = wifi_getRadioAutoChannelEnable(1, &output_bool);
+    ret = wifi_getRadioAutoChannelEnable(radioIndex, &output_bool);
     UT_LOG("Received output_bool: %c and return status: %d", output_bool, ret);
     
     UT_ASSERT_EQUAL(ret, RETURN_OK)
@@ -3002,10 +3076,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelEnable( void )
 {
     BOOL output_bool;
     INT ret;
-    
+    INT radioIndex = 2;   
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelEnable...");
     UT_LOG("Invoking wifi_getRadioAutoChannelEnable(2, &output_bool).");
-    ret = wifi_getRadioAutoChannelEnable(2, &output_bool);
+    ret = wifi_getRadioAutoChannelEnable(radioIndex, &output_bool);
     UT_LOG("Received output_bool: %c and return status: %d", output_bool, ret);
     
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
@@ -3034,10 +3108,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelEnable( void )
 void test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelEnable( void )
 {
     INT ret;
-    
+    INT radioIndex = 1;     
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelEnable...");
     UT_LOG("Invoking wifi_getRadioAutoChannelEnable(1, NULL).");
-    ret = wifi_getRadioAutoChannelEnable(1, NULL);
+    ret = wifi_getRadioAutoChannelEnable(radioIndex, NULL);
     UT_LOG("Received return status: %i", ret);
     
     UT_ASSERT_EQUAL(ret, RETURN_ERR)
@@ -3067,12 +3141,12 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelEnable( void )
 {
     BOOL output_bool;
     INT ret;
-    
+    INT radioIndex = 1;     
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelEnable...");
     WiFi_UnInitPosReq();
     // The wifi_init or wifi_initWithConfig function is NOT called before this API. 
     UT_LOG("Invoking wifi_getRadioAutoChannelEnable(1, &output_bool).");   
-    ret = wifi_getRadioAutoChannelEnable(1, &output_bool);
+    ret = wifi_getRadioAutoChannelEnable(radioIndex, &output_bool);
     UT_LOG("Received output_bool: %c and return status: %d", output_bool, ret);
     WiFi_InitPreReq();
     UT_ASSERT_EQUAL(ret, RETURN_ERR)
@@ -3102,14 +3176,16 @@ void test_l1_wifi_common_hal_positive1_getRadioAutoChannelRefreshPeriod( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_getRadioAutoChannelRefreshPeriod...");
     ULONG output = 0;
+    INT ret;	
+	INT radioIndex = 1;
     UT_LOG("Invoking wifi_getRadioAutoChannelRefreshPeriod with radioIndex = 1. Output pointer is valid.");
-    INT ret = wifi_getRadioAutoChannelRefreshPeriod(1, &output);
+    ret = wifi_getRadioAutoChannelRefreshPeriod(radioIndex, &output);
     UT_LOG("Returned status is %d", ret);
     UT_ASSERT_EQUAL(ret, RETURN_OK); 
 	if((output < 0) && (output > 4294967295))
 	{
-	    UT_LOG("failed due to invalid output : %lu",output);
-        UT_FAIL("failed due to invalid output");		
+	    UT_LOG("failed due to invalid output_ulong : %lu",output);
+        UT_FAIL("failed due to invalid output_ulong");		
 	}
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_getRadioAutoChannelRefreshPeriod...");
 }
@@ -3135,8 +3211,10 @@ void test_l1_wifi_common_hal_positive1_getRadioAutoChannelRefreshPeriod( void )
 void test_l1_wifi_common_hal_negative1_getRadioAutoChannelRefreshPeriod( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_getRadioAutoChannelRefreshPeriod...");
+    INT ret;
+	INT radioIndex = 2;	
     UT_LOG("Invoking wifi_getRadioAutoChannelRefreshPeriod with radioIndex = 2. Output pointer is NULL.");
-    INT ret = wifi_getRadioAutoChannelRefreshPeriod(2, NULL);
+    ret = wifi_getRadioAutoChannelRefreshPeriod(radioIndex, NULL);
     UT_LOG("Returned status is %d", ret);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative1_getRadioAutoChannelRefreshPeriod...");
@@ -3165,9 +3243,12 @@ void test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod...");
     ULONG output = 0;
+	INT radioIndex = 1;	
+    INT ret;
+	
 	WiFi_UnInitPosReq();
     UT_LOG("Invoking wifi_getRadioAutoChannelRefreshPeriod without calling wifi_init(). Output pointer is valid. ");
-    INT ret = wifi_getRadioAutoChannelRefreshPeriod(1, &output);
+    ret = wifi_getRadioAutoChannelRefreshPeriod(radioIndex, &output);
     UT_LOG("Returned status is %d", ret);
 	WiFi_InitPreReq();
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
@@ -3196,8 +3277,10 @@ void test_l1_wifi_common_hal_positive2_getRadioAutoChannelRefreshPeriod( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive2_getRadioAutoChannelRefreshPeriod...");
     ULONG output = 4294967295;
+    INT ret;
+	INT radioIndex = 1;	
     UT_LOG("Invoking wifi_getRadioAutoChannelRefreshPeriod with radioIndex = 1 and max possible value. Output pointer is valid.");
-    INT ret = wifi_getRadioAutoChannelRefreshPeriod(1, &output);
+    ret = wifi_getRadioAutoChannelRefreshPeriod(radioIndex, &output);
     UT_LOG("Returned status is %d", ret);
     UT_ASSERT_EQUAL(ret, RETURN_OK); 
 	if((output < 0) && (output > 4294967295))
@@ -3229,8 +3312,10 @@ void test_l1_wifi_common_hal_positive2_getRadioAutoChannelRefreshPeriod( void )
 void test_l1_wifi_common_hal_negative3_getRadioAutoChannelRefreshPeriod( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_getRadioAutoChannelRefreshPeriod...");
+    INT ret;	
+	INT radioIndex = 1;	
     UT_LOG("Invoking wifi_getRadioAutoChannelRefreshPeriod with null pointer for output.");
-    INT ret = wifi_getRadioAutoChannelRefreshPeriod(1, NULL);
+    ret = wifi_getRadioAutoChannelRefreshPeriod(radioIndex, NULL);
     UT_LOG("Returned status is %d", ret);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative3_getRadioAutoChannelRefreshPeriod...");
@@ -3260,11 +3345,13 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioGuardInterval(void)
     
     INT radioIndex = 1;
     CHAR output_string[10];
+    INT result;
 	
     UT_LOG("Invoking wifi_getRadioGuardInterval with valid radioIndex, output buffer is valid."); 
-    INT result = wifi_getRadioGuardInterval(radioIndex, output_string);
+    result = wifi_getRadioGuardInterval(radioIndex, output_string);
 
     UT_LOG("Return status is: %d\n", result);
+    UT_LOG("Radio Guard Interval is: %s\n", output_string);
     UT_ASSERT_EQUAL(result, RETURN_OK);
     if((strcmp(output_string,"400nsec") != 0) &&  (strcmp(output_string,"800nsec") != 0) && (strcmp(output_string,"Auto") != 0))
 	{
@@ -3298,9 +3385,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioGuardInterval(void)
 
     INT radioIndex = 2;
     CHAR output_string[10];
+    INT result;
 	
     UT_LOG("Invoking wifi_getRadioGuardInterval with invalid radioIndex, output buffer is valid.");
-    INT result = wifi_getRadioGuardInterval(radioIndex, output_string);
+    result = wifi_getRadioGuardInterval(radioIndex, output_string);
 
     UT_LOG("Return status is: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -3331,8 +3419,10 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioGuardInterval(void)
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioGuardInterval...\n");
     INT radioIndex = 1;
     CHAR *output_string = NULL;
+    INT result;
+	
     UT_LOG("Invoking wifi_getRadioGuardInterval with valid radioIndex, output buffer is NULL.");
-    INT result = wifi_getRadioGuardInterval(radioIndex, output_string);
+    result = wifi_getRadioGuardInterval(radioIndex, output_string);
     UT_LOG("Return status is: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getRadioGuardInterval...\n");
@@ -3361,9 +3451,11 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval(void)
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval...\n");
     
     INT radioIndex = 1;
-    CHAR *output_string = {"\0"};
+    CHAR *output_string;
+    INT result;
+	
     UT_LOG("Invoking wifi_getRadioGuardInterval with valid radioIndex, output buffer is uninitialized.");
-    INT result = wifi_getRadioGuardInterval(radioIndex, output_string);
+    result = wifi_getRadioGuardInterval(radioIndex, output_string);
 
     UT_LOG("Return status is: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -3397,10 +3489,11 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioGuardInterval(void)
 
     INT radioIndex = 1;
     CHAR output_string[10];
+    INT result;	
+	
 	WiFi_UnInitPosReq();
     UT_LOG("Invoking wifi_getRadioGuardInterval without previously calling wifi_init() or wifi_initWithConfig()");
-    INT result = wifi_getRadioGuardInterval(radioIndex, output_string);
-
+    result = wifi_getRadioGuardInterval(radioIndex, output_string);
     UT_LOG("Invoking wifi_getRadioGuardInterval without previously calling wifi_init() or wifi_initWithConfig(). Return status is: %d\n", result );
 	WiFi_InitPreReq();
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -3432,12 +3525,13 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth(vo
 
     INT radioIndex = 1;
     CHAR output_string[50];
-
+    INT returnValue;
     // Call the wifi_init or wifi_initWithConfig function before calling the tested API
     UT_LOG("Invoking wifi_getRadioOperatingChannelBandwidth with valid radioIndex and output_string.");
-    INT returnValue = wifi_getRadioOperatingChannelBandwidth(radioIndex, output_string);
+    returnValue = wifi_getRadioOperatingChannelBandwidth(radioIndex, output_string);
 
-    UT_LOG("Return value: %d", returnValue);
+    UT_LOG("Return status: %d", returnValue);
+    UT_LOG("output value: %s", output_string);	
     UT_ASSERT_EQUAL(returnValue, RETURN_OK);
     if( (output_string != NULL) && (check_value(output_string,bandwidth,5) != 1))
 	{
@@ -3472,10 +3566,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingChannelBandwidth(vo
 
     INT radioIndex = 2;   // non-valid index
     CHAR output_string[50];
-
+    INT returnValue;
     // Call the wifi_init or wifi_initWithConfig function before calling the tested API
     UT_LOG("Invoking wifi_getRadioOperatingChannelBandwidth with non-valid radioIndex and valid output_string.");
-    INT returnValue = wifi_getRadioOperatingChannelBandwidth(radioIndex, output_string);
+    returnValue = wifi_getRadioOperatingChannelBandwidth(radioIndex, output_string);
 
     UT_LOG("Return value: %d", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
@@ -3507,8 +3601,9 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioOperatingChannelBandwidth(vo
 
     INT radioIndex = 1;
     CHAR *output_string = NULL;   // NULL buffer
+    INT returnValue;
     UT_LOG("Invoking wifi_getRadioOperatingChannelBandwidth with valid radioIndex and NULL output_string. ");
-    INT returnValue = wifi_getRadioOperatingChannelBandwidth(radioIndex, output_string);
+    returnValue = wifi_getRadioOperatingChannelBandwidth(radioIndex, output_string);
 
     UT_LOG("Return value: %d", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
@@ -3540,10 +3635,12 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingChannelBandwidth(vo
 
     INT radioIndex = 1;
     CHAR output_string[50];
+    INT returnValue;
+	
     WiFi_UnInitPosReq();
     // Do not call the wifi_init or wifi_initWithConfig function before calling the tested API
     UT_LOG("Invoking wifi_getRadioOperatingChannelBandwidth without calling wifi_init or wifi_initWithConfig.");
-    INT returnValue = wifi_getRadioOperatingChannelBandwidth(radioIndex, output_string);
+    returnValue = wifi_getRadioOperatingChannelBandwidth(radioIndex, output_string);
 
     UT_LOG("Return value: %d", returnValue);
 	WiFi_InitPreReq();
@@ -3555,7 +3652,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingChannelBandwidth(vo
 /**
 * @brief Tests the operation of the wifi_getRadioOperatingChannelBandwidth API with invalid index data type.
 *
-* This test verifies the wifi_getRadioOperatingChannelBandwidth function by passing a radioIndex of a different data type. This API is expected to handle unexpected data type gracefully, by returning an error.@n
+* This test verifies the wifi_getRadioOperatingChannelBandwidth function by passing a radioIndex of -ve type. This API is expected to handle unexpected data type gracefully, by returning an error.@n
 *
 * **Test Group ID:** Basic: 01 @n
 * **Test Case ID:** 099 @n
@@ -3568,18 +3665,18 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingChannelBandwidth(vo
 * **Test Procedure:**@n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | :---------: | :----------: | :--------------: | :-----: |
-* | 01 | run wifi_getRadioOperatingChannelBandwidth API with different data type for a radioIndex | radioIndex = 1.0f | RETURN_ERR | Should be Fail |
+* | 01 | run wifi_getRadioOperatingChannelBandwidth API with Invalid radioIndex | radioIndex = -1 | RETURN_ERR | Should be Fail |
 */
 void test_l1_wifi_common_hal_negative4_wifi_getRadioOperatingChannelBandwidth(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioOperatingChannelBandwidth...");
 
-    FLOAT radioIndex = 1.02;  // different data type
+    FLOAT radioIndex = -1;  // different data type
     CHAR output_string[50];
-
+    INT returnValue;
     // Call the wifi_init or wifi_initWithConfig function before calling the tested API
-    UT_LOG("Invoking wifi_getRadioOperatingChannelBandwidth with radioIndex of different data type.");
-    INT returnValue = wifi_getRadioOperatingChannelBandwidth((int)radioIndex, output_string);
+    UT_LOG("Invoking wifi_getRadioOperatingChannelBandwidth with invalid radioIndex ");
+    returnValue = wifi_getRadioOperatingChannelBandwidth(radioIndex, output_string);
 
     UT_LOG("Return value: %d", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
@@ -3612,8 +3709,10 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioExtChannel( void )
 
     INT radioIndex = 1;
     CHAR output_string[100]; // A buffer large enough for returned string
+    INT result;	
+	
     UT_LOG("Invoking wifi_getRadioExtChannel with valid parameters. The radio index is 1 and the output_string is a valid buffer.");
-    INT result = wifi_getRadioExtChannel(radioIndex, output_string);
+    result = wifi_getRadioExtChannel(radioIndex, output_string);
     UT_LOG("The returned string is %s and the return status is %d", output_string, result);
     UT_ASSERT_EQUAL(result, RETURN_OK);
     if((strcmp(output_string,"AboveControlChannel") != 0) && (strcmp(output_string,"BelowControlChannel") != 0) && (strcmp(output_string,"Auto") != 0))
@@ -3645,11 +3744,13 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioExtChannel( void )
 void test_l1_wifi_common_hal_negative1_wifi_getRadioExtChannel( void )
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioExtChannel...");
-
+    
+	INT result;
     INT radioIndex = 0;
     CHAR output_string[100]; 
+	
     UT_LOG("Invoking wifi_getRadioExtChannel with invalid radio index. The output_string is a valid buffer.");
-    INT result = wifi_getRadioExtChannel(radioIndex, output_string);
+    result = wifi_getRadioExtChannel(radioIndex, output_string);
     UT_LOG("The return status is %d", result);
 
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -3681,8 +3782,10 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioExtChannel( void )
 
     INT radioIndex = 2;
     CHAR output_string[100]; 
+    INT result;	
+	
     UT_LOG("Invoking wifi_getRadioExtChannel with invalid radio index. The output_string is a valid buffer.");
-    INT result = wifi_getRadioExtChannel(radioIndex, output_string);
+    result = wifi_getRadioExtChannel(radioIndex, output_string);
     UT_LOG("The return status is %d", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getRadioExtChannel...");
@@ -3712,8 +3815,10 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioExtChannel( void )
 
     INT radioIndex = 1;
     CHAR *output_string = NULL;
+    INT result;
+	
     UT_LOG("Invoking wifi_getRadioExtChannel with null output string.");   
-    INT result = wifi_getRadioExtChannel(radioIndex, output_string);
+    result = wifi_getRadioExtChannel(radioIndex, output_string);
     UT_LOG("The return status is %d", result);
 
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -3745,9 +3850,11 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioExtChannel( void )
 
     INT radioIndex = 1;
     CHAR output_string[100]; 
+    INT result;	
+	
     WiFi_UnInitPosReq();
     UT_LOG("Invoking wifi_getRadioExtChannel before calling wifi_init or wifi_initWithConfig.");
-    INT result = wifi_getRadioExtChannel(radioIndex, output_string);
+    result = wifi_getRadioExtChannel(radioIndex, output_string);
     UT_LOG("The return status is %d", result);
     WiFi_InitPreReq();
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -3779,25 +3886,25 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioMCS( void )
 
     INT radioIndex = 1;
     INT output_INT;
-
+    INT status;
     //wifi_initWithConfig();
     UT_LOG("Invoking wifi_getRadioMCS with valid radioIndex and valid output_INT pointer.");
-    INT status = wifi_getRadioMCS(radioIndex, &output_INT);
+    status = wifi_getRadioMCS(radioIndex, &output_INT);
   
     UT_LOG("return Status: %d, Output Int: %d", status, output_INT);
 
     UT_ASSERT_EQUAL(status, RETURN_OK);
 	if((output_INT >= 0) && (output_INT <= 31))
 	{
-	    UT_LOG("802.11n valid RadioMCS ");
+	    UT_LOG("valid RadioMCS %d ",output_INT);
 	}
 	else if((output_INT >= 0) && (output_INT <= 9))
 	{
-	    UT_LOG("802.11ac valid RadioMCS");
+	    UT_LOG("valid RadioMCS %d ",output_INT);
 	}
 	else if((output_INT >= 1) && (output_INT <= 11))
 	{
-	    UT_LOG("802.11ax valid RadioMCS");
+	    UT_LOG("valid RadioMCS %d ",output_INT);
 	}
     else
 	{
@@ -3833,8 +3940,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioMCS(void)
 
     INT radioIndex = 2;
     INT output_INT;
+    INT status;	
+	
     UT_LOG("Invoking wifi_getRadioMCS with invalid radioIndex and valid output_INT pointer.");
-    INT status = wifi_getRadioMCS(radioIndex, &output_INT);
+    status = wifi_getRadioMCS(radioIndex, &output_INT);
 
     UT_LOG("Retrun Status: %d", status);
 
@@ -3866,8 +3975,10 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioMCS( void )
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioMCS...");
 
     INT radioIndex = 1;
+    INT status;	
+	
     UT_LOG("Invoking wifi_getRadioMCS with valid radioIndex and NULL output_INT pointer.");
-    INT status = wifi_getRadioMCS(radioIndex, NULL);
+    status = wifi_getRadioMCS(radioIndex, NULL);
     
     UT_LOG("Retrun Status: %d", status);
 
@@ -3901,9 +4012,11 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioMCS( void )
 
     INT radioIndex = 1;
     INT output_INT;
+    INT status;	
+	
     WiFi_UnInitPosReq();
     UT_LOG("Invoking wifi_getRadioMCS without calling wifi_init or wifi_initWithConfig. ");
-    INT status = wifi_getRadioMCS(radioIndex, &output_INT);
+    status = wifi_getRadioMCS(radioIndex, &output_INT);
  
     UT_LOG("Return Status: %d", status);
     WiFi_InitPreReq(); 
@@ -3936,8 +4049,10 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPowerSupported( void
 
     INT radioIndex = 1;
     CHAR output_list[50];
+    int return_status;	
+	
     UT_LOG("Invoking wifi_getRadioTransmitPowerSupported with valid radioIndex 1");    
-    int return_status = wifi_getRadioTransmitPowerSupported(radioIndex, output_list);
+    return_status = wifi_getRadioTransmitPowerSupported(radioIndex, output_list);
 
     UT_LOG("return status: %d, output_list: %s", return_status, output_list);
     UT_ASSERT_EQUAL(return_status, RETURN_OK);
@@ -3969,8 +4084,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPowerSupported( void
 
     INT radioIndex = 0;
     CHAR output_list[50];
+    int return_status;	
+	
     UT_LOG("Invoking wifi_getRadioTransmitPowerSupported with invalid radioIndex 0");
-    int return_status = wifi_getRadioTransmitPowerSupported(radioIndex, output_list);
+    return_status = wifi_getRadioTransmitPowerSupported(radioIndex, output_list);
     
     UT_LOG("return status: %d", return_status);
     UT_ASSERT_EQUAL(return_status, RETURN_ERR);
@@ -4002,8 +4119,10 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioTransmitPowerSupported( void
 
     INT radioIndex = 2;
     CHAR output_list[50];
+    int return_status;	
+	
     UT_LOG("Invoking wifi_getRadioTransmitPowerSupported with invalid radioIndex 2");
-    int return_status = wifi_getRadioTransmitPowerSupported(radioIndex, output_list);
+    return_status = wifi_getRadioTransmitPowerSupported(radioIndex, output_list);
     
     UT_LOG("return status: %d", return_status);
     UT_ASSERT_EQUAL(return_status, RETURN_ERR);
@@ -4035,8 +4154,10 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioTransmitPowerSupported( void
 
     INT radioIndex = 1;
     CHAR *output_list = NULL;
-     UT_LOG("Invoking wifi_getRadioTransmitPowerSupported with valid radioIndex 1 and NULL 'output_list' buffer.");   
-    int return_status = wifi_getRadioTransmitPowerSupported(radioIndex, output_list);
+    int return_status;	
+	
+    UT_LOG("Invoking wifi_getRadioTransmitPowerSupported with valid radioIndex 1 and NULL 'output_list' buffer.");   
+    return_status = wifi_getRadioTransmitPowerSupported(radioIndex, output_list);
     
     UT_LOG("return status: %d", return_status);
     UT_ASSERT_EQUAL(return_status, RETURN_ERR);
@@ -4069,10 +4190,12 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPowerSupported( void
 
     INT radioIndex = 1;
     CHAR output_list[50];
+    int return_status;	
+	
 	WiFi_UnInitPosReq();
 	//wifi_uninit()
     UT_LOG("Invoking wifi_getRadioTransmitPowerSupported before wifi_init() or wifi_initWithConfig()");    
-    int return_status = wifi_getRadioTransmitPowerSupported(radioIndex, output_list);
+    return_status = wifi_getRadioTransmitPowerSupported(radioIndex, output_list);
 
     UT_LOG("return status: %d, output_list: %s", return_status, output_list);
 	WiFi_InitPreReq();
@@ -4105,12 +4228,14 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower( void )
 
     INT radioIndex = 1;
     INT output_INT = 50;
+    INT ret;	
+	
     UT_LOG("Invoking wifi_getRadioTransmitPower with valid radioIndex and initialized output_INT. ");
-    INT ret = wifi_getRadioTransmitPower(radioIndex, &output_INT);
+    ret = wifi_getRadioTransmitPower(radioIndex, &output_INT);
     UT_LOG("Return status: %d", ret);
 
     UT_ASSERT_EQUAL(ret, RETURN_OK);
-	if((output_INT < -1) && (output_INT > 100))
+	if((output_INT < -1) || (output_INT > 100))
 	{
 	    UT_LOG("failed due to invalid TransmitPower : %d",output_INT);
         UT_FAIL("failed due to invalid TransmitPower");			
@@ -4143,13 +4268,13 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower( void )
 
     INT radioIndex = 2;
     INT *output_INT = (INT *) malloc(sizeof(INT));
+    INT ret;	
+	
     UT_LOG("Invoking wifi_getRadioTransmitPower with invalid radioIndex.");
-    INT ret = wifi_getRadioTransmitPower(radioIndex, output_INT);
+    ret = wifi_getRadioTransmitPower(radioIndex, output_INT);
     UT_LOG("Return status: %d", ret);
-
-    UT_ASSERT_EQUAL(ret, RETURN_ERR);
-
     free(output_INT);
+    UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower...");
 }
@@ -4178,8 +4303,10 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioTransmitPower( void )
 
     INT radioIndex = 1;
     INT *output_INT = NULL;
+    INT ret;	
+	
     UT_LOG("Invoking wifi_getRadioTransmitPower with NULL output_INT.");
-    INT ret = wifi_getRadioTransmitPower(radioIndex, output_INT);
+    ret = wifi_getRadioTransmitPower(radioIndex, output_INT);
     UT_LOG("Return status: %d", ret);
 
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
@@ -4211,10 +4338,12 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioTransmitPower( void )
 
     INT radioIndex = 1;
     INT output_INT = 50;
+    INT ret;	
+	
 	//wifi_uninit()
     WiFi_UnInitPosReq();	
     UT_LOG("Invoking wifi_getRadioTransmitPower before wifi_init() or wifi_initWithConfig() ");
-    INT ret = wifi_getRadioTransmitPower(radioIndex, &output_INT);
+    ret = wifi_getRadioTransmitPower(radioIndex, &output_INT);
     UT_LOG("Return status: %d", ret);
     WiFi_InitPreReq();
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
@@ -4243,11 +4372,12 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower( void )
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower...");
 
     INT radioIndex = 1;
-    INT *output_INT = 0;
+    INT *output_INT;
+    INT ret;
 	//wifi_uninit()
 	
     UT_LOG("Invoking wifi_getRadioTransmitPower with uninitialized output_INT pointer ");
-    INT ret = wifi_getRadioTransmitPower(radioIndex, output_INT);
+    ret = wifi_getRadioTransmitPower(radioIndex, output_INT);
     UT_LOG("Return status: %d", ret);
 
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
@@ -4285,7 +4415,7 @@ void test_l1_wifi_common_hal_positive_1_wifi_getRadioIEEE80211hSupported(void)
     //wifi_init(); // Precondition   
     UT_LOG("Invoked wifi_getRadioIEEE80211hSupported with radioIndex = 1 and valid supported pointer.");
     returnValue = wifi_getRadioIEEE80211hSupported(radioIndex, &supported);
-    UT_LOG("Returned status : %d", returnValue);
+    UT_LOG("Returned status : %d  Returned value : %c", returnValue,supported);
     UT_ASSERT_EQUAL(returnValue, RETURN_OK);
     if((supported != '0') && (supported != '1'))
 	{
@@ -4321,7 +4451,6 @@ void test_l1_wifi_common_hal_negative_1_wifi_getRadioIEEE80211hSupported(void)
    BOOL supported;
    INT returnValue;
 
-   wifi_init();  // Precondition
    UT_LOG("Invoked wifi_getRadioIEEE80211hSupported with invalid radioIndex = 0.");
    returnValue = wifi_getRadioIEEE80211hSupported(radioIndex, &supported);
    UT_LOG("Returned status : %d", returnValue);
@@ -4422,18 +4551,20 @@ void test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported(void)
 */
 void test_l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled(void)
 {
-  BOOL enable;
-//  INT initStatus = wifi_init();
-  INT radioIndex = 1;
   UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled...");
+  BOOL enable;
+  INT radioIndex = 1;
+  INT result;  
+  
+
   UT_LOG("Invoking wifi_getRadioIEEE80211hEnabled with valid index.");
-  INT result = wifi_getRadioIEEE80211hEnabled(radioIndex, &enable);
+  result = wifi_getRadioIEEE80211hEnabled(radioIndex, &enable);
   UT_LOG("return status: %d, enable: %c ", result, enable);
   UT_ASSERT_EQUAL(result, RETURN_OK);
     if((enable != '0') && (enable != '1'))
 	{
-	    UT_LOG("failed due to invalid output : %c",enable);
-        UT_FAIL("failed due to invalid output");		
+	    UT_LOG("failed due to invalid RadioIEEE80211hEnabled value : %c",enable);
+        UT_FAIL("failed due to invalid RadioIEEE80211hEnabled value");		
 	}
   UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled...");
 }
@@ -4458,12 +4589,14 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled(void)
 */ 
 void test_l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled(void)
 {
+  UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled...");
   BOOL enable;
   INT radioIndex = 1;
+  INT result; 
+  
   WiFi_UnInitPosReq();
-  UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled...");
   UT_LOG("Invoking wifi_getRadioIEEE80211hEnabled without initialization.");
-  INT result = wifi_getRadioIEEE80211hEnabled(radioIndex, &enable);
+  result = wifi_getRadioIEEE80211hEnabled(radioIndex, &enable);
   UT_LOG("return status: %d",result);
   WiFi_InitPreReq();
   UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -4491,11 +4624,12 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled(void)
 */
 void test_l1_wifi_common_hal_negative2_wifi_getRadioIEEE80211hEnabled(void)
 {
-//    INT initStatus = wifi_init();
+    UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioIEEE80211hEnabled...");
     INT radioIndex = 1;
-    UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioIEEE80211hEnabled...", "");
+    INT result;
+	
     UT_LOG("Invoking wifi_getRadioIEEE80211hEnabled with NULL parameter.");
-    INT result = wifi_getRadioIEEE80211hEnabled(radioIndex, NULL);
+    result = wifi_getRadioIEEE80211hEnabled(radioIndex, NULL);
     UT_LOG("Return status: %d", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getRadioIEEE80211hEnabled...", "");
@@ -4521,12 +4655,13 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioIEEE80211hEnabled(void)
 */
 void test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hEnabled(void)
 {
-//  INT initStatus = wifi_init();
+  UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hEnabled...");
   BOOL enable;
   INT radioIndex = 2;
-  UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hEnabled...");
+  INT result;  
+  
   UT_LOG("Invoked wifi_getRadioIEEE80211hEnabled with invalid index.");
-  INT result = wifi_getRadioIEEE80211hEnabled(radioIndex, &enable);
+  result = wifi_getRadioIEEE80211hEnabled(radioIndex, &enable);
   UT_LOG("Return  status: %d", result);
   UT_ASSERT_EQUAL(result, RETURN_ERR);
   UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hEnabled...", "");
@@ -4554,13 +4689,16 @@ void test_l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain...\n");
     INT radioIndex = 1;
     CHAR output_string[50];
+    INT status;	
+	
     UT_LOG("Invoking wifi_getRegulatoryDomain with valid parameters.");
-    INT status = wifi_getRegulatoryDomain(radioIndex, output_string);
+    status = wifi_getRegulatoryDomain(radioIndex, output_string);
     UT_LOG("Return status: %d \n", status);
+    UT_LOG("Return value: %s \n", output_string);	
     UT_ASSERT_EQUAL(status, RETURN_OK); 
 	if((output_string[2] != ' ') && (output_string[2] != 'O') && (output_string[2] != 'I'))
 	{
-	    UT_LOG("Invalid 3rd octet");
+	    UT_LOG("Invalid 3rd octet : %c ",output_string[2]);
         UT_FAIL("Invalid 3rd octet");
 	}
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain...\n");
@@ -4589,8 +4727,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getRegulatoryDomain(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRegulatoryDomain...\n");
     INT radioIndex = -1;
     CHAR output_string[50];
+    INT status;	
+	
     UT_LOG("Invoking wifi_getRegulatoryDomain with negative radioIndex.");
-    INT status = wifi_getRegulatoryDomain(radioIndex, output_string);
+    status = wifi_getRegulatoryDomain(radioIndex, output_string);
     UT_LOG("Return status: %d\n", status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative1_wifi_getRegulatoryDomain...\n");
@@ -4618,8 +4758,10 @@ void test_l1_wifi_common_hal_negative2_wifi_getRegulatoryDomain(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRegulatoryDomain...\n");
     INT radioIndex = 0;
     CHAR output_string[50];
+    INT status;	
+	
     UT_LOG("Invoking wifi_getRegulatoryDomain with radioIndex as 0");
-    INT status = wifi_getRegulatoryDomain(radioIndex, output_string);
+    status = wifi_getRegulatoryDomain(radioIndex, output_string);
     UT_LOG("Return status: %d\n", status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getRegulatoryDomain...\n");
@@ -4649,8 +4791,10 @@ void test_l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain(void) {
 	UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain...\n");
 	INT radioIndex = 2;
 	CHAR output_string[50];
+	INT status;	
+	
 	UT_LOG("Invoking wifi_getRegulatoryDomain with radioIndex greater than 1. ");
-	INT status = wifi_getRegulatoryDomain(radioIndex, output_string);
+	status = wifi_getRegulatoryDomain(radioIndex, output_string);
 	UT_LOG("Return status: %d\n", status);
 	UT_ASSERT_EQUAL(status, RETURN_ERR);
 	UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain...\n");
@@ -4678,9 +4822,11 @@ void test_l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain(void) {
 void test_l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain...\n");
     INT radioIndex = 1;
-    CHAR *output_string = {"\0"};
+    CHAR *output_string;
+    INT status;
+	
     UT_LOG("Invoking wifi_getRegulatoryDomain with uninitialized output_string.");
-    INT status = wifi_getRegulatoryDomain(radioIndex, output_string);
+    status = wifi_getRegulatoryDomain(radioIndex, output_string);
     UT_LOG("Return status: %d\n", status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain...\n");
@@ -4710,8 +4856,10 @@ void test_l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain...\n");
     INT radioIndex = 1;
     CHAR *output_string = NULL;
+    INT status;	
+	
     UT_LOG("Invoking wifi_getRegulatoryDomain with NULL output_string.");
-    INT status = wifi_getRegulatoryDomain(radioIndex, output_string);
+    status = wifi_getRegulatoryDomain(radioIndex, output_string);
     UT_LOG("Return status: %d\n", status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain...\n");
@@ -4738,12 +4886,13 @@ void test_l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain(void) {
 */
 void test_l1_wifi_common_hal_negative6_wifi_getRegulatoryDomain(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_negative6_wifi_getRegulatoryDomain...\n");
-    INT radioIndex = 0;
+    INT radioIndex = 1;
     CHAR output_string[50];
+    INT status;
+	
 	WiFi_UnInitPosReq();
-    // Skipping wifi_init or wifi_initWithConfig function 
     UT_LOG("Invoking wifi_getRegulatoryDomain before wifi_init or wifi_initWithConfig function.");
-    INT status = wifi_getRegulatoryDomain(radioIndex, output_string);
+    status = wifi_getRegulatoryDomain(radioIndex, output_string);
     UT_LOG("Return status: %d\n", status);
 	WiFi_InitPreReq();
     UT_ASSERT_EQUAL(status, RETURN_ERR);
@@ -4772,124 +4921,124 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats...");
     INT radioIndex = 1;
     wifi_radioTrafficStats_t output_struct;
-
+    INT status;
  
     UT_LOG("Invoking wifi_getRadioTrafficStats with valid radio index and valid output struct buffer.");
-    INT status = wifi_getRadioTrafficStats(radioIndex, &output_struct);
+    status = wifi_getRadioTrafficStats(radioIndex, &output_struct);
 
     UT_LOG("Return status: %d", status);
 
     UT_ASSERT_EQUAL(status, RETURN_OK);
-    if((output_struct.radio_BytesSent < 0) && (output_struct.radio_BytesSent > 18446744073709551615))
+    if((output_struct.radio_BytesSent < 0) || (output_struct.radio_BytesSent > 18446744073709551615))
 	{
-	    UT_LOG("Invalid RadioTrafficStats");
+	    UT_LOG("Invalid RadioTrafficStats: %lu ",output_struct.radio_BytesSent);
         UT_FAIL("Invalid RadioTrafficStats");
 	}
-    if((output_struct.radio_BytesReceived < 0) && (output_struct.radio_BytesReceived > 18446744073709551615))
+    if((output_struct.radio_BytesReceived < 0) || (output_struct.radio_BytesReceived > 18446744073709551615))
 	{
-	    UT_LOG("Invalid radio_BytesReceived");
+	    UT_LOG("Invalid radio_BytesReceived : %lu ",output_struct.radio_BytesReceived);
         UT_FAIL("Invalid radio_BytesReceived");
 	}
-    if((output_struct.radio_PacketsSent < 0) && (output_struct.radio_PacketsSent > 18446744073709551615))
+    if((output_struct.radio_PacketsSent < 0) || (output_struct.radio_PacketsSent > 18446744073709551615))
 	{
-	    UT_LOG("Invalid radio_PacketsSent");
+	    UT_LOG("Invalid radio_PacketsSent : %lu ",output_struct.radio_PacketsSent);
         UT_FAIL("Invalid radio_PacketsSent");
 	}
-    if((output_struct.radio_PacketsReceived < 0) && (output_struct.radio_PacketsReceived > 18446744073709551615))
+    if((output_struct.radio_PacketsReceived < 0) || (output_struct.radio_PacketsReceived > 18446744073709551615))
 	{
-	    UT_LOG("Invalid radio_PacketsReceived");
+	    UT_LOG("Invalid radio_PacketsReceived : %lu ",output_struct.radio_PacketsReceived);
         UT_FAIL("Invalid radio_PacketsReceived");
 	}
-    if((output_struct.radio_ErrorsSent < 0) && (output_struct.radio_ErrorsSent > 4294967295))
+    if((output_struct.radio_ErrorsSent < 0) || (output_struct.radio_ErrorsSent > 4294967295))
 	{
-	    UT_LOG("Invalid radio_ErrorsSent");
+	    UT_LOG("Invalid radio_ErrorsSent : %lu ",output_struct.radio_ErrorsSent);
         UT_FAIL("Invalid radio_ErrorsSent");
 	}
-    if((output_struct.radio_ErrorsReceived < 0) && (output_struct.radio_ErrorsReceived > 4294967295))
+    if((output_struct.radio_ErrorsReceived < 0) || (output_struct.radio_ErrorsReceived > 4294967295))
 	{
-	    UT_LOG("Invalid radio_ErrorsReceived");
+	    UT_LOG("Invalid radio_ErrorsReceived : %lu",output_struct.radio_ErrorsReceived);
         UT_FAIL("Invalid radio_ErrorsReceived");
 	}
-    if((output_struct.radio_DiscardPacketsSent < 0) && (output_struct.radio_DiscardPacketsSent > 4294967295))
+    if((output_struct.radio_DiscardPacketsSent < 0) || (output_struct.radio_DiscardPacketsSent > 4294967295))
 	{
-	    UT_LOG("Invalid radio_DiscardPacketsSent");
+	    UT_LOG("Invalid radio_DiscardPacketsSent : %lu",output_struct.radio_DiscardPacketsSent);
         UT_FAIL("Invalid radio_DiscardPacketsSent");
 	}
-    if((output_struct.radio_DiscardPacketsReceived < 0) && (output_struct.radio_DiscardPacketsReceived > 4294967295))
+    if((output_struct.radio_DiscardPacketsReceived < 0) || (output_struct.radio_DiscardPacketsReceived > 4294967295))
 	{
-	    UT_LOG("Invalid radio_DiscardPacketsReceived");
+	    UT_LOG("Invalid radio_DiscardPacketsReceived : %lu",output_struct.radio_DiscardPacketsReceived);
         UT_FAIL("Invalid radio_DiscardPacketsReceived");
 	}
-    if((output_struct.radio_PLCPErrorCount < 0) && (output_struct.radio_PLCPErrorCount > 4294967295))
+    if((output_struct.radio_PLCPErrorCount < 0) || (output_struct.radio_PLCPErrorCount > 4294967295))
 	{
-	    UT_LOG("Invalid radio_PLCPErrorCount");
+	    UT_LOG("Invalid radio_PLCPErrorCount : %lu",output_struct.radio_PLCPErrorCount);
         UT_FAIL("Invalid radio_PLCPErrorCount");
 	}
-    if((output_struct.radio_FCSErrorCount < 0) && (output_struct.radio_FCSErrorCount > 4294967295))
+    if((output_struct.radio_FCSErrorCount < 0) || (output_struct.radio_FCSErrorCount > 4294967295))
 	{
-	    UT_LOG("Invalid radio_FCSErrorCount");
+	    UT_LOG("Invalid radio_FCSErrorCount : %lu",output_struct.radio_FCSErrorCount);
         UT_FAIL("Invalid radio_FCSErrorCount");
 	}
-    if((output_struct.radio_InvalidMACCount < 0) && (output_struct.radio_InvalidMACCount > 4294967295))
+    if((output_struct.radio_InvalidMACCount < 0) || (output_struct.radio_InvalidMACCount > 4294967295))
 	{
-	    UT_LOG("Invalid radio_InvalidMACCount");
+	    UT_LOG("Invalid radio_InvalidMACCount :%lu",output_struct.radio_InvalidMACCount);
         UT_FAIL("Invalid radio_InvalidMACCount");
 	}
-    if((output_struct.radio_PacketsOtherReceived < 0) && (output_struct.radio_PacketsOtherReceived > 4294967295))
+    if((output_struct.radio_PacketsOtherReceived < 0) || (output_struct.radio_PacketsOtherReceived > 4294967295))
 	{
-	    UT_LOG("Invalid radio_PacketsOtherReceived");
+	    UT_LOG("Invalid radio_PacketsOtherReceived :%lu ",output_struct.radio_PacketsOtherReceived);
         UT_FAIL("Invalid radio_PacketsOtherReceived");
 	}
 	
-    if((output_struct.radio_NoiseFloor < -110) && (output_struct.radio_NoiseFloor > 0))
+    if((output_struct.radio_NoiseFloor < -110) || (output_struct.radio_NoiseFloor > 0))
 	{
-	    UT_LOG("Invalid radio_NoiseFloor");
+	    UT_LOG("Invalid radio_NoiseFloor : %d",output_struct.radio_NoiseFloor);
         UT_FAIL("Invalid radio_NoiseFloor");
 	}
 
 
-    if((output_struct.radio_ChannelUtilization < 0) && (output_struct.radio_ChannelUtilization > 100))
+    if((output_struct.radio_ChannelUtilization < 0) || (output_struct.radio_ChannelUtilization > 100))
 	{
-	    UT_LOG("Invalid radio_ChannelUtilization");
+	    UT_LOG("Invalid radio_ChannelUtilization : %lu",output_struct.radio_ChannelUtilization);
         UT_FAIL("Invalid radio_ChannelUtilization");
 	}
 	
-    if((output_struct.radio_ActivityFactor < 0) && (output_struct.radio_ActivityFactor > 100))
+    if((output_struct.radio_ActivityFactor < 0) || (output_struct.radio_ActivityFactor > 100))
 	{
-	    UT_LOG("Invalid radio_ActivityFactor");
+	    UT_LOG("Invalid radio_ActivityFactor : %d",output_struct.radio_ActivityFactor);
         UT_FAIL("Invalid radio_ActivityFactor");
 	}
 
-    if((output_struct.radio_CarrierSenseThreshold_Exceeded < 0) && (output_struct.radio_CarrierSenseThreshold_Exceeded > 100))
+    if((output_struct.radio_CarrierSenseThreshold_Exceeded < 0) || (output_struct.radio_CarrierSenseThreshold_Exceeded > 100))
 	{
-	    UT_LOG("Invalid radio_CarrierSenseThreshold_Exceeded");
+	    UT_LOG("Invalid radio_CarrierSenseThreshold_Exceeded :%d",output_struct.radio_CarrierSenseThreshold_Exceeded);
         UT_FAIL("Invalid radio_CarrierSenseThreshold_Exceeded");
 	}	
 
-    if((output_struct.radio_RetransmissionMetirc < 0) && (output_struct.radio_RetransmissionMetirc > 100))
+    if((output_struct.radio_RetransmissionMetirc < 0) || (output_struct.radio_RetransmissionMetirc > 100))
 	{
-	    UT_LOG("Invalid radio_RetransmissionMetirc");
+	    UT_LOG("Invalid radio_RetransmissionMetirc : %d",output_struct.radio_RetransmissionMetirc);
         UT_FAIL("Invalid radio_RetransmissionMetirc");
 	}
 
-    if((output_struct.radio_MaximumNoiseFloorOnChannel < -200) && (output_struct.radio_MaximumNoiseFloorOnChannel > 0))
+    if((output_struct.radio_MaximumNoiseFloorOnChannel < -200) || (output_struct.radio_MaximumNoiseFloorOnChannel > 0))
 	{
-	    UT_LOG("Invalid radio_MaximumNoiseFloorOnChannel");
+	    UT_LOG("Invalid radio_MaximumNoiseFloorOnChannel : %d ",output_struct.radio_MaximumNoiseFloorOnChannel);
         UT_FAIL("Invalid radio_MaximumNoiseFloorOnChannel");
 	}
-    if((output_struct.radio_MinimumNoiseFloorOnChannel < -200) && (output_struct.radio_MinimumNoiseFloorOnChannel > 0))
+    if((output_struct.radio_MinimumNoiseFloorOnChannel < -200) || (output_struct.radio_MinimumNoiseFloorOnChannel > 0))
 	{
-	    UT_LOG("Invalid radio_MinimumNoiseFloorOnChannel");
+	    UT_LOG("Invalid radio_MinimumNoiseFloorOnChannel : %d",output_struct.radio_MinimumNoiseFloorOnChannel);
         UT_FAIL("Invalid radio_MinimumNoiseFloorOnChannel");
 	}
-    if((output_struct.radio_MedianNoiseFloorOnChannel < -200) && (output_struct.radio_MedianNoiseFloorOnChannel > 0))
+    if((output_struct.radio_MedianNoiseFloorOnChannel < -200) || (output_struct.radio_MedianNoiseFloorOnChannel > 0))
 	{
-	    UT_LOG("Invalid radio_MedianNoiseFloorOnChannel");
+	    UT_LOG("Invalid radio_MedianNoiseFloorOnChannel : %d ",output_struct.radio_MedianNoiseFloorOnChannel);
         UT_FAIL("Invalid radio_MedianNoiseFloorOnChannel");
 	}
-    if((output_struct.radio_StatisticsStartTime < 0) && (output_struct.radio_StatisticsStartTime > 18446744073709551615))
+    if((output_struct.radio_StatisticsStartTime < 0) || (output_struct.radio_StatisticsStartTime > 18446744073709551615))
 	{
-	    UT_LOG("Invalid radio_StatisticsStartTime");
+	    UT_LOG("Invalid radio_StatisticsStartTime : %lu",output_struct.radio_StatisticsStartTime);
         UT_FAIL("Invalid radio_StatisticsStartTime");
 	}
 
@@ -4915,12 +5064,13 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats(void) {
  * | 01 | Invoke wifi_getRadioTrafficStats with invalid radio index and valid output struct buffer | radio index = 2, output struct = valid pointer | RETURN_ERR | Should fail|
  */
 void test_l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats(void) {
+    UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats...");	
     INT radioIndex = 0;
-    UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats...");
-
+    INT status;
     wifi_radioTrafficStats_t output_struct;
+	
     UT_LOG("Invoked wifi_getRadioTrafficStats with invalid radio index and valid output struct buffer.");    
-    INT status = wifi_getRadioTrafficStats(radioIndex, &output_struct);
+    status = wifi_getRadioTrafficStats(radioIndex, &output_struct);
 
     UT_LOG("Return status: %d", status);
 
@@ -4948,10 +5098,12 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats(void) {
 * | 01 | Invoke wifi_getRadioTrafficStats with valid radio index and NULL output struct buffer | radio index = 1, output struct buffer = NULL | RETURN_ERR | Should fail |
 */
 void test_l1_wifi_common_hal_negative2_wifi_getRadioTrafficStats(void) {
-    INT radioIndex = 1;	
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioTrafficStats...");
+    INT radioIndex = 1;	
+    INT status;
+	
     UT_LOG("Invoked wifi_getRadioTrafficStats with valid radio index and NULL output struct buffer.");
-    INT status = wifi_getRadioTrafficStats(radioIndex, NULL);
+    status = wifi_getRadioTrafficStats(radioIndex, NULL);
 
     UT_LOG("Return status: %d", status);
 
@@ -4979,15 +5131,14 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioTrafficStats(void) {
  * | 01 | Invoke wifi_getRadioTrafficStats without executing wifi_init() or wifi_initWithConfig() | radioIndex = 1, output_struct = valid buffer | RETURN_ERR | Should fail |
  */
 void test_l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats(void) {
-    INT radioIndex = 1;	
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats...");
-
+    INT radioIndex = 1;	
+    INT status;
     wifi_radioTrafficStats_t output_struct;
+	
     WiFi_UnInitPosReq();
-    // Assuming wifi_init() or wifi_initWithConfig() function has not been executed previously 
     UT_LOG("Invoked wifi_getRadioTrafficStats without executing wifi_init()");
-    INT status = wifi_getRadioTrafficStats(radioIndex, &output_struct);
-
+    status = wifi_getRadioTrafficStats(radioIndex, &output_struct);
     UT_LOG("Return status: %d", status);
     WiFi_InitPreReq();
     UT_ASSERT_EQUAL(status, RETURN_ERR);
@@ -5014,13 +5165,15 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats(void) {
 * | :----: | --------- | ---------- |-------------- | ----- |
 * | 01 | Invoking wifi_getSSIDName with valid radioIndex and buffer | radioIndex = 1, output_string = valid buffer | RETURN_OK | Should be successful |
 */
-void test_l1_wifi_common_hal_positive1_wifi_getSSIDName(void) {
-    INT radioIndex = 1;	
+void test_l1_wifi_common_hal_positive1_wifi_getSSIDName(void) {	
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getSSIDName...\n");
-    
+	
+    INT ssidIndex = 1;   
     CHAR output_string[50];
+    INT ret_val;
+	
     UT_LOG("Invoking wifi_getSSIDName with ssidIndex: 1.");
-    INT ret_val = wifi_getSSIDName(radioIndex, output_string);
+    ret_val = wifi_getSSIDName(ssidIndex, output_string);
 	UT_LOG("Returned status : %d", ret_val);    
     UT_ASSERT_EQUAL(ret_val, RETURN_OK);
     
@@ -5047,12 +5200,13 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDName(void) {
 * | 01 | Invoke the API wifi_getSSIDName with ssidIndex = 2 | ssidIndex = 2, output_string = valid buffer | RETURN_ERR | Should fail |
 */
 void test_l1_wifi_common_hal_negative1_wifi_getSSIDName(void) {
-	INT radioIndex = 2;
-    UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getSSIDName...\n");
-    
+    UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getSSIDName...\n");	
+	INT ssidIndex = 2;
     CHAR output_string[50];
+    INT ret_val;    
+
     UT_LOG("Invoking wifi_getSSIDName with ssidIndex: 2. Checking for error return status.\n");
-    INT ret_val = wifi_getSSIDName(radioIndex, output_string);
+    ret_val = wifi_getSSIDName(ssidIndex, output_string);
 	UT_LOG("Returned status : %d", ret_val);
     UT_ASSERT_EQUAL(ret_val, RETURN_ERR);
     
@@ -5079,11 +5233,12 @@ void test_l1_wifi_common_hal_negative1_wifi_getSSIDName(void) {
 * | 01               | Invoke wifi_getSSIDName   | ssidIndex = 1, output_string: NULL  | RETURN_ERR     | Should fail |
 */
 void test_l1_wifi_common_hal_negative2_wifi_getSSIDName(void) {
-	INT radioIndex = 1;
-    UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getSSIDName...\n");
+    UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getSSIDName...\n");	
+	INT ssidIndex = 1;
+    INT ret_val;
+	
     UT_LOG("Invoking wifi_getSSIDName with a NULL output_string. Checking for error return status.\n");  
-    INT ret_val = wifi_getSSIDName(radioIndex, NULL);
-    
+    ret_val = wifi_getSSIDName(ssidIndex, NULL);    
 	UT_LOG("Returned status : %d", ret_val);
     UT_ASSERT_EQUAL(ret_val, RETURN_ERR);
     
@@ -5112,12 +5267,13 @@ void test_l1_wifi_common_hal_negative3_wifi_getSSIDName(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getSSIDName...\n");
     
     //Omitted wifi_init() call
-    
+    INT ssidIndex = 1;    
     CHAR output_string[50];
+    INT ret_val;
 	
     WiFi_UnInitPosReq();
     UT_LOG("Invoking wifi_getSSIDName without wifi_init(). Checking for error return status.\n");
-    INT ret_val = wifi_getSSIDName(1, output_string);
+    ret_val = wifi_getSSIDName(ssidIndex, output_string);
     
 	UT_LOG("Returned status : %d", ret_val);
 	WiFi_InitPreReq();
@@ -5146,10 +5302,12 @@ void test_l1_wifi_common_hal_negative3_wifi_getSSIDName(void) {
 */
 void test_l1_wifi_common_hal_boundary1_wifi_getSSIDName(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_boundary1_wifi_getSSIDName...\n");
-	INT radioIndex = 1;
+	INT ssidIndex = 1;
     CHAR output_string[513];
+    INT ret_val;	
+	
     UT_LOG("Invoking wifi_getSSIDName with output_string of size greater than longest possible SSID. Checking for valid return status.\n");
-    INT ret_val = wifi_getSSIDName(radioIndex, output_string);
+    ret_val = wifi_getSSIDName(ssidIndex, output_string);
 
 	UT_LOG("Returned status : %d", ret_val);
     UT_ASSERT_EQUAL(ret_val, RETURN_OK);
@@ -5180,18 +5338,14 @@ void test_l1_wifi_common_hal_positive1_wifi_getBaseBSSID( void )
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getBaseBSSID...");
 
     INT ssidIndex = 1;
-    CHAR* output_string = (char*)malloc(50);
+    CHAR output_string[50];
     INT status;
     UT_LOG("Invoking wifi_getBaseBSSID with ssidIndex = 1 and a valid output_string buffer.");
-    //wifi_initWithConfig();
+
     status = wifi_getBaseBSSID(ssidIndex, output_string);
-
     UT_LOG("Return status = %d , ssidIndex = %d", status , ssidIndex);
-
     UT_ASSERT_EQUAL(status, RETURN_OK);
-
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getBaseBSSID...");
-    free(output_string);
 }    
 
 /**
@@ -5217,18 +5371,14 @@ void test_l1_wifi_common_hal_negative1_wifi_getBaseBSSID(void)
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getBaseBSSID...");
 
     INT ssidIndex = 2;
-    CHAR* output_string = (char*)malloc(50);
+    CHAR output_string[50];
     INT status;
     UT_LOG("Invoking wifi_getBaseBSSID with invalid ssidIndex = 2 and a valid output_string buffer. ");
-    //wifi_initWithConfig();
-    status = wifi_getBaseBSSID(ssidIndex, output_string);
-  
-    UT_LOG("ssidIndex = %d and Return status = %d", ssidIndex, status);
-  
-    UT_ASSERT_EQUAL(status, RETURN_ERR);
 
+    status = wifi_getBaseBSSID(ssidIndex, output_string);  
+    UT_LOG("ssidIndex = %d and Return status = %d", ssidIndex, status); 
+    UT_ASSERT_EQUAL(status, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative1_wifi_getBaseBSSID...");
-    free(output_string);
 }
 
 /**
@@ -5259,14 +5409,10 @@ void test_l1_wifi_common_hal_negative2_wifi_getBaseBSSID(void)
     CHAR* output_string = NULL;
     INT status;
  
-    //wifi_initWithConfig();
     UT_LOG("Invoking wifi_getBaseBSSID with ssidIndex = 1 and a NULL output_string buffer.");
-    status = wifi_getBaseBSSID(ssidIndex, output_string);
-  
-    UT_LOG("ssidIndex = %d and Return status = %d", ssidIndex, status);
-  
+    status = wifi_getBaseBSSID(ssidIndex, output_string);  
+    UT_LOG("ssidIndex = %d and Return status = %d", ssidIndex, status);  
     UT_ASSERT_EQUAL(status, RETURN_ERR);
-
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getBaseBSSID...");
 }
 
@@ -5293,19 +5439,17 @@ void test_l1_wifi_common_hal_negative3_wifi_getBaseBSSID(void)
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getBaseBSSID...");
 
     INT ssidIndex = 1;
-    CHAR* output_string = (char*)malloc(50);
+    CHAR output_string[50];
     INT status;
 	
 	WiFi_UnInitPosReq();
     UT_LOG("Invoking wifi_getBaseBSSID with ssidIndex = 1 and a valid output_string buffer without wifi initialization.");   
-    status = wifi_getBaseBSSID(ssidIndex, output_string);
-  
+    status = wifi_getBaseBSSID(ssidIndex, output_string);  
     UT_LOG("Return status = %d", status);
     WiFi_InitPreReq();
     UT_ASSERT_EQUAL(status, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getBaseBSSID...");
-    free(output_string);
 }
 
 /**
@@ -5332,14 +5476,13 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDMACAddress( void )
 
     INT ssidIndex = 1;
     CHAR output_string[20];
+    INT result;
+	
     UT_LOG("Invoking wifi_getSSIDMACAddress with valid inputs. SSID index: 1. Output buffer is valid.");
-    INT result = wifi_getSSIDMACAddress(ssidIndex, output_string);
-
+    result = wifi_getSSIDMACAddress(ssidIndex, output_string);
 
     UT_LOG("Return status: %d and MAC address: %s", result, output_string);
-
     UT_ASSERT_EQUAL(result, RETURN_OK);
-
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getSSIDMACAddress...");
 }
 
@@ -5367,13 +5510,13 @@ void test_l1_wifi_common_hal_negative1_wifi_getSSIDMACAddress( void )
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getSSIDMACAddress...");
 
     INT ssidIndex = 1;
+    INT result;	
+	
     UT_LOG("Invoking wifi_getSSIDMACAddress with NULL pointer for output buffer. SSID index: 1.");
-    INT result = wifi_getSSIDMACAddress(ssidIndex, NULL);
+    result = wifi_getSSIDMACAddress(ssidIndex, NULL);
 
     UT_LOG("Return status: %d", result);
-
     UT_ASSERT_EQUAL(result, RETURN_ERR);
-
     UT_LOG("Exiting test_l1_wifi_common_hal_negative1_wifi_getSSIDMACAddress...");
 }
 
@@ -5401,13 +5544,13 @@ void test_l1_wifi_common_hal_negative2_wifi_getSSIDMACAddress( void )
 
     INT ssidIndex = 2;
     CHAR output_string[20];
+    INT result;	
+	
     UT_LOG("Invoking wifi_getSSIDMACAddress with SSID index: 2. Expected to return error.");
-    INT result = wifi_getSSIDMACAddress(ssidIndex, output_string);
+    result = wifi_getSSIDMACAddress(ssidIndex, output_string);
 
     UT_LOG("Return status: %d", result);
-
     UT_ASSERT_EQUAL(result, RETURN_ERR);
-
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getSSIDMACAddress...");
 }
 
@@ -5435,12 +5578,14 @@ void test_l1_wifi_common_hal_negative3_wifi_getSSIDMACAddress( void )
    
     INT ssidIndex = 1;
     CHAR output_string[20];
+    INT result;	
+	
     WiFi_UnInitPosReq();
-    // Assuming wifi_init or wifi_initWithConfig is not called
     UT_LOG("Invoking wifi_getSSIDMACAddress before calling wifi_init() or wifi_initWithConfig(). Expected to return error.");    
-    INT result = wifi_getSSIDMACAddress(ssidIndex, output_string);    
+    result = wifi_getSSIDMACAddress(ssidIndex, output_string);    
     UT_LOG("Return status: %d", result);
     WiFi_InitPreReq();
+	
     UT_ASSERT_EQUAL(result, RETURN_ERR);    
     UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getSSIDMACAddress...");
 }
@@ -5468,12 +5613,13 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats...");
 	INT ssidIndex = 1;
-    
+    INT status;
+	
     wifi_ssidTrafficStats_t *output_struct = (wifi_ssidTrafficStats_t*)malloc(sizeof(wifi_ssidTrafficStats_t));
     if(output_struct != NULL)
     {
         UT_LOG("Invoking wifi_getSSIDTrafficStats with valid ssidIndex and output_struct pointer.");
-        INT status = wifi_getSSIDTrafficStats(ssidIndex, output_struct);
+        status = wifi_getSSIDTrafficStats(ssidIndex, output_struct);
     
         UT_LOG("Returrn Status: %d", status);
         UT_ASSERT_EQUAL(status, RETURN_OK);
@@ -5579,80 +5725,80 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats(void)
             UT_FAIL("ssid_ACKFailureCount validation failed");
         }
 
-        if (output_struct-> ssid_AggregatedPacketCount >= 0 && output_struct-> ssid_AggregatedPacketCount <= 4294967295)
+        if (output_struct->ssid_AggregatedPacketCount >= 0 && output_struct->ssid_AggregatedPacketCount <= 4294967295)
         {
-            UT_LOG("ssid_AggregatedPacketCount is %lu which is a valid value", output_struct-> ssid_AggregatedPacketCount);
+            UT_LOG("ssid_AggregatedPacketCount is %lu which is a valid value", output_struct->ssid_AggregatedPacketCount);
             UT_PASS("ssid_AggregatedPacketCount validation success");
         }
         else
         {
-            UT_LOG("ssid_AggregatedPacketCount is %lu which is an invalid value", output_struct-> ssid_AggregatedPacketCount);
+            UT_LOG("ssid_AggregatedPacketCount is %lu which is an invalid value", output_struct->ssid_AggregatedPacketCount);
             UT_FAIL("ssid_AggregatedPacketCount validation failed");
         }
 
-        if (output_struct-> ssid_ErrorsSent >= 0 && output_struct-> ssid_ErrorsSent <= 4294967295)
+        if (output_struct->ssid_ErrorsSent >= 0 && output_struct->ssid_ErrorsSent <= 4294967295)
         {
-            UT_LOG("ssid_ErrorsSent is %lu which is a valid value", output_struct-> ssid_ErrorsSent);
+            UT_LOG("ssid_ErrorsSent is %lu which is a valid value", output_struct->ssid_ErrorsSent);
             UT_PASS("ssid_ErrorsSent validation success");
         }
         else
         {
-            UT_LOG("ssid_ErrorsSent is %lu which is an invalid value", output_struct-> ssid_ErrorsSent);
+            UT_LOG("ssid_ErrorsSent is %lu which is an invalid value", output_struct->ssid_ErrorsSent);
             UT_FAIL("ssid_ErrorsSent validation failed");
         }
 
-        if (output_struct-> ssid_ErrorsReceived >= 0 && output_struct-> ssid_ErrorsReceived <= 4294967295)
+        if (output_struct->ssid_ErrorsReceived >= 0 && output_struct->ssid_ErrorsReceived <= 4294967295)
         {
-            UT_LOG("ssid_ErrorsReceived is %lu which is a valid value", output_struct-> ssid_ErrorsReceived);
+            UT_LOG("ssid_ErrorsReceived is %lu which is a valid value", output_struct->ssid_ErrorsReceived);
             UT_PASS("ssid_ErrorsReceived validation success");
         }
         else
         {
-            UT_LOG("ssid_ErrorsReceived is %lu which is an invalid value", output_struct-> ssid_ErrorsReceived);
+            UT_LOG("ssid_ErrorsReceived is %lu which is an invalid value", output_struct->ssid_ErrorsReceived);
             UT_FAIL("ssid_ErrorsReceived validation failed");
         }
 
-        if (output_struct-> ssid_UnicastPacketsSent >= 0 && output_struct-> ssid_UnicastPacketsSent <= 18446744073709551615)
+        if (output_struct->ssid_UnicastPacketsSent >= 0 && output_struct->ssid_UnicastPacketsSent <= 18446744073709551615)
         {
-            UT_LOG("ssid_UnicastPacketsSent is %lu which is a valid value", output_struct-> ssid_UnicastPacketsSent);
+            UT_LOG("ssid_UnicastPacketsSent is %lu which is a valid value", output_struct->ssid_UnicastPacketsSent);
             UT_PASS("ssid_UnicastPacketsSent validation success");
         }
         else
         {
-            UT_LOG("ssid_UnicastPacketsSent is %lu which is an invalid value", output_struct-> ssid_UnicastPacketsSent);
+            UT_LOG("ssid_UnicastPacketsSent is %lu which is an invalid value", output_struct->ssid_UnicastPacketsSent);
             UT_FAIL("ssid_UnicastPacketsSent validation failed");
         }
 
-        if (output_struct-> ssid_UnicastPacketsReceived >= 0 && output_struct-> ssid_UnicastPacketsReceived <= 18446744073709551615)
+        if (output_struct->ssid_UnicastPacketsReceived >= 0 && output_struct->ssid_UnicastPacketsReceived <= 18446744073709551615)
         {
-            UT_LOG("ssid_UnicastPacketsReceived  is %lu which is a valid value", output_struct-> ssid_UnicastPacketsReceived);
+            UT_LOG("ssid_UnicastPacketsReceived  is %lu which is a valid value", output_struct->ssid_UnicastPacketsReceived);
             UT_PASS("ssid_UnicastPacketsReceived validation success");
         }
         else
         {
-            UT_LOG("ssid_UnicastPacketsReceived  is %lu which is an invalid value", output_struct-> ssid_UnicastPacketsReceived);
+            UT_LOG("ssid_UnicastPacketsReceived  is %lu which is an invalid value", output_struct->ssid_UnicastPacketsReceived);
             UT_FAIL("ssid_UnicastPacketsReceived validation failed");
         }
 
-        if (output_struct-> ssid_DiscardedPacketsSent >= 0 && output_struct-> ssid_DiscardedPacketsSent <= 4294967295)
+        if (output_struct->ssid_DiscardedPacketsSent >= 0 && output_struct->ssid_DiscardedPacketsSent <= 4294967295)
         {
-            UT_LOG("ssid_DiscardedPacketsSent  is %lu which is a valid value", output_struct-> ssid_DiscardedPacketsSent);
+            UT_LOG("ssid_DiscardedPacketsSent  is %lu which is a valid value", output_struct->ssid_DiscardedPacketsSent);
             UT_PASS("ssid_DiscardedPacketsSent validation success");
         }
         else
         {
-            UT_LOG("ssid_DiscardedPacketsSent  is %lu which is an invalid value", output_struct-> ssid_DiscardedPacketsSent);
+            UT_LOG("ssid_DiscardedPacketsSent  is %lu which is an invalid value", output_struct->ssid_DiscardedPacketsSent);
             UT_FAIL("ssid_DiscardedPacketsSent validation failed");
         }
 
-        if (output_struct-> ssid_DiscardedPacketsReceived >= 0 && output_struct-> ssid_DiscardedPacketsReceived <= 4294967295)
+        if (output_struct->ssid_DiscardedPacketsReceived >= 0 && output_struct->ssid_DiscardedPacketsReceived <= 4294967295)
         {
-            UT_LOG("ssid_DiscardedPacketsReceived  is %lu which is a valid value", output_struct-> ssid_DiscardedPacketsReceived);
+            UT_LOG("ssid_DiscardedPacketsReceived  is %lu which is a valid value", output_struct->ssid_DiscardedPacketsReceived);
             UT_PASS("ssid_DiscardedPacketsReceived validation success");
         }
         else
         {
-            UT_LOG("ssid_DiscardedPacketsReceived  is %lu which is an invalid value", output_struct-> ssid_DiscardedPacketsReceived);
+            UT_LOG("ssid_DiscardedPacketsReceived  is %lu which is an invalid value", output_struct->ssid_DiscardedPacketsReceived);
             UT_FAIL("ssid_DiscardedPacketsReceived validation failed");
         }
 
@@ -5710,6 +5856,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats(void)
             UT_LOG("ssid_UnknownPacketsReceived is %lu which is an invalid value", output_struct->ssid_UnknownPacketsReceived);
             UT_FAIL("ssid_UnknownPacketsReceived validation failed");
         }
+		free(output_struct);
     }
     else
     {
@@ -5744,13 +5891,16 @@ void test_l1_wifi_common_hal_negative1_wifi_getSSIDTrafficStats(void)
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getSSIDTrafficStats...");
 	
 	INT ssidIndex = 2;
+    INT status;	
+	
     wifi_ssidTrafficStats_t *output_struct = (wifi_ssidTrafficStats_t*)malloc(sizeof(wifi_ssidTrafficStats_t));
     if(output_struct != NULL)
 	{
         UT_LOG("Invoking wifi_getSSIDTrafficStats with invalid ssidIndex.");	
-        INT status = wifi_getSSIDTrafficStats(ssidIndex, output_struct);
+        status = wifi_getSSIDTrafficStats(ssidIndex, output_struct);
     
         UT_LOG("Return Status: %d", status);
+		free(output_struct);
         UT_ASSERT_EQUAL(status, RETURN_ERR);
     }
     else
@@ -5785,9 +5935,10 @@ void test_l1_wifi_common_hal_negative2_wifi_getSSIDTrafficStats(void)
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getSSIDTrafficStats...");
     wifi_ssidTrafficStats_t *output_struct = NULL;
 	INT ssidIndex = 1;
+    INT status;
     
     UT_LOG("Invoking wifi_getSSIDTrafficStats with NULL output_struct pointer");
-    INT status = wifi_getSSIDTrafficStats(ssidIndex, output_struct);
+    status = wifi_getSSIDTrafficStats(ssidIndex, output_struct);
     
     UT_LOG("Return Status: %d", status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
@@ -5818,20 +5969,23 @@ void test_l1_wifi_common_hal_negative2_wifi_getSSIDTrafficStats(void)
 void test_l1_wifi_common_hal_negative3_wifi_getSSIDTrafficStats(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getSSIDTrafficStats...");
+	INT ssidIndex = 1;
+	INT status;
 	
     wifi_ssidTrafficStats_t *output_struct = (wifi_ssidTrafficStats_t*)malloc(sizeof(wifi_ssidTrafficStats_t));
+	
     if(output_struct != NULL)
     {
-	   INT radioIndex = 1;	
-	   WiFi_UnInitPosReq();
-    
+		
+	   WiFi_UnInitPosReq();    
        UT_LOG("Invoking wifi_getSSIDTrafficStats without prior wifi_init() or wifi_initWithConfig() calls."); 
-       INT status = wifi_getSSIDTrafficStats(radioIndex, output_struct);
+       status = wifi_getSSIDTrafficStats(ssidIndex, output_struct);
     
        UT_LOG("Return Status: %d", status);
+	   WiFi_InitPreReq();
+	   free(output_struct);
 	   UT_ASSERT_EQUAL(status, RETURN_ERR);
-
-       WiFi_InitPreReq();
+       
     }
     else
     {
@@ -5863,13 +6017,15 @@ void test_l1_wifi_common_hal_negative4_wifi_getSSIDTrafficStats(void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getSSIDTrafficStats...");
 	INT ssidIndex = 0;	
+	INT status;
     wifi_ssidTrafficStats_t *output_struct = (wifi_ssidTrafficStats_t*)malloc(sizeof(wifi_ssidTrafficStats_t));
     if(output_struct != NULL)
     {
         UT_LOG("Invoking wifi_getSSIDTrafficStats with ssidIndex 0");
-        INT status = wifi_getSSIDTrafficStats(ssidIndex, output_struct);
+        status = wifi_getSSIDTrafficStats(ssidIndex, output_struct);
     
         UT_LOG("Retrun Status: %d", status);
+		free(output_struct);
         UT_ASSERT_EQUAL(status, RETURN_ERR);
     }
     else
@@ -5904,202 +6060,197 @@ void test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult( 
 
     INT radioIndex = 1;
     UINT output_array_size = 512;
-    wifi_neighbor_ap_t *neighbor_ap_array = (wifi_neighbor_ap_t*)malloc(sizeof(wifi_neighbor_ap_t));
-    if(neighbor_ap_array != NULL)
-    {
-        UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with input radioIndex = 1. Expect RETURN_OK.");
-        INT result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, &neighbor_ap_array, &output_array_size);
+	INT result;
+	
+    wifi_neighbor_ap_t *neighbor_ap_array ;
 
-        UT_LOG("return status = %d", result);
-        UT_ASSERT_EQUAL(result, RETURN_OK);
+	UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with input radioIndex = 1. Expect RETURN_OK.");
+	result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, &neighbor_ap_array, &output_array_size);
 
-        UT_LOG("Array of neighboring access points contains the values: ap_SSID = %s, ap_BSSID = %s, ap_Mode = %s, ap_Channel = %d, ap_SignalStrength = %d, ap_SecurityModeEnabled =%s, ap_EncryptionMode = %s, ap_OperatingFrequencyBand = %s, ap_SupportedStandards = %s, ap_OperatingStandards = %s, ap_OperatingChannelBandwidth = %s, ap_BeaconPeriod = %d, ap_Noise = %s, ap_BasicDataTransferRates = %s, ap_SupportedDataTransferRates = %s, ap_DTIMPeriod = %d, ap_ChannelUtilization = %d", neighbor_ap_array->ap_SSID, neighbor_ap_array->ap_BSSID, neighbor_ap_array->ap_Mode, neighbor_ap_array->ap_Channel, neighbor_ap_array->ap_SignalStrength, neighbor_ap_array->ap_SecurityModeEnabled, neighbor_ap_array->ap_EncryptionMode, neighbor_ap_array->ap_OperatingFrequencyBand, neighbor_ap_array->ap_SupportedStandards, neighbor_ap_array->ap_OperatingStandards, neighbor_ap_array->ap_OperatingChannelBandwidth, neighbor_ap_array->ap_BeaconPeriod, neighbor_ap_array->ap_Noise, neighbor_ap_array->ap_BasicDataTransferRates, neighbor_ap_array->ap_SupportedDataTransferRates, neighbor_ap_array->ap_DTIMPeriod, neighbor_ap_array->ap_ChannelUtilization);
-        UT_LOG("output_array_size = %d", output_array_size);
-        if(!strcmp(neighbor_ap_array->ap_SSID,"") || !strcmp(neighbor_ap_array->ap_SSID,"valid_value"))   /*TODO need to replace with to valid value*/
-        {
-            UT_LOG("ap_SSID %s which is an valid value", neighbor_ap_array->ap_SSID);
-            UT_PASS("ap_SSID validation success");
-        }
-        else
-        {
-            UT_LOG("ap_SSID %s which is a invalid value", neighbor_ap_array->ap_SSID);
-            UT_FAIL("ap_SSID validation failed");
-        }
-  
-        if(!strcmp(neighbor_ap_array->ap_Mode,"AdHoc") || !strcmp(neighbor_ap_array->ap_Mode,"Infrastructure"))  
-        {
-            UT_LOG("ap_Mode %s which is an valid value", neighbor_ap_array->ap_Mode);
-            UT_PASS("ap_Mode validation success");
-        }
-        else
-        {
-            UT_LOG("ap_Mode %s which is a invalid value", neighbor_ap_array->ap_Mode);
-            UT_FAIL("ap_Mode validation failed");
-        }
+	UT_LOG("return status = %d", result);
+	UT_ASSERT_EQUAL(result, RETURN_OK);
 
-        if ((neighbor_ap_array->ap_Channel >= 1 && neighbor_ap_array->ap_Channel <= 13 )|| (neighbor_ap_array->ap_Channel >= 36 && neighbor_ap_array->ap_Channel <= 64) ||(neighbor_ap_array->ap_Channel >= 100 && neighbor_ap_array->ap_Channel <= 165))
-        {
-            UT_LOG("ap_Channel is %d which is a valid value", neighbor_ap_array->ap_Channel);
-            UT_PASS("ssid_UnknownPacketsReceived validation success");
-        }
-        else
-        {
-            UT_LOG("ap_Channel is %d which is an invalid value", neighbor_ap_array->ap_Channel);
-            UT_FAIL("ap_Channel validation failed");
-        }
+	UT_LOG("Array of neighboring access points contains the values: ap_SSID = %s, ap_BSSID = %s, ap_Mode = %s, ap_Channel = %d, ap_SignalStrength = %d, ap_SecurityModeEnabled =%s, ap_EncryptionMode = %s, ap_OperatingFrequencyBand = %s, ap_SupportedStandards = %s, ap_OperatingStandards = %s, ap_OperatingChannelBandwidth = %s, ap_BeaconPeriod = %d, ap_Noise = %s, ap_BasicDataTransferRates = %s, ap_SupportedDataTransferRates = %s, ap_DTIMPeriod = %d, ap_ChannelUtilization = %d", neighbor_ap_array->ap_SSID, neighbor_ap_array->ap_BSSID, neighbor_ap_array->ap_Mode, neighbor_ap_array->ap_Channel, neighbor_ap_array->ap_SignalStrength, neighbor_ap_array->ap_SecurityModeEnabled, neighbor_ap_array->ap_EncryptionMode, neighbor_ap_array->ap_OperatingFrequencyBand, neighbor_ap_array->ap_SupportedStandards, neighbor_ap_array->ap_OperatingStandards, neighbor_ap_array->ap_OperatingChannelBandwidth, neighbor_ap_array->ap_BeaconPeriod, neighbor_ap_array->ap_Noise, neighbor_ap_array->ap_BasicDataTransferRates, neighbor_ap_array->ap_SupportedDataTransferRates, neighbor_ap_array->ap_DTIMPeriod, neighbor_ap_array->ap_ChannelUtilization);
+	UT_LOG("output_array_size = %d", output_array_size);
+	if(!strcmp(neighbor_ap_array->ap_SSID,"") || !strcmp(neighbor_ap_array->ap_SSID,"valid_value"))   /*TODO need to replace with to valid value*/
+	{
+		UT_LOG("ap_SSID %s which is an valid value", neighbor_ap_array->ap_SSID);
+		UT_PASS("ap_SSID validation success");
+	}
+	else
+	{
+		UT_LOG("ap_SSID %s which is a invalid value", neighbor_ap_array->ap_SSID);
+		UT_FAIL("ap_SSID validation failed");
+	}
 
-        if (neighbor_ap_array->ap_SignalStrength >= -200 && neighbor_ap_array->ap_SignalStrength <= 0)
-        {
-            UT_LOG("ap_SignalStrength is %d which is a valid value", neighbor_ap_array->ap_SignalStrength);
-            UT_PASS("ap_SignalStrength validation success");
-        }
-        else
-        {
-            UT_LOG("ap_SignalStrength is %d which is an invalid value", neighbor_ap_array->ap_SignalStrength);
-            UT_FAIL("ap_SignalStrength validation failed");
-        }
-        if(!strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"None") || !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WEP")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA3")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-WPA2")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2-WPA3")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-Enterprise")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2-Enterprise")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-WPA2-Enterprise"))
-        {
-            UT_LOG("ap_SecurityModeEnabled is %s which is an valid value", neighbor_ap_array->ap_SecurityModeEnabled);
-            UT_PASS("ap_SecurityModeEnabled validation success");
-        }
-        else
-        {
-            UT_LOG("ap_SecurityModeEnabled is %s which is a invalid value", neighbor_ap_array->ap_SecurityModeEnabled);
-            UT_FAIL("ap_SecurityModeEnabled validation failed");
-        }
+	if(!strcmp(neighbor_ap_array->ap_Mode,"AdHoc") || !strcmp(neighbor_ap_array->ap_Mode,"Infrastructure"))  
+	{
+		UT_LOG("ap_Mode %s which is an valid value", neighbor_ap_array->ap_Mode);
+		UT_PASS("ap_Mode validation success");
+	}
+	else
+	{
+		UT_LOG("ap_Mode %s which is a invalid value", neighbor_ap_array->ap_Mode);
+		UT_FAIL("ap_Mode validation failed");
+	}
 
-        if(!strcmp(neighbor_ap_array->ap_EncryptionMode,"TKIP") || !strcmp(neighbor_ap_array->ap_EncryptionMode,"AES"))  
-        {
-            UT_LOG("ap_EncryptionMode is %s which is an valid value", neighbor_ap_array->ap_EncryptionMode);
-            UT_PASS("ap_EncryptionMode validation success");
-        }
-        else
-        {
-            UT_LOG("ap_EncryptionMode is %s which is a invalid value", neighbor_ap_array->ap_EncryptionMode);
-            UT_FAIL("ap_EncryptionMode validation failed");
-        }
+	if ((neighbor_ap_array->ap_Channel >= 1 && neighbor_ap_array->ap_Channel <= 13 )|| (neighbor_ap_array->ap_Channel >= 36 && neighbor_ap_array->ap_Channel <= 64) ||(neighbor_ap_array->ap_Channel >= 100 && neighbor_ap_array->ap_Channel <= 165))
+	{
+		UT_LOG("ap_Channel is %d which is a valid value", neighbor_ap_array->ap_Channel);
+		UT_PASS("ssid_UnknownPacketsReceived validation success");
+	}
+	else
+	{
+		UT_LOG("ap_Channel is %d which is an invalid value", neighbor_ap_array->ap_Channel);
+		UT_FAIL("ap_Channel validation failed");
+	}
 
-        if(!strcmp(neighbor_ap_array->ap_OperatingFrequencyBand,"2.4GHz") || !strcmp(neighbor_ap_array->ap_OperatingFrequencyBand,"5GHz"))  
-        {
-            UT_LOG("ap_OperatingFrequencyBand is %s which is an valid value", neighbor_ap_array->ap_OperatingFrequencyBand);
-            UT_PASS("ap_OperatingFrequencyBand validation success");
-        }
-        else
-        {
-            UT_LOG("ap_OperatingFrequencyBand is %s which is a invalid value", neighbor_ap_array->ap_OperatingFrequencyBand);
-            UT_FAIL("ap_OperatingFrequencyBand validation failed");
-        }
+	if (neighbor_ap_array->ap_SignalStrength >= -200 && neighbor_ap_array->ap_SignalStrength <= 0)
+	{
+		UT_LOG("ap_SignalStrength is %d which is a valid value", neighbor_ap_array->ap_SignalStrength);
+		UT_PASS("ap_SignalStrength validation success");
+	}
+	else
+	{
+		UT_LOG("ap_SignalStrength is %d which is an invalid value", neighbor_ap_array->ap_SignalStrength);
+		UT_FAIL("ap_SignalStrength validation failed");
+	}
+	if(!strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"None") || !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WEP")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA3")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-WPA2")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2-WPA3")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-Enterprise")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2-Enterprise")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-WPA2-Enterprise"))
+	{
+		UT_LOG("ap_SecurityModeEnabled is %s which is an valid value", neighbor_ap_array->ap_SecurityModeEnabled);
+		UT_PASS("ap_SecurityModeEnabled validation success");
+	}
+	else
+	{
+		UT_LOG("ap_SecurityModeEnabled is %s which is a invalid value", neighbor_ap_array->ap_SecurityModeEnabled);
+		UT_FAIL("ap_SecurityModeEnabled validation failed");
+	}
 
-        if(!strcmp(neighbor_ap_array->ap_SupportedStandards,"a") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"b") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"g") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"n") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"ac"))  
-        {
-            UT_LOG("ap_SupportedStandards is %s which is an valid value", neighbor_ap_array->ap_SupportedStandards);
-            UT_PASS("ap_SupportedStandards validation success");
-        }
-        else
-        {
-            UT_LOG("ap_SupportedStandards is %s which is a invalid value", neighbor_ap_array->ap_SupportedStandards);
-            UT_FAIL("ap_SupportedStandards validation failed");
-        }
-        if(!strcmp(neighbor_ap_array->ap_OperatingStandards,"a") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"b") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"g") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"n") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"ac"))  
-        {
-            UT_LOG("ap_OperatingStandards is %s which is an valid value", neighbor_ap_array->ap_OperatingStandards);
-            UT_PASS("ap_OperatingStandards validation success");
-        }
-        else
-        {
-            UT_LOG("ap_OperatingStandards is %s which is a invalid value", neighbor_ap_array->ap_OperatingStandards);
-            UT_FAIL("ap_OperatingStandards validation failed");
-        }
-        if(!strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"20MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"40MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"80MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"160MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"Auto"))  
-        {
-            UT_LOG("ap_OperatingChannelBandwidth is %s which is an valid value", neighbor_ap_array->ap_OperatingStandards);
-            UT_PASS("ap_OperatingChannelBandwidth validation success");
-        }
-        else
-        {
-            UT_LOG("ap_OperatingChannelBandwidth is %s which is a invalid value", neighbor_ap_array->ap_OperatingStandards);
-            UT_FAIL("ap_OperatingChannelBandwidth validation failed");
-        }
-        if (neighbor_ap_array->ap_BeaconPeriod >= 0 && neighbor_ap_array->ap_BeaconPeriod <= 4294967295)
-        {
-            UT_LOG("ap_BeaconPeriod is %d which is a valid value", neighbor_ap_array->ap_BeaconPeriod);
-            UT_PASS("ap_BeaconPeriod validation success");
-        }
-        else
-        {
-            UT_LOG("ap_BeaconPeriod is %d which is an invalid value", neighbor_ap_array->ap_BeaconPeriod);
-            UT_FAIL("ap_BeaconPeriod validation failed");
-        }
-        if (neighbor_ap_array->ap_Noise >= -200 && neighbor_ap_array->ap_Noise <= 0)
-        {
-            UT_LOG("ap_Noise is %d which is a valid value", neighbor_ap_array->ap_Noise);
-            UT_PASS("ap_Noise validation success");
-        }
-        else
-        {
-            UT_LOG("ap_Noise is %d which is an invalid value", neighbor_ap_array->ap_Noise);
-            UT_FAIL("ap_Noise validation failed");
-        }
-        if(!strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"1") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"2") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"5.5") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"6") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"9") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"12")|| !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"18") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"24") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"36") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"48")|| !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"54"))  
-        {
-            UT_LOG("ap_BasicDataTransferRates is %s which is an valid value", neighbor_ap_array->ap_BasicDataTransferRates);
-            UT_PASS("ap_BasicDataTransferRates validation success");
-        }
-        else
-        {
-            UT_LOG("ap_BasicDataTransferRates is %s which is a invalid value", neighbor_ap_array->ap_BasicDataTransferRates);
-            UT_FAIL("ap_BasicDataTransferRates validation failed");
-        }
-        if(!strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"1") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"2") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"5.5") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"6") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"9") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"12")|| !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"18") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"24") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"36") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"48")|| !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"54"))  
-        {
-            UT_LOG("ap_SupportedDataTransferRates is %s which is an valid value", neighbor_ap_array->ap_SupportedDataTransferRates);
-            UT_PASS("ap_SupportedDataTransferRates validation success");
-        }
-        else
-        {
-            UT_LOG("ap_SupportedDataTransferRates is %s which is a invalid value", neighbor_ap_array->ap_SupportedDataTransferRates);
-            UT_FAIL("ap_SupportedDataTransferRates validation failed");
-        }
-        if (neighbor_ap_array->ap_DTIMPeriod >= 0 && neighbor_ap_array->ap_DTIMPeriod <= 4294967295)
-        {
-            UT_LOG("ap_DTIMPeriod is %d which is a valid value", neighbor_ap_array->ap_DTIMPeriod);
-            UT_PASS("ap_Noise validation success");
-        }
-        else
-        {
-            UT_LOG("ap_DTIMPeriod is %d which is an invalid value", neighbor_ap_array->ap_DTIMPeriod);
-            UT_FAIL("ap_DTIMPeriod validation failed");
-        }
-        for (int i = 0; i < sizeof(neighbor_ap_array->ap_ChannelUtilization) / sizeof(neighbor_ap_array->ap_ChannelUtilization[0]); i++) {
-            if (neighbor_ap_array->ap_ChannelUtilization[i] >= 0 && neighbor_ap_array->ap_ChannelUtilization[i] <= 100) 
-            {
-                UT_LOG("ap_ChannelUtilization is %s which is a valid value", neighbor_ap_array->ap_ChannelUtilization[i]);
-                UT_PASS("ap_ChannelUtilization validation success");
-            }
-            else
-            {
-                UT_LOG("ap_ChannelUtilizationis %s which is a invalid value", neighbor_ap_array->ap_ChannelUtilization[i]);
-                UT_FAIL("ap_ChannelUtilization validation failed");
-            }
-        }
-        if (output_array_size >= 0 && output_array_size <= 512)
-        {
-            UT_LOG("output_array_size is %d which is a valid value", output_array_size);
-            UT_PASS("output_array_size success");
-        }
-        else
-        {
-            UT_LOG("output_array_size is %d which is an invalid value",output_array_size);
-            UT_FAIL("output_array_size validation failed");
-        }
+	if(!strcmp(neighbor_ap_array->ap_EncryptionMode,"TKIP") || !strcmp(neighbor_ap_array->ap_EncryptionMode,"AES"))  
+	{
+		UT_LOG("ap_EncryptionMode is %s which is an valid value", neighbor_ap_array->ap_EncryptionMode);
+		UT_PASS("ap_EncryptionMode validation success");
+	}
+	else
+	{
+		UT_LOG("ap_EncryptionMode is %s which is a invalid value", neighbor_ap_array->ap_EncryptionMode);
+		UT_FAIL("ap_EncryptionMode validation failed");
+	}
 
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed");
-        UT_FAIL("Memory allocation with malloc failed");
-    }
+	if(!strcmp(neighbor_ap_array->ap_OperatingFrequencyBand,"2.4GHz") || !strcmp(neighbor_ap_array->ap_OperatingFrequencyBand,"5GHz"))  
+	{
+		UT_LOG("ap_OperatingFrequencyBand is %s which is an valid value", neighbor_ap_array->ap_OperatingFrequencyBand);
+		UT_PASS("ap_OperatingFrequencyBand validation success");
+	}
+	else
+	{
+		UT_LOG("ap_OperatingFrequencyBand is %s which is a invalid value", neighbor_ap_array->ap_OperatingFrequencyBand);
+		UT_FAIL("ap_OperatingFrequencyBand validation failed");
+	}
+
+	if(!strcmp(neighbor_ap_array->ap_SupportedStandards,"a") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"b") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"g") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"n") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"ac"))  
+	{
+		UT_LOG("ap_SupportedStandards is %s which is an valid value", neighbor_ap_array->ap_SupportedStandards);
+		UT_PASS("ap_SupportedStandards validation success");
+	}
+	else
+	{
+		UT_LOG("ap_SupportedStandards is %s which is a invalid value", neighbor_ap_array->ap_SupportedStandards);
+		UT_FAIL("ap_SupportedStandards validation failed");
+	}
+	if(!strcmp(neighbor_ap_array->ap_OperatingStandards,"a") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"b") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"g") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"n") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"ac"))  
+	{
+		UT_LOG("ap_OperatingStandards is %s which is an valid value", neighbor_ap_array->ap_OperatingStandards);
+		UT_PASS("ap_OperatingStandards validation success");
+	}
+	else
+	{
+		UT_LOG("ap_OperatingStandards is %s which is a invalid value", neighbor_ap_array->ap_OperatingStandards);
+		UT_FAIL("ap_OperatingStandards validation failed");
+	}
+	if(!strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"20MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"40MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"80MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"160MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"Auto"))  
+	{
+		UT_LOG("ap_OperatingChannelBandwidth is %s which is an valid value", neighbor_ap_array->ap_OperatingChannelBandwidth);
+		UT_PASS("ap_OperatingChannelBandwidth validation success");
+	}
+	else
+	{
+		UT_LOG("ap_OperatingChannelBandwidth is %s which is a invalid value", neighbor_ap_array->ap_OperatingChannelBandwidth);
+		UT_FAIL("ap_OperatingChannelBandwidth validation failed");
+	}
+	if (neighbor_ap_array->ap_BeaconPeriod >= 0 && neighbor_ap_array->ap_BeaconPeriod <= 4294967295)
+	{
+		UT_LOG("ap_BeaconPeriod is %d which is a valid value", neighbor_ap_array->ap_BeaconPeriod);
+		UT_PASS("ap_BeaconPeriod validation success");
+	}
+	else
+	{
+		UT_LOG("ap_BeaconPeriod is %d which is an invalid value", neighbor_ap_array->ap_BeaconPeriod);
+		UT_FAIL("ap_BeaconPeriod validation failed");
+	}
+	if (neighbor_ap_array->ap_Noise >= -200 && neighbor_ap_array->ap_Noise <= 0)
+	{
+		UT_LOG("ap_Noise is %d which is a valid value", neighbor_ap_array->ap_Noise);
+		UT_PASS("ap_Noise validation success");
+	}
+	else
+	{
+		UT_LOG("ap_Noise is %d which is an invalid value", neighbor_ap_array->ap_Noise);
+		UT_FAIL("ap_Noise validation failed");
+	}
+	if(!strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"1") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"2") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"5.5") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"6") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"9") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"12")|| !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"18") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"24") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"36") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"48")|| !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"54"))  
+	{
+		UT_LOG("ap_BasicDataTransferRates is %s which is an valid value", neighbor_ap_array->ap_BasicDataTransferRates);
+		UT_PASS("ap_BasicDataTransferRates validation success");
+	}
+	else
+	{
+		UT_LOG("ap_BasicDataTransferRates is %s which is a invalid value", neighbor_ap_array->ap_BasicDataTransferRates);
+		UT_FAIL("ap_BasicDataTransferRates validation failed");
+	}
+	if(!strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"1") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"2") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"5.5") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"6") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"9") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"12")|| !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"18") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"24") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"36") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"48")|| !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"54"))  
+	{
+		UT_LOG("ap_SupportedDataTransferRates is %s which is an valid value", neighbor_ap_array->ap_SupportedDataTransferRates);
+		UT_PASS("ap_SupportedDataTransferRates validation success");
+	}
+	else
+	{
+		UT_LOG("ap_SupportedDataTransferRates is %s which is a invalid value", neighbor_ap_array->ap_SupportedDataTransferRates);
+		UT_FAIL("ap_SupportedDataTransferRates validation failed");
+	}
+	if (neighbor_ap_array->ap_DTIMPeriod >= 0 && neighbor_ap_array->ap_DTIMPeriod <= 4294967295)
+	{
+		UT_LOG("ap_DTIMPeriod is %d which is a valid value", neighbor_ap_array->ap_DTIMPeriod);
+		UT_PASS("ap_Noise validation success");
+	}
+	else
+	{
+		UT_LOG("ap_DTIMPeriod is %d which is an invalid value", neighbor_ap_array->ap_DTIMPeriod);
+		UT_FAIL("ap_DTIMPeriod validation failed");
+	}
+	for (int i = 0; i < sizeof(neighbor_ap_array->ap_ChannelUtilization) / sizeof(neighbor_ap_array->ap_ChannelUtilization[0]); i++) {
+		if (neighbor_ap_array->ap_ChannelUtilization[i] >= 0 && neighbor_ap_array->ap_ChannelUtilization[i] <= 100) 
+		{
+			UT_LOG("ap_ChannelUtilization is %s which is a valid value", neighbor_ap_array->ap_ChannelUtilization[i]);
+			UT_PASS("ap_ChannelUtilization validation success");
+		}
+		else
+		{
+			UT_LOG("ap_ChannelUtilizationis %s which is a invalid value", neighbor_ap_array->ap_ChannelUtilization[i]);
+			UT_FAIL("ap_ChannelUtilization validation failed");
+		}
+	}
+	if (output_array_size >= 0 && output_array_size <= 512)
+	{
+		UT_LOG("output_array_size is %d which is a valid value", output_array_size);
+		UT_PASS("output_array_size success");
+	}
+	else
+	{
+		UT_LOG("output_array_size is %d which is an invalid value",output_array_size);
+		UT_FAIL("output_array_size validation failed");
+	}
+    free(neighbor_ap_array);
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult...");
 }
 
@@ -6120,7 +6271,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult( 
 * **Test Procedure:**@n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_getNeighboringWiFiDiagnosticResult with invalid neighbor_ap_array and output_array_size. | radioIndex = 0 , neighbor_ap_array = NULL , output_array_size = NULL | Function should return RETURN_ERR | Should fail |
+* | 01 | Invoke wifi_getNeighboringWiFiDiagnosticResult with invalid neighbor_ap_array and output_array_size. | radioIndex = 0 , neighbor_ap_array = valid , output_array_size = NULL | Function should return RETURN_ERR | Should fail |
 */
 void test_l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult( void )
 {
@@ -6128,20 +6279,14 @@ void test_l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult( 
 
     INT radioIndex = 1;
     UINT *output_array_size = NULL;
-    wifi_neighbor_ap_t *neighbor_ap_array = (wifi_neighbor_ap_t*)malloc(sizeof(wifi_neighbor_ap_t));
-    if(neighbor_ap_array != NULL)
-    {
-        UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with invalid input radioIndex = 0, NULL ,NULL. Expect RETURN_ERR.");
-        INT result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, &neighbor_ap_array, output_array_size);
-
-        UT_LOG("Returned status : %d", result);
-        UT_ASSERT_EQUAL(result, RETURN_ERR);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed");
-        UT_FAIL("Memory allocation with malloc failed");
-    }
+    INT result;	
+    wifi_neighbor_ap_t *neighbor_ap_array;
+	
+	UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with invalid input radioIndex = 0, neighbor_ap_array = valid ,NULL. Expect RETURN_ERR.");
+	result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, &neighbor_ap_array, output_array_size);
+	UT_LOG("Returned status : %d", result);
+    free(neighbor_ap_array);
+	UT_ASSERT_EQUAL(result, RETURN_ERR);
     UT_LOG("Exiting test_l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult...");
 }
 
@@ -6169,12 +6314,14 @@ void test_l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult( 
 
     INT radioIndex = 1;
     UINT output_array_size = 512;
-    wifi_neighbor_ap_t **neighbor_ap_array = NULL;
+    wifi_neighbor_ap_t *neighbor_ap_array = NULL;
+    INT result;
     
     UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with invalid input radioIndex = 1,output_array_size = 512,neighbor_ap_array = NULL");
-    INT result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, neighbor_ap_array, &output_array_size);
+    result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, &neighbor_ap_array, &output_array_size);
 
     UT_LOG("Returned status : %d", result);
+	free(neighbor_ap_array);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult...");
@@ -6204,20 +6351,15 @@ void test_l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult(v
 
     INT radioIndex = 3;
     UINT output_array_size = 512;
-    wifi_neighbor_ap_t *neighbor_ap_array = (wifi_neighbor_ap_t*)malloc(sizeof(wifi_neighbor_ap_t));
-    if(neighbor_ap_array != NULL)
-    {
-        UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with radioIndex = 3 ,null neighbour_ap_array and output_array_size");
-        INT result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, &neighbor_ap_array, &output_array_size);
+    wifi_neighbor_ap_t *neighbor_ap_array;
+    INT result;
+	
+	UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with radioIndex = 3 ,null neighbour_ap_array and output_array_size");
+	result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, &neighbor_ap_array, &output_array_size);
+    free(neighbor_ap_array);
+	UT_LOG("Returned status : %d", result);
+	UT_ASSERT_EQUAL(result, RETURN_ERR);
 
-        UT_LOG("Returned status : %d", result);
-        UT_ASSERT_EQUAL(result, RETURN_ERR);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed");
-        UT_FAIL("Memory allocation with malloc failed");
-    }
     UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult...");
 }
 
@@ -6245,24 +6387,18 @@ void test_l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult( 
 
     INT radioIndex = 1;
     UINT output_array_size = 512;
-    wifi_neighbor_ap_t *neighbor_ap_array = (wifi_neighbor_ap_t*)malloc(sizeof(wifi_neighbor_ap_t));
-    if(neighbor_ap_array != NULL)
-    {
-        WiFi_UnInitPosReq();
+    wifi_neighbor_ap_t *neighbor_ap_array;
 
-        UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult without calling wifi_init() or wifi_initWithConfig()");
-        INT result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, &neighbor_ap_array, &output_array_size);
+	WiFi_UnInitPosReq();
 
-        UT_LOG("Returned status : %d", result);
-        UT_ASSERT_EQUAL(result, RETURN_ERR);
+	UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult without calling wifi_init() or wifi_initWithConfig()");
+	INT result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, &neighbor_ap_array, &output_array_size);
 
-        WiFi_InitPreReq();
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed");
-        UT_FAIL("Memory allocation with malloc failed");
-    }
+	UT_LOG("Returned status : %d", result);
+	WiFi_InitPreReq();
+    free(neighbor_ap_array);
+	UT_ASSERT_EQUAL(result, RETURN_ERR);
+
     UT_LOG("Exiting test_l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult...");
 }
 
@@ -6292,204 +6428,197 @@ void test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo( void )
     const char *SSID = "valid_ssid";                          /*Need to replace with valid value*/
     WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
     UINT output_array_size = 0;
-    wifi_neighbor_ap_t *neighbor_ap_array = (wifi_neighbor_ap_t*)malloc(sizeof(wifi_neighbor_ap_t));
-    if(neighbor_ap_array != NULL)
-    {
-        UT_LOG("Invoking wifi_getSpecificSSIDInfo with valid SSID and frequency band");
-        INT ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
+    wifi_neighbor_ap_t *neighbor_ap_array;
+	INT ret;
 
-        UT_LOG("Return status: %d\n", ret);
-        UT_ASSERT_EQUAL(ret, RETURN_OK);
+	UT_LOG("Invoking wifi_getSpecificSSIDInfo with valid SSID and frequency band");
+	ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
 
-        UT_LOG("Array of neighboring access points contains the values: ap_SSID = %s, ap_BSSID = %s, ap_Mode = %s, ap_Channel = %d, ap_SignalStrength = %d, ap_SecurityModeEnabled =%s, ap_EncryptionMode = %s, ap_OperatingFrequencyBand = %s, ap_SupportedStandards = %s, ap_OperatingStandards = %s, ap_OperatingChannelBandwidth = %s, ap_BeaconPeriod = %d, ap_Noise = %s, ap_BasicDataTransferRates = %s, ap_SupportedDataTransferRates = %s, ap_DTIMPeriod = %d, ap_ChannelUtilization = %d", neighbor_ap_array->ap_SSID, neighbor_ap_array->ap_BSSID, neighbor_ap_array->ap_Mode, neighbor_ap_array->ap_Channel, neighbor_ap_array->ap_SignalStrength, neighbor_ap_array->ap_SecurityModeEnabled, neighbor_ap_array->ap_EncryptionMode, neighbor_ap_array->ap_OperatingFrequencyBand, neighbor_ap_array->ap_SupportedStandards, neighbor_ap_array->ap_OperatingStandards, neighbor_ap_array->ap_OperatingChannelBandwidth, neighbor_ap_array->ap_BeaconPeriod, neighbor_ap_array->ap_Noise, neighbor_ap_array->ap_BasicDataTransferRates, neighbor_ap_array->ap_SupportedDataTransferRates, neighbor_ap_array->ap_DTIMPeriod, neighbor_ap_array->ap_ChannelUtilization);
-        UT_LOG("output_array_size = %d", output_array_size);
-        if(!strcmp(neighbor_ap_array->ap_SSID,"") || !strcmp(neighbor_ap_array->ap_SSID,"valid_value"))   /*TODO need to replace with to valid value*/
-        {
-            UT_LOG("ap_SSID %s which is an valid value", neighbor_ap_array->ap_SSID);
-            UT_PASS("ap_SSID validation success");
-        }
-        else
-        {
-            UT_LOG("ap_SSID %s which is a invalid value", neighbor_ap_array->ap_SSID);
-            UT_FAIL("ap_SSID validation failed");
-        }
+	UT_LOG("Return status: %d\n", ret);
+	UT_ASSERT_EQUAL(ret, RETURN_OK);
 
-        if(!strcmp(neighbor_ap_array->ap_Mode,"AdHoc") || !strcmp(neighbor_ap_array->ap_Mode,"Infrastructure"))  
-        {
-            UT_LOG("ap_Mode %s which is an valid value", neighbor_ap_array->ap_Mode);
-            UT_PASS("ap_Mode validation success");
-        }
-        else
-        {
-            UT_LOG("ap_Mode %s which is a invalid value", neighbor_ap_array->ap_Mode);
-            UT_FAIL("ap_Mode validation failed");
-        }
+	UT_LOG("Array of neighboring access points contains the values: ap_SSID = %s, ap_BSSID = %s, ap_Mode = %s, ap_Channel = %d, ap_SignalStrength = %d, ap_SecurityModeEnabled =%s, ap_EncryptionMode = %s, ap_OperatingFrequencyBand = %s, ap_SupportedStandards = %s, ap_OperatingStandards = %s, ap_OperatingChannelBandwidth = %s, ap_BeaconPeriod = %d, ap_Noise = %d, ap_BasicDataTransferRates = %s, ap_SupportedDataTransferRates = %s, ap_DTIMPeriod = %d, ap_ChannelUtilization = %d", neighbor_ap_array->ap_SSID, neighbor_ap_array->ap_BSSID, neighbor_ap_array->ap_Mode, neighbor_ap_array->ap_Channel, neighbor_ap_array->ap_SignalStrength, neighbor_ap_array->ap_SecurityModeEnabled, neighbor_ap_array->ap_EncryptionMode, neighbor_ap_array->ap_OperatingFrequencyBand, neighbor_ap_array->ap_SupportedStandards, neighbor_ap_array->ap_OperatingStandards, neighbor_ap_array->ap_OperatingChannelBandwidth, neighbor_ap_array->ap_BeaconPeriod, neighbor_ap_array->ap_Noise, neighbor_ap_array->ap_BasicDataTransferRates, neighbor_ap_array->ap_SupportedDataTransferRates, neighbor_ap_array->ap_DTIMPeriod, neighbor_ap_array->ap_ChannelUtilization);
+	UT_LOG("output_array_size = %d", output_array_size);
+	if(!strcmp(neighbor_ap_array->ap_SSID,"") || !strcmp(neighbor_ap_array->ap_SSID,"valid_value"))   /*TODO need to replace with to valid value*/
+	{
+		UT_LOG("ap_SSID %s which is an valid value", neighbor_ap_array->ap_SSID);
+		UT_PASS("ap_SSID validation success");
+	}
+	else
+	{
+		UT_LOG("ap_SSID %s which is a invalid value", neighbor_ap_array->ap_SSID);
+		UT_FAIL("ap_SSID validation failed");
+	}
 
-        if ((neighbor_ap_array->ap_Channel >= 1 && neighbor_ap_array->ap_Channel <= 13 )||( neighbor_ap_array->ap_Channel >= 36 && neighbor_ap_array->ap_Channel <= 64) || (neighbor_ap_array->ap_Channel >= 100 && neighbor_ap_array->ap_Channel <= 165))
-        {
-            UT_LOG("ap_Channel is %d which is a valid value", neighbor_ap_array->ap_Channel);
-            UT_PASS("ssid_UnknownPacketsReceived validation success");
-        }
-        else
-        {
-            UT_LOG("ap_Channel is %d which is an invalid value", neighbor_ap_array->ap_Channel);
-            UT_FAIL("ap_Channel validation failed");
-        }
+	if(!strcmp(neighbor_ap_array->ap_Mode,"AdHoc") || !strcmp(neighbor_ap_array->ap_Mode,"Infrastructure"))  
+	{
+		UT_LOG("ap_Mode %s which is an valid value", neighbor_ap_array->ap_Mode);
+		UT_PASS("ap_Mode validation success");
+	}
+	else
+	{
+		UT_LOG("ap_Mode %s which is a invalid value", neighbor_ap_array->ap_Mode);
+		UT_FAIL("ap_Mode validation failed");
+	}
 
-        if (neighbor_ap_array->ap_SignalStrength >= -200 && neighbor_ap_array->ap_SignalStrength <= 0)
-        {
-            UT_LOG("ap_SignalStrength is %d which is a valid value", neighbor_ap_array->ap_SignalStrength);
-            UT_PASS("ap_SignalStrength validation success");
-        }
-        else
-        {
-            UT_LOG("ap_SignalStrength is %d which is an invalid value", neighbor_ap_array->ap_SignalStrength);
-            UT_FAIL("ap_SignalStrength validation failed");
-        }
+	if ((neighbor_ap_array->ap_Channel >= 1 && neighbor_ap_array->ap_Channel <= 13 )||( neighbor_ap_array->ap_Channel >= 36 && neighbor_ap_array->ap_Channel <= 64) || (neighbor_ap_array->ap_Channel >= 100 && neighbor_ap_array->ap_Channel <= 165))
+	{
+		UT_LOG("ap_Channel is %d which is a valid value", neighbor_ap_array->ap_Channel);
+		UT_PASS("ssid_UnknownPacketsReceived validation success");
+	}
+	else
+	{
+		UT_LOG("ap_Channel is %d which is an invalid value", neighbor_ap_array->ap_Channel);
+		UT_FAIL("ap_Channel validation failed");
+	}
 
-        if(!strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"None") || !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WEP")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA3")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-WPA2")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2-WPA3")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-Enterprise")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2-Enterprise")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-WPA2-Enterprise"))  
-        {
-            UT_LOG("ap_SecurityModeEnabled is %s which is an valid value", neighbor_ap_array->ap_SecurityModeEnabled);
-            UT_PASS("ap_SecurityModeEnabled validation success");
-        }
-        else
-        {
-            UT_LOG("ap_SecurityModeEnabled is %s which is a invalid value", neighbor_ap_array->ap_SecurityModeEnabled);
-            UT_FAIL("ap_SecurityModeEnabled validation failed");
-        }
+	if (neighbor_ap_array->ap_SignalStrength >= -200 && neighbor_ap_array->ap_SignalStrength <= 0)
+	{
+		UT_LOG("ap_SignalStrength is %d which is a valid value", neighbor_ap_array->ap_SignalStrength);
+		UT_PASS("ap_SignalStrength validation success");
+	}
+	else
+	{
+		UT_LOG("ap_SignalStrength is %d which is an invalid value", neighbor_ap_array->ap_SignalStrength);
+		UT_FAIL("ap_SignalStrength validation failed");
+	}
 
-        if(!strcmp(neighbor_ap_array->ap_EncryptionMode,"TKIP") || !strcmp(neighbor_ap_array->ap_EncryptionMode,"AES"))  
-        {
-            UT_LOG("ap_EncryptionMode is %s which is an valid value", neighbor_ap_array->ap_EncryptionMode);
-            UT_PASS("ap_EncryptionMode validation success");
-        }
-        else
-        {
-            UT_LOG("ap_EncryptionMode is %s which is a invalid value", neighbor_ap_array->ap_EncryptionMode);
-            UT_FAIL("ap_EncryptionMode validation failed");
-        }
+	if(!strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"None") || !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WEP")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA3")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-WPA2")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2-WPA3")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-Enterprise")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2-Enterprise")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-WPA2-Enterprise"))  
+	{
+		UT_LOG("ap_SecurityModeEnabled is %s which is an valid value", neighbor_ap_array->ap_SecurityModeEnabled);
+		UT_PASS("ap_SecurityModeEnabled validation success");
+	}
+	else
+	{
+		UT_LOG("ap_SecurityModeEnabled is %s which is a invalid value", neighbor_ap_array->ap_SecurityModeEnabled);
+		UT_FAIL("ap_SecurityModeEnabled validation failed");
+	}
 
-        if(!strcmp(neighbor_ap_array->ap_OperatingFrequencyBand,"2.4GHz") || !strcmp(neighbor_ap_array->ap_OperatingFrequencyBand,"5GHz"))  
-        {
-            UT_LOG("ap_OperatingFrequencyBand is %s which is an valid value", neighbor_ap_array->ap_OperatingFrequencyBand);
-            UT_PASS("ap_OperatingFrequencyBand validation success");
-        }
-        else
-        {
-            UT_LOG("ap_OperatingFrequencyBand is %s which is a invalid value", neighbor_ap_array->ap_OperatingFrequencyBand);
-            UT_FAIL("ap_OperatingFrequencyBand validation failed");
-        }
+	if(!strcmp(neighbor_ap_array->ap_EncryptionMode,"TKIP") || !strcmp(neighbor_ap_array->ap_EncryptionMode,"AES"))  
+	{
+		UT_LOG("ap_EncryptionMode is %s which is an valid value", neighbor_ap_array->ap_EncryptionMode);
+		UT_PASS("ap_EncryptionMode validation success");
+	}
+	else
+	{
+		UT_LOG("ap_EncryptionMode is %s which is a invalid value", neighbor_ap_array->ap_EncryptionMode);
+		UT_FAIL("ap_EncryptionMode validation failed");
+	}
 
-        if(!strcmp(neighbor_ap_array->ap_SupportedStandards,"a") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"b") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"g") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"n") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"ac"))  
-        {
-            UT_LOG("ap_SupportedStandards is %s which is an valid value", neighbor_ap_array->ap_SupportedStandards);
-            UT_PASS("ap_SupportedStandards validation success");
-        }
-        else
-        {
-            UT_LOG("ap_SupportedStandards is %s which is a invalid value", neighbor_ap_array->ap_SupportedStandards);
-            UT_FAIL("ap_SupportedStandards validation failed");
-        }
-        if(!strcmp(neighbor_ap_array->ap_OperatingStandards,"a") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"b") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"g") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"n") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"ac"))  
-        {
-            UT_LOG("ap_OperatingStandards is %s which is an valid value", neighbor_ap_array->ap_OperatingStandards);
-            UT_PASS("ap_OperatingStandards validation success");
-        }
-        else
-        {
-            UT_LOG("ap_OperatingStandards is %s which is a invalid value", neighbor_ap_array->ap_OperatingStandards);
-            UT_FAIL("ap_OperatingStandards validation failed");
-        }
-        if(!strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"20MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"40MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"80MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"160MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"Auto"))  
-        {
-            UT_LOG("ap_OperatingChannelBandwidth is %s which is an valid value", neighbor_ap_array->ap_OperatingStandards);
-            UT_PASS("ap_OperatingChannelBandwidth validation success");
-        }
-        else
-        {
-            UT_LOG("ap_OperatingChannelBandwidth is %s which is a invalid value", neighbor_ap_array->ap_OperatingStandards);
-            UT_FAIL("ap_OperatingChannelBandwidth validation failed");
-        }
-        if (neighbor_ap_array->ap_BeaconPeriod >= 0 && neighbor_ap_array->ap_BeaconPeriod <= 4294967295)
-        {
-            UT_LOG("ap_BeaconPeriod is %d which is a valid value", neighbor_ap_array->ap_BeaconPeriod);
-            UT_PASS("ap_BeaconPeriod validation success");
-        }
-        else
-        {
-            UT_LOG("ap_BeaconPeriod is %d which is an invalid value", neighbor_ap_array->ap_BeaconPeriod);
-            UT_FAIL("ap_BeaconPeriod validation failed");
-        }
-        if (neighbor_ap_array->ap_Noise >= -200 && neighbor_ap_array->ap_Noise <= 0)
-        {
-            UT_LOG("ap_Noise is %d which is a valid value", neighbor_ap_array->ap_Noise);
-            UT_PASS("ap_Noise validation success");
-        }
-        else
-        {
-            UT_LOG("ap_Noise is %d which is an invalid value", neighbor_ap_array->ap_Noise);
-            UT_FAIL("ap_Noise validation failed");
-        }
-        if(!strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"1") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"2") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"5.5") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"6") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"9") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"12")|| !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"18") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"24") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"36") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"48")|| !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"54"))  
-        {
-            UT_LOG("ap_BasicDataTransferRates is %s which is an valid value", neighbor_ap_array->ap_BasicDataTransferRates);
-            UT_PASS("ap_BasicDataTransferRates validation success");
-        }
-        else
-        {
-            UT_LOG("ap_BasicDataTransferRates is %s which is a invalid value", neighbor_ap_array->ap_BasicDataTransferRates);
-            UT_FAIL("ap_BasicDataTransferRates validation failed");
-        }
-        if(!strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"1") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"2") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"5.5") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"6") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"9") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"12")|| !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"18") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"24") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"36") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"48")|| !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"54"))  
-        {
-            UT_LOG("ap_SupportedDataTransferRates is %s which is an valid value", neighbor_ap_array->ap_SupportedDataTransferRates);
-            UT_PASS("ap_SupportedDataTransferRates validation success");
-        }
-        else
-        {
-            UT_LOG("ap_SupportedDataTransferRates is %s which is a invalid value", neighbor_ap_array->ap_SupportedDataTransferRates);
-            UT_FAIL("ap_SupportedDataTransferRates validation failed");
-        }
-        if (neighbor_ap_array->ap_DTIMPeriod >= 0 && neighbor_ap_array->ap_DTIMPeriod <= 4294967295)
-        {
-            UT_LOG("ap_DTIMPeriod is %d which is a valid value", neighbor_ap_array->ap_DTIMPeriod);
-            UT_PASS("ap_Noise validation success");
-        }
-        else
-        {
-            UT_LOG("ap_DTIMPeriod is %d which is an invalid value", neighbor_ap_array->ap_DTIMPeriod);
-            UT_FAIL("ap_DTIMPeriod validation failed");
-        }
-        for (int i = 0; i < sizeof(neighbor_ap_array->ap_ChannelUtilization) / sizeof(neighbor_ap_array->ap_ChannelUtilization[0]); i++) {
-            if (neighbor_ap_array->ap_ChannelUtilization[i] >= 0 && neighbor_ap_array->ap_ChannelUtilization[i] <= 100) 
-            {
-                UT_LOG("ap_ChannelUtilization is %s which is a valid value", neighbor_ap_array->ap_ChannelUtilization[i]);
-                UT_PASS("ap_ChannelUtilization validation success");
-            }
-            else
-            {
-                UT_LOG("ap_ChannelUtilizationis %s which is a invalid value", neighbor_ap_array->ap_ChannelUtilization[i]);
-                UT_FAIL("ap_ChannelUtilization validation failed");
-            }
-        }
-        if (output_array_size >= 0 && output_array_size <= 512)
-        {
-            UT_LOG("output_array_size is %d which is a valid value", output_array_size);
-            UT_PASS("output_array_size success");
-        }
-        else
-        {
-            UT_LOG("output_array_size is %d which is an invalid value",output_array_size);
-            UT_FAIL("output_array_size validation failed");
-        }
+	if(!strcmp(neighbor_ap_array->ap_OperatingFrequencyBand,"2.4GHz") || !strcmp(neighbor_ap_array->ap_OperatingFrequencyBand,"5GHz"))  
+	{
+		UT_LOG("ap_OperatingFrequencyBand is %s which is an valid value", neighbor_ap_array->ap_OperatingFrequencyBand);
+		UT_PASS("ap_OperatingFrequencyBand validation success");
+	}
+	else
+	{
+		UT_LOG("ap_OperatingFrequencyBand is %s which is a invalid value", neighbor_ap_array->ap_OperatingFrequencyBand);
+		UT_FAIL("ap_OperatingFrequencyBand validation failed");
+	}
 
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed");
-        UT_FAIL("Memory allocation with malloc failed");
-    }
-
+	if(!strcmp(neighbor_ap_array->ap_SupportedStandards,"a") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"b") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"g") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"n") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"ac"))  
+	{
+		UT_LOG("ap_SupportedStandards is %s which is an valid value", neighbor_ap_array->ap_SupportedStandards);
+		UT_PASS("ap_SupportedStandards validation success");
+	}
+	else
+	{
+		UT_LOG("ap_SupportedStandards is %s which is a invalid value", neighbor_ap_array->ap_SupportedStandards);
+		UT_FAIL("ap_SupportedStandards validation failed");
+	}
+	if(!strcmp(neighbor_ap_array->ap_OperatingStandards,"a") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"b") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"g") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"n") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"ac"))  
+	{
+		UT_LOG("ap_OperatingStandards is %s which is an valid value", neighbor_ap_array->ap_OperatingStandards);
+		UT_PASS("ap_OperatingStandards validation success");
+	}
+	else
+	{
+		UT_LOG("ap_OperatingStandards is %s which is a invalid value", neighbor_ap_array->ap_OperatingStandards);
+		UT_FAIL("ap_OperatingStandards validation failed");
+	}
+	if(!strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"20MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"40MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"80MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"160MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"Auto"))  
+	{
+		UT_LOG("ap_OperatingChannelBandwidth is %s which is an valid value", neighbor_ap_array->ap_OperatingStandards);
+		UT_PASS("ap_OperatingChannelBandwidth validation success");
+	}
+	else
+	{
+		UT_LOG("ap_OperatingChannelBandwidth is %s which is a invalid value", neighbor_ap_array->ap_OperatingStandards);
+		UT_FAIL("ap_OperatingChannelBandwidth validation failed");
+	}
+	if (neighbor_ap_array->ap_BeaconPeriod >= 0 && neighbor_ap_array->ap_BeaconPeriod <= 4294967295)
+	{
+		UT_LOG("ap_BeaconPeriod is %d which is a valid value", neighbor_ap_array->ap_BeaconPeriod);
+		UT_PASS("ap_BeaconPeriod validation success");
+	}
+	else
+	{
+		UT_LOG("ap_BeaconPeriod is %d which is an invalid value", neighbor_ap_array->ap_BeaconPeriod);
+		UT_FAIL("ap_BeaconPeriod validation failed");
+	}
+	if (neighbor_ap_array->ap_Noise >= -200 && neighbor_ap_array->ap_Noise <= 0)
+	{
+		UT_LOG("ap_Noise is %d which is a valid value", neighbor_ap_array->ap_Noise);
+		UT_PASS("ap_Noise validation success");
+	}
+	else
+	{
+		UT_LOG("ap_Noise is %d which is an invalid value", neighbor_ap_array->ap_Noise);
+		UT_FAIL("ap_Noise validation failed");
+	}
+	if(!strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"1") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"2") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"5.5") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"6") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"9") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"12")|| !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"18") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"24") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"36") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"48")|| !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"54"))  
+	{
+		UT_LOG("ap_BasicDataTransferRates is %s which is an valid value", neighbor_ap_array->ap_BasicDataTransferRates);
+		UT_PASS("ap_BasicDataTransferRates validation success");
+	}
+	else
+	{
+		UT_LOG("ap_BasicDataTransferRates is %s which is a invalid value", neighbor_ap_array->ap_BasicDataTransferRates);
+		UT_FAIL("ap_BasicDataTransferRates validation failed");
+	}
+	if(!strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"1") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"2") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"5.5") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"6") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"9") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"12")|| !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"18") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"24") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"36") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"48")|| !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"54"))  
+	{
+		UT_LOG("ap_SupportedDataTransferRates is %s which is an valid value", neighbor_ap_array->ap_SupportedDataTransferRates);
+		UT_PASS("ap_SupportedDataTransferRates validation success");
+	}
+	else
+	{
+		UT_LOG("ap_SupportedDataTransferRates is %s which is a invalid value", neighbor_ap_array->ap_SupportedDataTransferRates);
+		UT_FAIL("ap_SupportedDataTransferRates validation failed");
+	}
+	if (neighbor_ap_array->ap_DTIMPeriod >= 0 && neighbor_ap_array->ap_DTIMPeriod <= 4294967295)
+	{
+		UT_LOG("ap_DTIMPeriod is %d which is a valid value", neighbor_ap_array->ap_DTIMPeriod);
+		UT_PASS("ap_Noise validation success");
+	}
+	else
+	{
+		UT_LOG("ap_DTIMPeriod is %d which is an invalid value", neighbor_ap_array->ap_DTIMPeriod);
+		UT_FAIL("ap_DTIMPeriod validation failed");
+	}
+	for (int i = 0; i < sizeof(neighbor_ap_array->ap_ChannelUtilization) / sizeof(neighbor_ap_array->ap_ChannelUtilization[0]); i++) {
+		if (neighbor_ap_array->ap_ChannelUtilization[i] >= 0 && neighbor_ap_array->ap_ChannelUtilization[i] <= 100) 
+		{
+			UT_LOG("ap_ChannelUtilization is %s which is a valid value", neighbor_ap_array->ap_ChannelUtilization[i]);
+			UT_PASS("ap_ChannelUtilization validation success");
+		}
+		else
+		{
+			UT_LOG("ap_ChannelUtilizationis %s which is a invalid value", neighbor_ap_array->ap_ChannelUtilization[i]);
+			UT_FAIL("ap_ChannelUtilization validation failed");
+		}
+	}
+	if (output_array_size >= 0 && output_array_size <= 512)
+	{
+		UT_LOG("output_array_size is %d which is a valid value", output_array_size);
+		UT_PASS("output_array_size success");
+	}
+	else
+	{
+		UT_LOG("output_array_size is %d which is an invalid value",output_array_size);
+		UT_FAIL("output_array_size validation failed");
+	}
+	free(neighbor_ap_array);
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo...\n");
 }
 
@@ -6518,20 +6647,16 @@ void test_l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo( void )
     const char *SSID = NULL;
     WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_5GHZ;
     UINT output_array_size = 0;
-    wifi_neighbor_ap_t *neighbor_ap_array = (wifi_neighbor_ap_t*)malloc(sizeof(wifi_neighbor_ap_t));
-    if(neighbor_ap_array != NULL)
-    {
-        UT_LOG("Invoking wifi_getSpecificSSIDInfo with NULL SSID");	
-        INT ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
+    wifi_neighbor_ap_t *neighbor_ap_array;
+	INT ret;
+	
+	UT_LOG("Invoking wifi_getSpecificSSIDInfo with NULL SSID");	
+	ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
 
-        UT_LOG("Return status: %d\n", ret);
-        UT_ASSERT_EQUAL(ret, RETURN_ERR);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed");
-        UT_FAIL("Memory allocation with malloc failed");
-    }
+	UT_LOG("Return status: %d\n", ret);
+	free(neighbor_ap_array);
+	UT_ASSERT_EQUAL(ret, RETURN_ERR);
+    
     UT_LOG("Exiting test_l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo...\n");
 }
 
@@ -6561,20 +6686,15 @@ void test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo( void )
     const char *SSID = "valid_ssid";        /*Need to replace with valid value*/
     WIFI_HAL_FREQ_BAND band = 5;
     UINT output_array_size = 0;
-    wifi_neighbor_ap_t *neighbor_ap_array = (wifi_neighbor_ap_t*)malloc(sizeof(wifi_neighbor_ap_t));
-    if(neighbor_ap_array != NULL)
-    {
-        UT_LOG("Invoking wifi_getSpecificSSIDInfo with invalid frequency band");
-        INT ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
+    wifi_neighbor_ap_t *neighbor_ap_array;
 
-        UT_LOG("Return status: %d\n", ret);
-        UT_ASSERT_EQUAL(ret, RETURN_ERR);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed");
-        UT_FAIL("Memory allocation with malloc failed");
-    }
+	UT_LOG("Invoking wifi_getSpecificSSIDInfo with invalid frequency band");
+	INT ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
+
+	UT_LOG("Return status: %d\n", ret);
+	free(neighbor_ap_array);
+	UT_ASSERT_EQUAL(ret, RETURN_ERR);
+
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo...\n");
 }
 
@@ -6603,12 +6723,14 @@ void test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo( void )
     const char *SSID = "valid_ssid";                      /*Need to replace with valid calue*/
     WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
     UINT output_array_size = 0;
-	wifi_neighbor_ap_t **neighbor_ap_array = NULL;
+	wifi_neighbor_ap_t *neighbor_ap_array = NULL;
+    INT ret;
     
     UT_LOG("Invoking wifi_getSpecificSSIDInfo with invalid ap_array ");
-    INT ret = wifi_getSpecificSSIDInfo(SSID, band, neighbor_ap_array, &output_array_size);
+    ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
 
     UT_LOG("Return status: %d\n", ret);
+	free(neighbor_ap_array);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo...\n");
@@ -6638,23 +6760,20 @@ void test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo( void )
     const char *SSID = "valid_ssid";                               /*Need to replace with valid calue*/
     WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
     UINT output_array_size = 0;
-    wifi_neighbor_ap_t *neighbor_ap_array = (wifi_neighbor_ap_t*)malloc(sizeof(wifi_neighbor_ap_t));
-    if(neighbor_ap_array != NULL)
-    {
-	    WiFi_UnInitPosReq();
-        UT_LOG("Invoking wifi_getSpecificSSIDInfo before wifi_init() or wifi_initWithConfig()");
-        INT ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
+    wifi_neighbor_ap_t *neighbor_ap_array;
+	INT ret;
+	
+	WiFi_UnInitPosReq();
+	UT_LOG("Invoking wifi_getSpecificSSIDInfo before wifi_init() or wifi_initWithConfig()");
+	ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
 
-        UT_LOG("Return status: %d\n", ret);
-        UT_ASSERT_EQUAL(ret, RETURN_ERR);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed");
-        UT_FAIL("Memory allocation with malloc failed");
-    }
-
+	UT_LOG("Return status: %d\n", ret);
+	free(neighbor_ap_array);	
     WiFi_InitPreReq();
+	UT_ASSERT_EQUAL(ret, RETURN_ERR);
+
+
+
     UT_LOG("Exiting test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo...\n");
 }
 
@@ -6681,9 +6800,10 @@ void test_l1_wifi_common_hal_positive1_wifi_setRadioScanningFreqList(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_setRadioScanningFreqList...");
     INT radioIndex = 1;
     CHAR *freqList = "2412 2437 2452 2467 2482";
+    INT result;
     
     UT_LOG("Invoking wifi_setRadioScanningFreqList with valid input parameters");
-    INT result = wifi_setRadioScanningFreqList(radioIndex, freqList);
+    result = wifi_setRadioScanningFreqList(radioIndex, freqList);
     
     UT_LOG("Returned status : %d", result);
     UT_ASSERT_EQUAL(result, RETURN_OK);
@@ -6716,9 +6836,10 @@ void test_l1_wifi_common_hal_negative1_wifi_setRadioScanningFreqList(void) {
     
     INT radioIndex = 2;
     CHAR *freqList = "2412 2437 2452 2467 2482";
-    
+    INT result;
+	
     UT_LOG("Invoking wifi_setRadioScanningFreqList with invalid radioIndex");
-    INT result = wifi_setRadioScanningFreqList(radioIndex, freqList);
+    result = wifi_setRadioScanningFreqList(radioIndex, freqList);
     
     UT_LOG("Returned status : %d", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -6749,9 +6870,10 @@ void test_l1_wifi_common_hal_negative2_wifi_setRadioScanningFreqList(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_setRadioScanningFreqList...");
     INT radioIndex = 1;
     CHAR *freqList = "2412:2437:2452:2467:2482";
+    INT result;
     
     UT_LOG("Invoking wifi_setRadioScanningFreqList with invalid separator");
-    INT result = wifi_setRadioScanningFreqList(radioIndex, freqList);
+    result = wifi_setRadioScanningFreqList(radioIndex, freqList);
 
     UT_LOG("Returned : %d", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -6782,9 +6904,10 @@ void test_l1_wifi_common_hal_negative3_wifi_setRadioScanningFreqList(void) {
     
     INT radioIndex = 1;
     CHAR *freqList = "5555 2437 2452 2467 2482";
+    INT result;
     
     UT_LOG("Invoking wifi_setRadioScanningFreqList with freqList containing one invalid frequency");
-    INT result = wifi_setRadioScanningFreqList(radioIndex, freqList);
+    result = wifi_setRadioScanningFreqList(radioIndex, freqList);
     
     UT_LOG("Returned status : %d", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -6814,9 +6937,10 @@ void test_l1_wifi_common_hal_negative4_wifi_setRadioScanningFreqList(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_setRadioScanningFreqList...");
     INT radioIndex = 1;
     CHAR *freqList = NULL;
+    INT result;
     
     UT_LOG("Invoking wifi_setRadioScanningFreqList with freqList = NULL ");
-    INT result = wifi_setRadioScanningFreqList(radioIndex, freqList);
+    result = wifi_setRadioScanningFreqList(radioIndex, freqList);
     
     UT_LOG("Returned status : %d", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -6846,11 +6970,12 @@ void test_l1_wifi_common_hal_negative5_wifi_setRadioScanningFreqList(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_negative5_wifi_setRadioScanningFreqList...");
     INT radioIndex = 1;
     CHAR *freqList = "2412 2437 2452 2467 2482";
+    INT result;
 	
 	WiFi_UnInitPosReq();
 	
     UT_LOG("Invoking wifi_setRadioScanningFreqList before wifi_init() or wifi_initWithConfig()");
-    INT result = wifi_setRadioScanningFreqList(radioIndex, freqList);
+    result = wifi_setRadioScanningFreqList(radioIndex, freqList);
     
     UT_LOG("Returned status : %d", result);
 	WiFi_InitPreReq();
@@ -6881,9 +7006,10 @@ void test_l1_wifi_common_hal_negative6_wifi_setRadioScanningFreqList(void) {
     UT_LOG("Entering test_l1_wifi_common_hal_negative6_wifi_setRadioScanningFreqList...");
     INT radioIndex = 1;
     CHAR *freqList = " ";
+    INT result;
 	
     UT_LOG("Invoking wifi_setRadioScanningFreqList with empty freqList ");
-    INT result = wifi_setRadioScanningFreqList(radioIndex, freqList);
+    result = wifi_setRadioScanningFreqList(radioIndex, freqList);
     
     UT_LOG("Returned status : %d", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -6914,7 +7040,6 @@ void test_l1_wifi_common_hal_positive1_getDualBandSupport(void)
    UT_LOG("Entering test function: test_l1_wifi_common_hal_positive1_getDualBandSupport...");
 
    INT return_val;
-   return_val = wifi_getDualBandSupport();
    
    UT_LOG("Invoking wifi_getDualBandSupport");
    return_val = wifi_getDualBandSupport();
@@ -6986,18 +7111,17 @@ void test_l1_wifi_common_hal_positive1_wifi_waitForScanResults(void)
 */
 void test_l1_wifi_common_hal_negative1_wifi_waitForScanResults(void)
 {
-    INT retValue;
-
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_waitForScanResults...");
-    WiFi_UnInitPosReq();
-
-    UT_LOG("Invoking wifi_waitForScanResults without calling wifi_init or wifi_initWithConfig. Expected return value is #RETURN_ERR.");
-    retValue = wifi_waitForScanResults();
 	
+    INT retValue;
+	
+    WiFi_UnInitPosReq();
+    UT_LOG("Invoking wifi_waitForScanResults without calling wifi_init or wifi_initWithConfig. Expected return value is #RETURN_ERR.");
+    retValue = wifi_waitForScanResults();	
     UT_LOG("Returned status : %d", retValue);
     UT_ASSERT_EQUAL(retValue, RETURN_ERR);
-
     WiFi_InitPreReq();
+	
     UT_LOG("Exiting test_l1_wifi_common_hal_negative1_wifi_waitForScanResults...");
 }
 
@@ -7017,8 +7141,8 @@ int test_wifi_common_hal_register(void)
         return -1;
     }
     // List of test function names and strings
-   const char* list1[] = {"l1_wifi_common_hal_positive1_wifi_getHalVersion", "l1_wifi_common_hal_negative1_wifi_getHalVersion", "l1_wifi_common_hal_positive1_wifi_init", "l1_wifi_common_hal_positive1_wifi_initWithConfig", "l1_wifi_common_hal_negative1_wifi_initWithConfig", "l1_wifi_common_hal_negative2_wifi_initWithConfig", "l1_wifi_common_hal_negative3_wifi_initWithConfig", "l1_wifi_common_hal_positive1_wifi_down", "l1_wifi_common_hal_negative1_wifi_down","l1_wifi_common_hal_positive1_wifi_uninit", "l1_wifi_common_hal_positive2_wifi_uninit", "l1_wifi_common_hal_negative1_wifi_uninit", "l1_wifi_common_hal_positive1_getStats", "l1_wifi_common_hal_negative1_getStats", "l1_wifi_common_hal_negative2_getStats", "l1_wifi_common_hal_negative3_getStats", "l1_wifi_common_hal_positive1_wifi_getRadioNumberOfEntries", "l1_wifi_common_hal_negative1_wifi_getRadioNumberOfEntries", "l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries", "l1_wifi_common_hal_positive1_wifi_getSSIDNumberOfEntries", "l1_wifi_common_hal_negative1_wifi_getSSIDNumberOfEntries", "l1_wifi_common_hal_negative2_wifi_getSSIDNumberOfEntries", "l1_wifi_common_hal_positive1_wifi_getRadioEnable", "l1_wifi_common_hal_positive2_wifi_getRadioEnable", "l1_wifi_common_hal_positive3_wifi_getRadioEnable", "l1_wifi_common_hal_negative1_wifi_getRadioEnable", "l1_wifi_common_hal_negative2_wifi_getRadioEnable", "l1_wifi_common_hal_negative3_wifi_getRadioEnable","l1_wifi_common_hal_negative4_wifi_getRadioEnable", "l1_wifi_common_hal_positive1_wifi_getRadioStatus", "l1_wifi_common_hal_negative1_wifi_getRadioStatus", "l1_wifi_common_hal_negative2_wifi_getRadioStatus", "l1_wifi_common_hal_negative3_wifi_getRadioStatus","l1_wifi_common_hal_positive1_wifi_getRadioIfName","l1_wifi_common_hal_negative1_wifi_getRadioIfName","l1_wifi_common_hal_negative2_wifi_getRadioIfName","l1_wifi_common_hal_negative3_wifi_getRadioIfName","l1_wifi_common_hal_negative4_wifi_getRadioIfName","l1_wifi_common_hal_negative5_wifi_getRadioIfName", "l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate", "l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate", "l1_wifi_common_hal_negative2_wifi_getRadioMaxBitRate", "l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate", "l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands", "l1_wifi_common_hal_negative1_wifi_getRadioSupportedFrequencyBands", "l1_wifi_common_hal_negative2_wifi_getRadioSupportedFrequencyBands", "l1_wifi_common_hal_negative3_wifi_getRadioSupportedFrequencyBands", "l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands", "l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand", "l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand", "l1_wifi_common_hal_negative2_wifi_getRadioOperatingFrequencyBand", "l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand", "l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards", "l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards", "l1_wifi_common_hal_negative2_wifi_getRadioSupportedStandards", "l1_wifi_common_hal_negative3_wifi_getRadioSupportedStandards", "l1_wifi_common_hal_positive1_wifi_getRadioStandard", "l1_wifi_common_hal_negative1_wifi_getRadioStandard", "l1_wifi_common_hal_negative2_wifi_getRadioStandard", "l1_wifi_common_hal_negative3_wifi_getRadioStandard", "l1_wifi_common_hal_positive1_wifi_getRadioPossibleChannels", "l1_wifi_common_hal_negative1_wifi_getRadioPossibleChannels", "l1_wifi_common_hal_negative2_wifi_getRadioPossibleChannels", "l1_wifi_common_hal_negative3_wifi_getRadioPossibleChannels", "l1_wifi_common_hal_negative4_wifi_getRadioPossibleChannels", "l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse", "l1_wifi_common_hal_negative1_wifi_getRadioChannelsInUse", "l1_wifi_common_hal_negative2_wifi_getRadioChannelsInUse", "l1_wifi_common_hal_negative3_wifi_getRadioChannelsInUse", "l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse", "l1_wifi_common_hal_positive1_wifi_getRadioChannel", "l1_wifi_common_hal_negative1_wifi_getRadioChannel", "l1_wifi_common_hal_negative2_wifi_getRadioChannel", "l1_wifi_common_hal_negative3_wifi_getRadioChannel", "l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelSupported", "l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelSupported", "l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelSupported", "l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelSupported", "l1_wifi_common_hal_negative4_wifi_getRadioAutoChannelSupported", "l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelEnable", "l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelEnable", "l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelEnable", "l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelEnable", "l1_wifi_common_hal_positive1_getRadioAutoChannelRefreshPeriod", "l1_wifi_common_hal_negative1_getRadioAutoChannelRefreshPeriod", "l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod", "l1_wifi_common_hal_positive2_getRadioAutoChannelRefreshPeriod", "l1_wifi_common_hal_negative3_getRadioAutoChannelRefreshPeriod", "l1_wifi_common_hal_positive1_wifi_getRadioGuardInterval", "l1_wifi_common_hal_negative1_wifi_getRadioGuardInterval", "l1_wifi_common_hal_negative2_wifi_getRadioGuardInterval", "l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval", "l1_wifi_common_hal_negative4_wifi_getRadioGuardInterval", "l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth", "l1_wifi_common_hal_negative1_wifi_getRadioOperatingChannelBandwidth", "l1_wifi_common_hal_negative2_wifi_getRadioOperatingChannelBandwidth", "l1_wifi_common_hal_negative3_wifi_getRadioOperatingChannelBandwidth", "l1_wifi_common_hal_negative4_wifi_getRadioOperatingChannelBandwidth", "l1_wifi_common_hal_positive1_wifi_getRadioExtChannel", "l1_wifi_common_hal_negative1_wifi_getRadioExtChannel", "l1_wifi_common_hal_negative2_wifi_getRadioExtChannel", "l1_wifi_common_hal_negative3_wifi_getRadioExtChannel", "l1_wifi_common_hal_negative4_wifi_getRadioExtChannel", "l1_wifi_common_hal_positive1_wifi_getRadioMCS", "l1_wifi_common_hal_negative1_wifi_getRadioMCS", "l1_wifi_common_hal_negative2_wifi_getRadioMCS", "l1_wifi_common_hal_negative3_wifi_getRadioMCS", "l1_wifi_common_hal_positive1_wifi_getRadioTransmitPowerSupported", "l1_wifi_common_hal_negative1_wifi_getRadioTransmitPowerSupported", "l1_wifi_common_hal_negative2_wifi_getRadioTransmitPowerSupported", "l1_wifi_common_hal_negative3_wifi_getRadioTransmitPowerSupported","l1_wifi_common_hal_negative4_wifi_getRadioTransmitPowerSupported", "l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower", "l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower", "l1_wifi_common_hal_negative2_wifi_getRadioTransmitPower","l1_wifi_common_hal_negative3_wifi_getRadioTransmitPower","l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower", "l1_wifi_common_hal_positive_1_wifi_getRadioIEEE80211hSupported", "l1_wifi_common_hal_negative_1_wifi_getRadioIEEE80211hSupported", "l1_wifi_common_hal_negative_2_wifi_getRadioIEEE80211hSupported", "l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported", "l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled", "l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled", "l1_wifi_common_hal_negative2_wifi_getRadioIEEE80211hEnabled", "l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hEnabled", "l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain", "l1_wifi_common_hal_negative1_wifi_getRegulatoryDomain", "l1_wifi_common_hal_negative2_wifi_getRegulatoryDomain", "l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain", "l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain", "l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain", "l1_wifi_common_hal_negative6_wifi_getRegulatoryDomain", "l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats", "l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats", "l1_wifi_common_hal_negative2_wifi_getRadioTrafficStats", "l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats", "l1_wifi_common_hal_positive1_wifi_getSSIDName", "l1_wifi_common_hal_negative1_wifi_getSSIDName", "l1_wifi_common_hal_negative2_wifi_getSSIDName", "l1_wifi_common_hal_negative3_wifi_getSSIDName", "l1_wifi_common_hal_boundary1_wifi_getSSIDName", "l1_wifi_common_hal_positive1_wifi_getBaseBSSID", "l1_wifi_common_hal_negative1_wifi_getBaseBSSID", "l1_wifi_common_hal_negative2_wifi_getBaseBSSID", "l1_wifi_common_hal_negative3_wifi_getBaseBSSID", "l1_wifi_common_hal_positive1_wifi_getSSIDMACAddress", "l1_wifi_common_hal_negative1_wifi_getSSIDMACAddress", "l1_wifi_common_hal_negative2_wifi_getSSIDMACAddress", "l1_wifi_common_hal_negative3_wifi_getSSIDMACAddress", "l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats", "l1_wifi_common_hal_negative1_wifi_getSSIDTrafficStats", "l1_wifi_common_hal_negative2_wifi_getSSIDTrafficStats", "l1_wifi_common_hal_negative3_wifi_getSSIDTrafficStats", "l1_wifi_common_hal_negative4_wifi_getSSIDTrafficStats", "l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult", "l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult", "l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult", "l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult", "l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult", "l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo", "l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo", "l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo","l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo","l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo", "l1_wifi_common_hal_positive1_wifi_setRadioScanningFreqList", "l1_wifi_common_hal_negative1_wifi_setRadioScanningFreqList", "l1_wifi_common_hal_negative2_wifi_setRadioScanningFreqList","l1_wifi_common_hal_negative3_wifi_setRadioScanningFreqList", "l1_wifi_common_hal_negative4_wifi_setRadioScanningFreqList", "l1_wifi_common_hal_negative5_wifi_setRadioScanningFreqList", "l1_wifi_common_hal_negative6_wifi_setRadioScanningFreqList", "l1_wifi_common_hal_positive1_getDualBandSupport", "l1_wifi_common_hal_positive1_wifi_waitForScanResults", "l1_wifi_common_hal_negative1_wifi_waitForScanResults" };
-   void (*list2[])() = {test_l1_wifi_common_hal_positive1_wifi_getHalVersion, test_l1_wifi_common_hal_negative1_wifi_getHalVersion, test_l1_wifi_common_hal_positive1_wifi_init, test_l1_wifi_common_hal_positive1_wifi_initWithConfig, test_l1_wifi_common_hal_negative1_wifi_initWithConfig, test_l1_wifi_common_hal_negative2_wifi_initWithConfig, test_l1_wifi_common_hal_negative3_wifi_initWithConfig, test_l1_wifi_common_hal_positive1_wifi_down,test_l1_wifi_common_hal_negative1_wifi_down,test_l1_wifi_common_hal_positive1_wifi_uninit, test_l1_wifi_common_hal_positive2_wifi_uninit, test_l1_wifi_common_hal_negative1_wifi_uninit, test_l1_wifi_common_hal_positive1_getStats, test_l1_wifi_common_hal_negative1_getStats, test_l1_wifi_common_hal_negative2_getStats, test_l1_wifi_common_hal_negative3_getStats, test_l1_wifi_common_hal_positive1_wifi_getRadioNumberOfEntries, test_l1_wifi_common_hal_negative1_wifi_getRadioNumberOfEntries, test_l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries, test_l1_wifi_common_hal_positive1_wifi_getSSIDNumberOfEntries, test_l1_wifi_common_hal_negative1_wifi_getSSIDNumberOfEntries, test_l1_wifi_common_hal_negative2_wifi_getSSIDNumberOfEntries, test_l1_wifi_common_hal_positive1_wifi_getRadioEnable, test_l1_wifi_common_hal_positive2_wifi_getRadioEnable, test_l1_wifi_common_hal_positive3_wifi_getRadioEnable, test_l1_wifi_common_hal_negative1_wifi_getRadioEnable, test_l1_wifi_common_hal_negative2_wifi_getRadioEnable, test_l1_wifi_common_hal_negative3_wifi_getRadioEnable, test_l1_wifi_common_hal_negative4_wifi_getRadioEnable, test_l1_wifi_common_hal_positive1_wifi_getRadioStatus, test_l1_wifi_common_hal_negative1_wifi_getRadioStatus, test_l1_wifi_common_hal_negative2_wifi_getRadioStatus, test_l1_wifi_common_hal_negative3_wifi_getRadioStatus,test_l1_wifi_common_hal_positive1_wifi_getRadioIfName,test_l1_wifi_common_hal_negative1_wifi_getRadioIfName,test_l1_wifi_common_hal_negative2_wifi_getRadioIfName,test_l1_wifi_common_hal_negative3_wifi_getRadioIfName,test_l1_wifi_common_hal_negative4_wifi_getRadioIfName,test_l1_wifi_common_hal_negative5_wifi_getRadioIfName, test_l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate, test_l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate, test_l1_wifi_common_hal_negative2_wifi_getRadioMaxBitRate, test_l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate, test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands, test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedFrequencyBands, test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedFrequencyBands, test_l1_wifi_common_hal_negative3_wifi_getRadioSupportedFrequencyBands, test_l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands, test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand, test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand, test_l1_wifi_common_hal_negative2_wifi_getRadioOperatingFrequencyBand, test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand, test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards, test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards, test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedStandards, test_l1_wifi_common_hal_negative3_wifi_getRadioSupportedStandards, test_l1_wifi_common_hal_positive1_wifi_getRadioStandard, test_l1_wifi_common_hal_negative1_wifi_getRadioStandard, test_l1_wifi_common_hal_negative2_wifi_getRadioStandard, test_l1_wifi_common_hal_negative3_wifi_getRadioStandard, test_l1_wifi_common_hal_positive1_wifi_getRadioPossibleChannels, test_l1_wifi_common_hal_negative1_wifi_getRadioPossibleChannels, test_l1_wifi_common_hal_negative2_wifi_getRadioPossibleChannels, test_l1_wifi_common_hal_negative3_wifi_getRadioPossibleChannels, test_l1_wifi_common_hal_negative4_wifi_getRadioPossibleChannels, test_l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse, test_l1_wifi_common_hal_negative1_wifi_getRadioChannelsInUse, test_l1_wifi_common_hal_negative2_wifi_getRadioChannelsInUse, test_l1_wifi_common_hal_negative3_wifi_getRadioChannelsInUse, test_l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse, test_l1_wifi_common_hal_positive1_wifi_getRadioChannel, test_l1_wifi_common_hal_negative1_wifi_getRadioChannel, test_l1_wifi_common_hal_negative2_wifi_getRadioChannel,  test_l1_wifi_common_hal_negative3_wifi_getRadioChannel, test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelSupported, test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelSupported, test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelSupported, test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelSupported, test_l1_wifi_common_hal_negative4_wifi_getRadioAutoChannelSupported, test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelEnable, test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelEnable, test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelEnable, test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelEnable, test_l1_wifi_common_hal_positive1_getRadioAutoChannelRefreshPeriod, test_l1_wifi_common_hal_negative1_getRadioAutoChannelRefreshPeriod, test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod, test_l1_wifi_common_hal_positive2_getRadioAutoChannelRefreshPeriod, test_l1_wifi_common_hal_negative3_getRadioAutoChannelRefreshPeriod, test_l1_wifi_common_hal_positive1_wifi_getRadioGuardInterval, test_l1_wifi_common_hal_negative1_wifi_getRadioGuardInterval, test_l1_wifi_common_hal_negative2_wifi_getRadioGuardInterval, test_l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval, test_l1_wifi_common_hal_negative4_wifi_getRadioGuardInterval, test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth, test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingChannelBandwidth, test_l1_wifi_common_hal_negative2_wifi_getRadioOperatingChannelBandwidth, test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingChannelBandwidth, test_l1_wifi_common_hal_negative4_wifi_getRadioOperatingChannelBandwidth, test_l1_wifi_common_hal_positive1_wifi_getRadioExtChannel, test_l1_wifi_common_hal_negative1_wifi_getRadioExtChannel, test_l1_wifi_common_hal_negative2_wifi_getRadioExtChannel, test_l1_wifi_common_hal_negative3_wifi_getRadioExtChannel, test_l1_wifi_common_hal_negative4_wifi_getRadioExtChannel, test_l1_wifi_common_hal_positive1_wifi_getRadioMCS, test_l1_wifi_common_hal_negative1_wifi_getRadioMCS, test_l1_wifi_common_hal_negative2_wifi_getRadioMCS, test_l1_wifi_common_hal_negative3_wifi_getRadioMCS, test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPowerSupported, test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPowerSupported, test_l1_wifi_common_hal_negative2_wifi_getRadioTransmitPowerSupported, test_l1_wifi_common_hal_negative3_wifi_getRadioTransmitPowerSupported, test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPowerSupported, test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower, test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower, test_l1_wifi_common_hal_negative2_wifi_getRadioTransmitPower, test_l1_wifi_common_hal_negative3_wifi_getRadioTransmitPower, test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower, test_l1_wifi_common_hal_positive_1_wifi_getRadioIEEE80211hSupported, test_l1_wifi_common_hal_negative_1_wifi_getRadioIEEE80211hSupported, test_l1_wifi_common_hal_negative_2_wifi_getRadioIEEE80211hSupported, test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported, test_l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled, test_l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled, test_l1_wifi_common_hal_negative2_wifi_getRadioIEEE80211hEnabled, test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hEnabled, test_l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_negative1_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_negative2_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_negative6_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats, test_l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats, test_l1_wifi_common_hal_negative2_wifi_getRadioTrafficStats, test_l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats, test_l1_wifi_common_hal_positive1_wifi_getSSIDName, test_l1_wifi_common_hal_negative1_wifi_getSSIDName, test_l1_wifi_common_hal_negative2_wifi_getSSIDName, test_l1_wifi_common_hal_negative3_wifi_getSSIDName, test_l1_wifi_common_hal_boundary1_wifi_getSSIDName, test_l1_wifi_common_hal_positive1_wifi_getBaseBSSID, test_l1_wifi_common_hal_negative1_wifi_getBaseBSSID, test_l1_wifi_common_hal_negative2_wifi_getBaseBSSID, test_l1_wifi_common_hal_negative3_wifi_getBaseBSSID, test_l1_wifi_common_hal_positive1_wifi_getSSIDMACAddress, test_l1_wifi_common_hal_negative1_wifi_getSSIDMACAddress, test_l1_wifi_common_hal_negative2_wifi_getSSIDMACAddress, test_l1_wifi_common_hal_negative3_wifi_getSSIDMACAddress, test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats, test_l1_wifi_common_hal_negative1_wifi_getSSIDTrafficStats, test_l1_wifi_common_hal_negative2_wifi_getSSIDTrafficStats, test_l1_wifi_common_hal_negative3_wifi_getSSIDTrafficStats, test_l1_wifi_common_hal_negative4_wifi_getSSIDTrafficStats, test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult, test_l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult, test_l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult, test_l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult, test_l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult, test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo, test_l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo, test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo, test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo, test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo, test_l1_wifi_common_hal_positive1_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_negative1_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_negative2_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_negative3_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_negative4_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_negative5_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_negative6_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_positive1_getDualBandSupport, test_l1_wifi_common_hal_positive1_wifi_waitForScanResults, test_l1_wifi_common_hal_negative1_wifi_waitForScanResults };
+   const char* list1[] = {"l1_wifi_common_hal_positive1_wifi_getHalVersion", "l1_wifi_common_hal_negative1_wifi_getHalVersion", "l1_wifi_common_hal_positive1_wifi_init", "l1_wifi_common_hal_positive1_wifi_initWithConfig", "l1_wifi_common_hal_negative1_wifi_initWithConfig", "l1_wifi_common_hal_negative2_wifi_initWithConfig", "l1_wifi_common_hal_negative3_wifi_initWithConfig", "l1_wifi_common_hal_positive1_wifi_down", "l1_wifi_common_hal_negative1_wifi_down","l1_wifi_common_hal_positive1_wifi_uninit", "l1_wifi_common_hal_positive2_wifi_uninit", "l1_wifi_common_hal_negative1_wifi_uninit", "l1_wifi_common_hal_positive1_getStats", "l1_wifi_common_hal_negative1_getStats", "l1_wifi_common_hal_negative2_getStats", "l1_wifi_common_hal_negative3_getStats", "l1_wifi_common_hal_positive1_wifi_getRadioNumberOfEntries", "l1_wifi_common_hal_negative1_wifi_getRadioNumberOfEntries", "l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries", "l1_wifi_common_hal_positive1_wifi_getSSIDNumberOfEntries", "l1_wifi_common_hal_negative1_wifi_getSSIDNumberOfEntries", "l1_wifi_common_hal_negative2_wifi_getSSIDNumberOfEntries", "l1_wifi_common_hal_positive1_wifi_getRadioEnable", "l1_wifi_common_hal_positive2_wifi_getRadioEnable", "l1_wifi_common_hal_positive3_wifi_getRadioEnable", "l1_wifi_common_hal_negative1_wifi_getRadioEnable", "l1_wifi_common_hal_negative2_wifi_getRadioEnable", "l1_wifi_common_hal_negative3_wifi_getRadioEnable","l1_wifi_common_hal_negative4_wifi_getRadioEnable", "l1_wifi_common_hal_positive1_wifi_getRadioStatus", "l1_wifi_common_hal_negative1_wifi_getRadioStatus", "l1_wifi_common_hal_negative2_wifi_getRadioStatus", "l1_wifi_common_hal_negative3_wifi_getRadioStatus","l1_wifi_common_hal_positive1_wifi_getRadioIfName","l1_wifi_common_hal_negative1_wifi_getRadioIfName","l1_wifi_common_hal_negative2_wifi_getRadioIfName","l1_wifi_common_hal_negative3_wifi_getRadioIfName","l1_wifi_common_hal_negative4_wifi_getRadioIfName","l1_wifi_common_hal_negative5_wifi_getRadioIfName", "l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate", "l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate", "l1_wifi_common_hal_negative2_wifi_getRadioMaxBitRate", "l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate", "l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands", "l1_wifi_common_hal_negative1_wifi_getRadioSupportedFrequencyBands", "l1_wifi_common_hal_negative2_wifi_getRadioSupportedFrequencyBands", "l1_wifi_common_hal_negative3_wifi_getRadioSupportedFrequencyBands", "l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands", "l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand", "l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand", "l1_wifi_common_hal_negative2_wifi_getRadioOperatingFrequencyBand", "l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand", "l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards", "l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards", "l1_wifi_common_hal_negative2_wifi_getRadioSupportedStandards", "l1_wifi_common_hal_negative3_wifi_getRadioSupportedStandards", "l1_wifi_common_hal_positive1_wifi_getRadioStandard", "l1_wifi_common_hal_negative1_wifi_getRadioStandard", "l1_wifi_common_hal_negative2_wifi_getRadioStandard", "l1_wifi_common_hal_negative3_wifi_getRadioStandard", "l1_wifi_common_hal_positive1_wifi_getRadioPossibleChannels", "l1_wifi_common_hal_negative1_wifi_getRadioPossibleChannels", "l1_wifi_common_hal_negative2_wifi_getRadioPossibleChannels", "l1_wifi_common_hal_negative3_wifi_getRadioPossibleChannels", "l1_wifi_common_hal_negative4_wifi_getRadioPossibleChannels", "l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse", "l1_wifi_common_hal_negative1_wifi_getRadioChannelsInUse", "l1_wifi_common_hal_negative2_wifi_getRadioChannelsInUse", "l1_wifi_common_hal_negative3_wifi_getRadioChannelsInUse", "l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse", "l1_wifi_common_hal_positive1_wifi_getRadioChannel", "l1_wifi_common_hal_negative1_wifi_getRadioChannel", "l1_wifi_common_hal_negative2_wifi_getRadioChannel", "l1_wifi_common_hal_negative3_wifi_getRadioChannel", "l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelSupported", "l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelSupported", "l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelSupported", "l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelSupported", "l1_wifi_common_hal_positive2_wifi_getRadioAutoChannelSupported", "l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelEnable", "l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelEnable", "l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelEnable", "l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelEnable", "l1_wifi_common_hal_positive1_getRadioAutoChannelRefreshPeriod", "l1_wifi_common_hal_negative1_getRadioAutoChannelRefreshPeriod", "l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod", "l1_wifi_common_hal_positive2_getRadioAutoChannelRefreshPeriod", "l1_wifi_common_hal_negative3_getRadioAutoChannelRefreshPeriod", "l1_wifi_common_hal_positive1_wifi_getRadioGuardInterval", "l1_wifi_common_hal_negative1_wifi_getRadioGuardInterval", "l1_wifi_common_hal_negative2_wifi_getRadioGuardInterval", "l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval", "l1_wifi_common_hal_negative4_wifi_getRadioGuardInterval", "l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth", "l1_wifi_common_hal_negative1_wifi_getRadioOperatingChannelBandwidth", "l1_wifi_common_hal_negative2_wifi_getRadioOperatingChannelBandwidth", "l1_wifi_common_hal_negative3_wifi_getRadioOperatingChannelBandwidth", "l1_wifi_common_hal_negative4_wifi_getRadioOperatingChannelBandwidth", "l1_wifi_common_hal_positive1_wifi_getRadioExtChannel", "l1_wifi_common_hal_negative1_wifi_getRadioExtChannel", "l1_wifi_common_hal_negative2_wifi_getRadioExtChannel", "l1_wifi_common_hal_negative3_wifi_getRadioExtChannel", "l1_wifi_common_hal_negative4_wifi_getRadioExtChannel", "l1_wifi_common_hal_positive1_wifi_getRadioMCS", "l1_wifi_common_hal_negative1_wifi_getRadioMCS", "l1_wifi_common_hal_negative2_wifi_getRadioMCS", "l1_wifi_common_hal_negative3_wifi_getRadioMCS", "l1_wifi_common_hal_positive1_wifi_getRadioTransmitPowerSupported", "l1_wifi_common_hal_negative1_wifi_getRadioTransmitPowerSupported", "l1_wifi_common_hal_negative2_wifi_getRadioTransmitPowerSupported", "l1_wifi_common_hal_negative3_wifi_getRadioTransmitPowerSupported","l1_wifi_common_hal_negative4_wifi_getRadioTransmitPowerSupported", "l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower", "l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower", "l1_wifi_common_hal_negative2_wifi_getRadioTransmitPower","l1_wifi_common_hal_negative3_wifi_getRadioTransmitPower","l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower", "l1_wifi_common_hal_positive_1_wifi_getRadioIEEE80211hSupported", "l1_wifi_common_hal_negative_1_wifi_getRadioIEEE80211hSupported", "l1_wifi_common_hal_negative_2_wifi_getRadioIEEE80211hSupported", "l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported", "l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled", "l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled", "l1_wifi_common_hal_negative2_wifi_getRadioIEEE80211hEnabled", "l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hEnabled", "l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain", "l1_wifi_common_hal_negative1_wifi_getRegulatoryDomain", "l1_wifi_common_hal_negative2_wifi_getRegulatoryDomain", "l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain", "l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain", "l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain", "l1_wifi_common_hal_negative6_wifi_getRegulatoryDomain", "l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats", "l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats", "l1_wifi_common_hal_negative2_wifi_getRadioTrafficStats", "l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats", "l1_wifi_common_hal_positive1_wifi_getSSIDName", "l1_wifi_common_hal_negative1_wifi_getSSIDName", "l1_wifi_common_hal_negative2_wifi_getSSIDName", "l1_wifi_common_hal_negative3_wifi_getSSIDName", "l1_wifi_common_hal_boundary1_wifi_getSSIDName", "l1_wifi_common_hal_positive1_wifi_getBaseBSSID", "l1_wifi_common_hal_negative1_wifi_getBaseBSSID", "l1_wifi_common_hal_negative2_wifi_getBaseBSSID", "l1_wifi_common_hal_negative3_wifi_getBaseBSSID", "l1_wifi_common_hal_positive1_wifi_getSSIDMACAddress", "l1_wifi_common_hal_negative1_wifi_getSSIDMACAddress", "l1_wifi_common_hal_negative2_wifi_getSSIDMACAddress", "l1_wifi_common_hal_negative3_wifi_getSSIDMACAddress", "l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats", "l1_wifi_common_hal_negative1_wifi_getSSIDTrafficStats", "l1_wifi_common_hal_negative2_wifi_getSSIDTrafficStats", "l1_wifi_common_hal_negative3_wifi_getSSIDTrafficStats", "l1_wifi_common_hal_negative4_wifi_getSSIDTrafficStats", "l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult", "l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult", "l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult", "l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult", "l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult", "l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo", "l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo", "l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo","l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo","l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo", "l1_wifi_common_hal_positive1_wifi_setRadioScanningFreqList", "l1_wifi_common_hal_negative1_wifi_setRadioScanningFreqList", "l1_wifi_common_hal_negative2_wifi_setRadioScanningFreqList","l1_wifi_common_hal_negative3_wifi_setRadioScanningFreqList", "l1_wifi_common_hal_negative4_wifi_setRadioScanningFreqList", "l1_wifi_common_hal_negative5_wifi_setRadioScanningFreqList", "l1_wifi_common_hal_negative6_wifi_setRadioScanningFreqList", "l1_wifi_common_hal_positive1_getDualBandSupport", "l1_wifi_common_hal_positive1_wifi_waitForScanResults", "l1_wifi_common_hal_negative1_wifi_waitForScanResults" };
+   void (*list2[])() = {test_l1_wifi_common_hal_positive1_wifi_getHalVersion, test_l1_wifi_common_hal_negative1_wifi_getHalVersion, test_l1_wifi_common_hal_positive1_wifi_init, test_l1_wifi_common_hal_positive1_wifi_initWithConfig, test_l1_wifi_common_hal_negative1_wifi_initWithConfig, test_l1_wifi_common_hal_negative2_wifi_initWithConfig, test_l1_wifi_common_hal_negative3_wifi_initWithConfig, test_l1_wifi_common_hal_positive1_wifi_down,test_l1_wifi_common_hal_negative1_wifi_down,test_l1_wifi_common_hal_positive1_wifi_uninit, test_l1_wifi_common_hal_positive2_wifi_uninit, test_l1_wifi_common_hal_negative1_wifi_uninit, test_l1_wifi_common_hal_positive1_getStats, test_l1_wifi_common_hal_negative1_getStats, test_l1_wifi_common_hal_negative2_getStats, test_l1_wifi_common_hal_negative3_getStats, test_l1_wifi_common_hal_positive1_wifi_getRadioNumberOfEntries, test_l1_wifi_common_hal_negative1_wifi_getRadioNumberOfEntries, test_l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries, test_l1_wifi_common_hal_positive1_wifi_getSSIDNumberOfEntries, test_l1_wifi_common_hal_negative1_wifi_getSSIDNumberOfEntries, test_l1_wifi_common_hal_negative2_wifi_getSSIDNumberOfEntries, test_l1_wifi_common_hal_positive1_wifi_getRadioEnable, test_l1_wifi_common_hal_positive2_wifi_getRadioEnable, test_l1_wifi_common_hal_positive3_wifi_getRadioEnable, test_l1_wifi_common_hal_negative1_wifi_getRadioEnable, test_l1_wifi_common_hal_negative2_wifi_getRadioEnable, test_l1_wifi_common_hal_negative3_wifi_getRadioEnable, test_l1_wifi_common_hal_negative4_wifi_getRadioEnable, test_l1_wifi_common_hal_positive1_wifi_getRadioStatus, test_l1_wifi_common_hal_negative1_wifi_getRadioStatus, test_l1_wifi_common_hal_negative2_wifi_getRadioStatus, test_l1_wifi_common_hal_negative3_wifi_getRadioStatus,test_l1_wifi_common_hal_positive1_wifi_getRadioIfName,test_l1_wifi_common_hal_negative1_wifi_getRadioIfName,test_l1_wifi_common_hal_negative2_wifi_getRadioIfName,test_l1_wifi_common_hal_negative3_wifi_getRadioIfName,test_l1_wifi_common_hal_negative4_wifi_getRadioIfName,test_l1_wifi_common_hal_negative5_wifi_getRadioIfName, test_l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate, test_l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate, test_l1_wifi_common_hal_negative2_wifi_getRadioMaxBitRate, test_l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate, test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands, test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedFrequencyBands, test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedFrequencyBands, test_l1_wifi_common_hal_negative3_wifi_getRadioSupportedFrequencyBands, test_l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands, test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand, test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand, test_l1_wifi_common_hal_negative2_wifi_getRadioOperatingFrequencyBand, test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand, test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards, test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards, test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedStandards, test_l1_wifi_common_hal_negative3_wifi_getRadioSupportedStandards, test_l1_wifi_common_hal_positive1_wifi_getRadioStandard, test_l1_wifi_common_hal_negative1_wifi_getRadioStandard, test_l1_wifi_common_hal_negative2_wifi_getRadioStandard, test_l1_wifi_common_hal_negative3_wifi_getRadioStandard, test_l1_wifi_common_hal_positive1_wifi_getRadioPossibleChannels, test_l1_wifi_common_hal_negative1_wifi_getRadioPossibleChannels, test_l1_wifi_common_hal_negative2_wifi_getRadioPossibleChannels, test_l1_wifi_common_hal_negative3_wifi_getRadioPossibleChannels, test_l1_wifi_common_hal_negative4_wifi_getRadioPossibleChannels, test_l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse, test_l1_wifi_common_hal_negative1_wifi_getRadioChannelsInUse, test_l1_wifi_common_hal_negative2_wifi_getRadioChannelsInUse, test_l1_wifi_common_hal_negative3_wifi_getRadioChannelsInUse, test_l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse, test_l1_wifi_common_hal_positive1_wifi_getRadioChannel, test_l1_wifi_common_hal_negative1_wifi_getRadioChannel, test_l1_wifi_common_hal_negative2_wifi_getRadioChannel,  test_l1_wifi_common_hal_negative3_wifi_getRadioChannel, test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelSupported, test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelSupported, test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelSupported, test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelSupported, test_l1_wifi_common_hal_positive2_wifi_getRadioAutoChannelSupported, test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelEnable, test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelEnable, test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelEnable, test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelEnable, test_l1_wifi_common_hal_positive1_getRadioAutoChannelRefreshPeriod, test_l1_wifi_common_hal_negative1_getRadioAutoChannelRefreshPeriod, test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod, test_l1_wifi_common_hal_positive2_getRadioAutoChannelRefreshPeriod, test_l1_wifi_common_hal_negative3_getRadioAutoChannelRefreshPeriod, test_l1_wifi_common_hal_positive1_wifi_getRadioGuardInterval, test_l1_wifi_common_hal_negative1_wifi_getRadioGuardInterval, test_l1_wifi_common_hal_negative2_wifi_getRadioGuardInterval, test_l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval, test_l1_wifi_common_hal_negative4_wifi_getRadioGuardInterval, test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth, test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingChannelBandwidth, test_l1_wifi_common_hal_negative2_wifi_getRadioOperatingChannelBandwidth, test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingChannelBandwidth, test_l1_wifi_common_hal_negative4_wifi_getRadioOperatingChannelBandwidth, test_l1_wifi_common_hal_positive1_wifi_getRadioExtChannel, test_l1_wifi_common_hal_negative1_wifi_getRadioExtChannel, test_l1_wifi_common_hal_negative2_wifi_getRadioExtChannel, test_l1_wifi_common_hal_negative3_wifi_getRadioExtChannel, test_l1_wifi_common_hal_negative4_wifi_getRadioExtChannel, test_l1_wifi_common_hal_positive1_wifi_getRadioMCS, test_l1_wifi_common_hal_negative1_wifi_getRadioMCS, test_l1_wifi_common_hal_negative2_wifi_getRadioMCS, test_l1_wifi_common_hal_negative3_wifi_getRadioMCS, test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPowerSupported, test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPowerSupported, test_l1_wifi_common_hal_negative2_wifi_getRadioTransmitPowerSupported, test_l1_wifi_common_hal_negative3_wifi_getRadioTransmitPowerSupported, test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPowerSupported, test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower, test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower, test_l1_wifi_common_hal_negative2_wifi_getRadioTransmitPower, test_l1_wifi_common_hal_negative3_wifi_getRadioTransmitPower, test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower, test_l1_wifi_common_hal_positive_1_wifi_getRadioIEEE80211hSupported, test_l1_wifi_common_hal_negative_1_wifi_getRadioIEEE80211hSupported, test_l1_wifi_common_hal_negative_2_wifi_getRadioIEEE80211hSupported, test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported, test_l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled, test_l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled, test_l1_wifi_common_hal_negative2_wifi_getRadioIEEE80211hEnabled, test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hEnabled, test_l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_negative1_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_negative2_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_negative6_wifi_getRegulatoryDomain, test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats, test_l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats, test_l1_wifi_common_hal_negative2_wifi_getRadioTrafficStats, test_l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats, test_l1_wifi_common_hal_positive1_wifi_getSSIDName, test_l1_wifi_common_hal_negative1_wifi_getSSIDName, test_l1_wifi_common_hal_negative2_wifi_getSSIDName, test_l1_wifi_common_hal_negative3_wifi_getSSIDName, test_l1_wifi_common_hal_boundary1_wifi_getSSIDName, test_l1_wifi_common_hal_positive1_wifi_getBaseBSSID, test_l1_wifi_common_hal_negative1_wifi_getBaseBSSID, test_l1_wifi_common_hal_negative2_wifi_getBaseBSSID, test_l1_wifi_common_hal_negative3_wifi_getBaseBSSID, test_l1_wifi_common_hal_positive1_wifi_getSSIDMACAddress, test_l1_wifi_common_hal_negative1_wifi_getSSIDMACAddress, test_l1_wifi_common_hal_negative2_wifi_getSSIDMACAddress, test_l1_wifi_common_hal_negative3_wifi_getSSIDMACAddress, test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats, test_l1_wifi_common_hal_negative1_wifi_getSSIDTrafficStats, test_l1_wifi_common_hal_negative2_wifi_getSSIDTrafficStats, test_l1_wifi_common_hal_negative3_wifi_getSSIDTrafficStats, test_l1_wifi_common_hal_negative4_wifi_getSSIDTrafficStats, test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult, test_l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult, test_l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult, test_l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult, test_l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult, test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo, test_l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo, test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo, test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo, test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo, test_l1_wifi_common_hal_positive1_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_negative1_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_negative2_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_negative3_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_negative4_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_negative5_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_negative6_wifi_setRadioScanningFreqList, test_l1_wifi_common_hal_positive1_getDualBandSupport, test_l1_wifi_common_hal_positive1_wifi_waitForScanResults, test_l1_wifi_common_hal_negative1_wifi_waitForScanResults };
     // Add tests to the suite
     for (int i = 0; i < sizeof(list1) / sizeof(list1[0]); i++) {
         UT_add_test(pSuite, list1[i], list2[i]);
