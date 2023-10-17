@@ -34,7 +34,7 @@
  * @{
  */
 /**
- * @defgroup RDKV_WIFI_HALTEST RDK-V WiFi HAL Tests
+ * @addtogroup RDKV_WIFI_HALTEST RDK-V WiFi HAL Tests
  * @{
  */
 /**
@@ -59,5 +59,5 @@ int register_hal_l1_tests( void )
 
 /** @} */ // End of RDKV_WIFI_HALTEST_REGISTER
 /** @} */ // End of RDKV_WIFI_HALTEST
-/** @} */ // End RDKV_WIFI
+/** @} */ // End of RDKV_WIFI
 /** @} */ // End of HPK

@@ -7181,5 +7181,5 @@ int test_wifi_common_hal_register(void)
 
 /** @} */ // End of RDKV_WIFI_COMMON_HALTEST_L1
 /** @} */ // End of RDKV_WIFI_HALTEST
-/** @} */ // End of RDKV_WIFI_MANAGER
+/** @} */ // End of RDKV_WIFI
 /** @} */ // End of HPK

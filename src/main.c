@@ -130,5 +130,5 @@ int main(int argc, char** argv)
 
 /** @} */ // End of RDKV_WIFI_HALTEST_MAIN
 /** @} */ // End of RDKV_WIFI_HALTEST
-/** @} */ // End RDKV_WIFI
+/** @} */ // End of RDKV_WIFI
 /** @} */ // End of HPK
