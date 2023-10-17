@@ -46,7 +46,7 @@
  */
 
 /**
-* @file test_wifi_client_hal.c
+* @file test_L1_wifi_client_hal.c
 * @page wifi_client_hal Level 1 Tests
 *
 * ## Module's Role
@@ -56,7 +56,7 @@
 * **Pre-Conditions:**  None @n
 * **Dependencies:** None @n
 *
-* Ref to API Definition specification documentation : [halSpec.md](../../../docs/halSpec.md)
+* Ref to API Definition specification documentation : [Wifi_halSpec.md](../../../docs/Wifi_halSpec.md)
 */
 
 #include <ut.h>

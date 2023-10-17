@@ -46,7 +46,7 @@
  */
 
 /**
-* @file test_wifi_common_hal.c
+* @file test_L1_wifi_common_hal.c
 * @page wifi_common_hal Level 1 Tests
 *
 * ## Module's Role
@@ -56,7 +56,7 @@
 * **Pre-Conditions:**  None@n
 * **Dependencies:** None@n
 *
-* Ref to API Definition specification documentation : [halSpec.md](../../../docs/halSpec.md)
+* Ref to API Definition specification documentation : [Wifi_halSpec.md](../../../docs/Wifi_halSpec.md)
 */
 
 #include <ut.h>
@@ -73,11 +73,18 @@ extern void WiFi_UnInitPosReq(void);
 #define MAX_OUTPUT_STRING_LEN 50
 #define MAX_LENGTH 256
 
-const char* secmode[] = {"None", "WEP", "WPA", "WPA2", "WPA3", "WPA-WPA2", "WPA2-WPA3", "WPA-Enterprise", "WPA2-Enterprise", "WPA-WPA2-Enterprise"};
-int freqList[] = {2412, 2417, 2422, 2427, 2432, 2437, 2442, 2447, 2452, 2457, 2462, 2467, 2472, 5160, 5180, 5200, 5220, 5240, 5260, 5280, 5300, 5320, 5340, 5480, 5500, 5520, 5540, 5560, 5580, 5600, 5620, 5640, 5660, 5680, 5700, 5720, 5745, 5765, 5785, 5805, 5825, 5845, 5865, 5885};
-const char* radiostatus[] = {"Up", "Down", "Unknown", "Dormant", "NotPresent", "LowerLayerDown"};
-const char* bandwidth[] = {"20MHz", "40MHz", "80MHz", "160MHz", "Auto"};
-
+/**
+ * @brief Checks the #target is present in #list or not
+ * 
+ * @param[in] target String to be search
+ * @param[in] list   Comma-separated list of strings
+ * @param[in] count  size of #list
+ * 
+ * @return #INT - The status of the operation
+ * @retval #RETURN_OK  if successful
+ * @retval #RETURN_ERR if any error is detected
+ * 
+ */
 int check_value(const char* target, const char* list[], int count) {
     for (int i = 0; i < count; i++) {
         if (strcmp(target, list[i]) == 0) {
@@ -1258,6 +1265,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioStatus(void){
 
     INT radioIndex = 1;
     CHAR output_string[20];
+    const char* radiostatus[] = {"Up", "Down", "Unknown", "Dormant", "NotPresent", "LowerLayerDown"};
     INT return_value;
 	
     UT_LOG("Invoking wifi_getRadioStatus with valid radio index. ");
@@ -3554,6 +3562,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth(vo
 
     INT radioIndex = 1;
     CHAR output_string[50];
+    const char* bandwidth[] = {"20MHz", "40MHz", "80MHz", "160MHz", "Auto"};
     INT returnValue;
     // Call the wifi_init or wifi_initWithConfig function before calling the tested API
     UT_LOG("Invoking wifi_getRadioOperatingChannelBandwidth with valid radioIndex and output_string.");
