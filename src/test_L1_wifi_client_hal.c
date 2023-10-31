@@ -66,9 +66,11 @@
 #include <string.h>
 #include "wifi_client_hal.h"
 
-extern void WiFi_InitPreReq(void);
-extern void WiFi_InitWithConfigPreReq(void);
-extern void WiFi_UnInitPosReq(void);
+extern int WiFi_InitPreReq(void);
+extern int WiFi_InitWithConfigPreReq(void);
+extern int WiFi_UnInitPosReq(void);
+
+extern const int SSID_INDEX;
 
 /**
 * @brief This function checks if wifi_getCliWpsConfigMethodsSupported works as expected, when invoked after calling wifi_init().
@@ -86,17 +88,15 @@ extern void WiFi_UnInitPosReq(void);
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_getCliWpsConfigMethodsSupported() API with ssidIndex = 1 and methods = valid buffer | ssidIndex = 1, methods = valid buffer | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_getCliWpsConfigMethodsSupported() API with ssidIndex = 1 and methods = valid buffer | ssidIndex = 1, methods = valid buffer | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported...\n");
-    INT ssidIndex = 1;
     CHAR methods[] = {"\0"};
 
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsSupported with ssidIndex = 1 and valid buffer for methods\n");
-    INT res = wifi_getCliWpsConfigMethodsSupported(ssidIndex, methods);
-    
+    INT res = wifi_getCliWpsConfigMethodsSupported(SSID_INDEX, methods);
     UT_LOG("wifi_getCliWpsConfigMethodsSupported API returns : %d and the configuration method is %s\n",res,methods);
     UT_ASSERT_EQUAL(res, RETURN_OK);
     const char *validMethods[] = {"USBFlashDrive", "Ethernet", "ExternalNFCToken","IntegratedNFCToken", "NFCInterface", "PushButton", "PIN"};
@@ -119,6 +119,7 @@ void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported (voi
         }
         method = strtok(NULL, ",");
     }
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported...\n");
 }
 
@@ -138,20 +139,16 @@ void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported (voi
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_getCliWpsConfigMethodsSupported() API with ssidIndex = 1 and methods = valid buffer | ssidIndex = 1, methods = valid buffer | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_getCliWpsConfigMethodsSupported() API with ssidIndex = 1 and methods = valid buffer | ssidIndex = 1, methods = valid buffer | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported...\n");
-    INT ssidIndex = 1;
     CHAR methods[] = {"\0"};
-
-    WiFi_UnInitPosReq();
-    WiFi_InitWithConfigPreReq();
+    INT res;
 
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsSupported with ssidIndex = 1 and valid buffer for methods\n");
-    INT res = wifi_getCliWpsConfigMethodsSupported(ssidIndex, methods);
-    
+    res = wifi_getCliWpsConfigMethodsSupported(SSID_INDEX, methods);
     UT_LOG("wifi_getCliWpsConfigMethodsSupported API returns : %d and the configuration method is %s",res,methods);
     UT_ASSERT_EQUAL(res, RETURN_OK);
     const char *validMethods[] = {"USBFlashDrive", "Ethernet", "ExternalNFCToken","IntegratedNFCToken", "NFCInterface", "PushButton", "PIN"};
@@ -174,8 +171,6 @@ void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported (voi
         }
         method = strtok(NULL, ",");
     }
-    WiFi_UnInitPosReq();
-    WiFi_InitPreReq();
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported...\n");
 }
@@ -196,7 +191,7 @@ void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported (voi
 * **Test Procedure:** @n
 *| Variation / Step | Description | Test Data |Expected Result |Notes |
 *| :----: | --------- | ---------- |-------------- | ----- |
-*| 01 | Invoking the wifi_getCliWpsConfigMethodsSupported API with invalid ssidIndex=-1 and methods = valid buffer | ssidIndex=-1 and methods = valid buffer | RETURN_ERR | Should Fail |
+*| 01 | Invoke wifi_getCliWpsConfigMethodsSupported() API with invalid ssidIndex=-1 and methods = valid buffer | ssidIndex=-1 and methods = valid buffer | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported (void)
 {
@@ -206,7 +201,6 @@ void test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported (voi
 
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsSupported with invalid ssidIndex=-1\n");
     INT res = wifi_getCliWpsConfigMethodsSupported(ssidIndex, methods);
-
     UT_LOG("wifi_getCliWpsConfigMethodsSupported retuns %d", res);
     UT_ASSERT_EQUAL(res, RETURN_ERR);
    
@@ -230,17 +224,15 @@ void test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported (voi
 * Below is the outline of steps followed in this test. 
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invokig the wifi_getCliWpsConfigMethodsSupported API with ssidIndex = 1 and invalid methods = NULL | ssidIndex = 1, methods = NULL | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_getCliWpsConfigMethodsSupported() API with ssidIndex = 1 and invalid methods = NULL | ssidIndex = 1, methods = NULL | RETURN_ERR | Should Fail |
 */ 
 void test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported...\n");
-    INT ssidIndex = 1;
     CHAR *methods = NULL;
     
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsSupported with NULL buffer for methods\n");
-    INT res = wifi_getCliWpsConfigMethodsSupported(ssidIndex, methods);
-
+    INT res = wifi_getCliWpsConfigMethodsSupported(SSID_INDEX, methods);
     UT_LOG("wifi_getCliWpsConfigMethodsSupported API returns %d", res);
     UT_ASSERT_EQUAL(res, RETURN_ERR);
    
@@ -264,22 +256,18 @@ void test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported (voi
 * The steps to run this test and add a line in the below table for each input variation tried in this function.
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_getCliWpsConfigMethodsSupported API without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, methods = valid buffer | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_getCliWpsConfigMethodsSupported() API without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, methods = valid buffer | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsSupported (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsSupported...\n");
-    INT ssidIndex = 1;
     CHAR methods[200] = {"\0"};
-    WiFi_UnInitPosReq();
     
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsSupported without calling wifi_init()\n");
-    INT res = wifi_getCliWpsConfigMethodsSupported(ssidIndex, methods);
-
+    INT res = wifi_getCliWpsConfigMethodsSupported(SSID_INDEX, methods);
     UT_LOG("wifi_getCliWpsConfigMethodsSupported API returns %d",res);
     UT_ASSERT_EQUAL(res, RETURN_ERR);
 
-    WiFi_InitPreReq();
     UT_LOG("Exiting test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsSupported...\n");
 }
 
@@ -300,18 +288,15 @@ void test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsSupported (voi
  *
  * | Variation / Step     | Description                                                                                           | Test Data                                      | Expected Result | Notes       |
  * | :------------------: | ----------------------------------------------------------------------------------------------------- | -----------------------------------------------| ----------------|-------------|
- * | 01                   | Invoke the wifi_getCliWpsConfigMethodsEnabled API with ssidIndex = 1 and output_string = valid buffer | ssidIndex = 1 and output_string = valid buffer | RETURN_OK       | Should Pass |
+ * | 01                   | Invoke wifi_getCliWpsConfigMethodsEnabled() API with ssidIndex = 1 and output_string = valid buffer | ssidIndex = 1 and output_string = valid buffer | RETURN_OK       | Should Pass |
  */
 void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled...\n");
-    
-    INT ssidIndex = 1;
     CHAR output_string[] = {"\0"};
     
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsEnabled with input parameter ssidIndex=1 and valid output_string buffer\n");
-    INT return_val = wifi_getCliWpsConfigMethodsEnabled(ssidIndex, output_string);
-    
+    INT return_val = wifi_getCliWpsConfigMethodsEnabled(SSID_INDEX, output_string);
     UT_LOG("wifi_getCliWpsConfigMethodsEnabled API retunrs : %d",return_val);
     UT_ASSERT_EQUAL(return_val, RETURN_OK);
     const char *validMethods[] = {"USBFlashDrive", "Ethernet", "ExternalNFCToken","IntegratedNFCToken", "NFCInterface", "PushButton", "PIN"};
@@ -334,6 +319,7 @@ void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled (void)
         }
         method = strtok(NULL, ",");
     }
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled...\n");
 }
 
@@ -354,20 +340,16 @@ void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled (void)
  *
  * | Variation / Step     | Description                                                                                           | Test Data                                      | Expected Result | Notes       |
  * | :------------------: | ----------------------------------------------------------------------------------------------------- | -----------------------------------------------| ----------------|-------------|
- * | 01                   | Invoke the wifi_getCliWpsConfigMethodsEnabled API with ssidIndex = 1 and output_string = valid buffer | ssidIndex = 1 and output_string = valid buffer | RETURN_OK       | Should Pass |
+ * | 01 | Invoke wifi_getCliWpsConfigMethodsEnabled() API with ssidIndex = 1 and output_string = valid buffer | ssidIndex = 1 and output_string = valid buffer | RETURN_OK       | Should Pass |
  */
 void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled...\n");
-    
-    INT ssidIndex = 1;
     CHAR output_string[100] = {"\0"};
-    WiFi_UnInitPosReq();
-    WiFi_InitWithConfigPreReq();
+    INT return_val;
 
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsEnabled with input parameter ssidIndex=1 and valid output_string buffer\n");
-    INT return_val = wifi_getCliWpsConfigMethodsEnabled(ssidIndex, output_string);
-
+    return_val = wifi_getCliWpsConfigMethodsEnabled(SSID_INDEX, output_string);
     UT_LOG("wifi_getCliWpsConfigMethodsEnabled API returns %d and the WPS configuration methods enabled on the device is %s\n", return_val,output_string);
     UT_ASSERT_EQUAL(return_val, RETURN_OK);
     const char *validMethods[] = {"USBFlashDrive", "Ethernet", "ExternalNFCToken","IntegratedNFCToken", "NFCInterface", "PushButton", "PIN"};
@@ -390,8 +372,6 @@ void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled (void)
         }
         method = strtok(NULL, ",");
     }
-    WiFi_UnInitPosReq();
-    WiFi_InitPreReq();
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled...\n");
 }
@@ -412,23 +392,18 @@ void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_getCliWpsConfigMethodsEnabled API without calling wifi_init() or wifi_initWithConfig()| ssidIndex = 1, output_string = valid buffer | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_getCliWpsConfigMethodsEnabled() API without calling wifi_init() or wifi_initWithConfig()| ssidIndex = 1, output_string = valid buffer | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsEnabled (void)
 {
-    
     UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsEnabled...\n");
-    INT ssidIndex = 1;
     CHAR output_string[100] = {"\0"};
-    WiFi_UnInitPosReq();
 
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsEnabled with input parameter ssidIndex=1 and valid output_string buffer without calling wifi_init or wifi_initWithConfig\n");
-    INT return_val = wifi_getCliWpsConfigMethodsEnabled(ssidIndex, output_string);
-    
+    INT return_val = wifi_getCliWpsConfigMethodsEnabled(SSID_INDEX, output_string);
     UT_LOG("wifi_getCliWpsConfigMethodsEnabled API returns %d",return_val);
     UT_ASSERT_EQUAL(return_val, RETURN_ERR);
 
-    WiFi_InitPreReq();
     UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsEnabled...\n");
 }
 
@@ -448,7 +423,7 @@ void test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsEnabled (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoking wifi_getCliWpsConfigMethodsEnabled with invalid ssidIndex = 2 and output_string = valid buffer | ssidIndex = 2, output_string = valid buffer | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_getCliWpsConfigMethodsEnabled() with invalid ssidIndex = 2 and output_string = valid buffer | ssidIndex = 2, output_string = valid buffer | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsEnabled (void)
 {
@@ -458,7 +433,6 @@ void test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsEnabled (void)
     
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsEnabled with invalid input parameter ssidIndex=2 and valid output_string buffer.\n");
     INT return_val = wifi_getCliWpsConfigMethodsEnabled(ssidIndex, output_string);
-    
     UT_LOG("wifi_getCliWpsConfigMethodsEnabled API returns %d",return_val);
     UT_ASSERT_EQUAL(return_val, RETURN_ERR);
     
@@ -481,18 +455,15 @@ void test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsEnabled (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_getCliWpsConfigMethodsEnabled API with ssidIndex = 1, invalid output_string = NULL  | ssidIndex = 1, output_string = NULL | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_getCliWpsConfigMethodsEnabled() API with ssidIndex = 1, invalid output_string = NULL  | ssidIndex = 1, output_string = NULL | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled...\n");
-    INT ssidIndex = 1;
     CHAR *output_string = NULL;
   
-    UT_LOG("WiFi init returned success\n");
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsEnabled with input parameter ssidIndex=1 and NULL output_string buffer.\n");
-    INT return_val = wifi_getCliWpsConfigMethodsEnabled(ssidIndex, output_string);
-    
+    INT return_val = wifi_getCliWpsConfigMethodsEnabled(SSID_INDEX, output_string);
     UT_LOG("wifi_getCliWpsConfigMethodsEnabled API retuns %d",return_val);
     UT_ASSERT_EQUAL(return_val, RETURN_ERR);
     
@@ -515,18 +486,15 @@ void test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoking the wifi_setCliWpsConfigMethodsEnabled API with ssidIndex = 1, methodString = "USBFlashDrive" | ssidIndex = 1, methodString = "USBFlashDrive" | RETURN_OK | Should Pass |
+ * | 01 | Invoke wifi_setCliWpsConfigMethodsEnabled() API with ssidIndex = 1, methodString = "USBFlashDrive" | ssidIndex = 1, methodString = "USBFlashDrive" | RETURN_OK | Should Pass |
  */
 void test_l1_wifi_client_hal_positive1_wifi_setCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_setCliWpsConfigMethodsEnabled...\n");
-    
-    INT ssidIndex = 1;
     CHAR* methodString = "USBFlashDrive";
 
     UT_LOG("Invoking wifi_setCliWpsConfigMethodsEnabled with ssidIndex 1 and methodString \"USBFlashDrive\".\n");
-    INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(ssidIndex, methodString);
-    
+    INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(SSID_INDEX, methodString);
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns %d",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_OK);
 
@@ -549,24 +517,18 @@ void test_l1_wifi_client_hal_positive1_wifi_setCliWpsConfigMethodsEnabled (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoking the wifi_setCliWpsConfigMethodsEnabled API with ssidIndex = 1, methodString = "USBFlashDrive" | ssidIndex = 1, methodString = "USBFlashDrive" | RETURN_OK | Should Pass |
+ * | 01 | Invoke the wifi_setCliWpsConfigMethodsEnabled() API with ssidIndex = 1, methodString = "USBFlashDrive" | ssidIndex = 1, methodString = "USBFlashDrive" | RETURN_OK | Should Pass |
  */
 void test_l1_wifi_client_hal_positive2_wifi_setCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_setCliWpsConfigMethodsEnabled...\n");
-    INT ssidIndex = 1;
     CHAR* methodString = "USBFlashDrive";
-    WiFi_UnInitPosReq();
-    WiFi_InitWithConfigPreReq();
-    
+    INT returnStatus;
+
     UT_LOG("Invoking wifi_setCliWpsConfigMethodsEnabled with ssidIndex 1 and methodString \"USBFlashDrive\".\n");
-    INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(ssidIndex, methodString);
-    
+    returnStatus = wifi_setCliWpsConfigMethodsEnabled(SSID_INDEX, methodString);
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns %d",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_OK);
-    
-    WiFi_UnInitPosReq();
-    WiFi_InitPreReq();
     
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_setCliWpsConfigMethodsEnabled...\n");
 }
@@ -587,20 +549,15 @@ void test_l1_wifi_client_hal_positive2_wifi_setCliWpsConfigMethodsEnabled (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoke the wifi_setCliWpsConfigMethodsEnabled' API with ssidIndex = 1 methodString = "Ethernet" | ssidIndex = 1, methodString = "Ethernet" | RETURN_OK | Should Pass |
+ * | 01 | Invoke wifi_setCliWpsConfigMethodsEnabled() API with ssidIndex = 1 methodString = "Ethernet" | ssidIndex = 1, methodString = "Ethernet" | RETURN_OK | Should Pass |
  */
 void test_l1_wifi_client_hal_positive3_wifi_setCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive3_wifi_setCliWpsConfigMethodsEnabled...\n");
-    
-    INT ssidIndex = 1;
     CHAR* methodString = "Ethernet";
 
-    UT_LOG("WiFi init returned success\n");
-        
     UT_LOG("Invoking wifi_setCliWpsConfigMethodsEnabled with ssidIndex 1 and methodString \"Ethernet\".\n");
-    INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(ssidIndex, methodString);
-    
+    INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(SSID_INDEX, methodString);
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns %d",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_OK);
     
@@ -623,7 +580,7 @@ void test_l1_wifi_client_hal_positive3_wifi_setCliWpsConfigMethodsEnabled (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke the wifi_setCliWpsConfigMethodsEnabled API with invalid ssidIndex = 0,methodString = "USBFlashDrive." | ssidIndex = 0, methodString = "USBFlashDrive" | RETURN_ERR | Should Fail|
+* | 01 | Invoke wifi_setCliWpsConfigMethodsEnabled() API with invalid ssidIndex = 0,methodString = "USBFlashDrive." | ssidIndex = 0, methodString = "USBFlashDrive" | RETURN_ERR | Should Fail|
 */
 void test_l1_wifi_client_hal_negative1_wifi_setCliWpsConfigMethodsEnabled (void)
 {
@@ -633,7 +590,6 @@ void test_l1_wifi_client_hal_negative1_wifi_setCliWpsConfigMethodsEnabled (void)
 
     UT_LOG("Invoking wifi_setCliWpsConfigMethodsEnabled with invalid ssidIndex 0 and methodString \"USBFlashDrive\".\n");
     INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(ssidIndex, methodString);
-    
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns %d",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_ERR);
   
@@ -656,18 +612,15 @@ void test_l1_wifi_client_hal_negative1_wifi_setCliWpsConfigMethodsEnabled (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_setCliWpsConfigMethodsEnabled with ssidIndex = 1 and methodString = ""(Empty string) | ssidIndex = 1, methodString = "" | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setCliWpsConfigMethodsEnabled() with ssidIndex = 1 and methodString = ""(Empty string) | ssidIndex = 1, methodString = "" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative2_wifi_setCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_setCliWpsConfigMethodsEnabled...\n");
-    INT ssidIndex = 1;
     CHAR* methodString = "";
 
-    UT_LOG("WiFi init returned success\n");
     UT_LOG("Invoking wifi_setCliWpsConfigMethodsEnabled with ssidIndex 1 and empty methodString.\n");
-    INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(ssidIndex, methodString);
-        
+    INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(SSID_INDEX, methodString);
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns %d",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_ERR);
    
@@ -689,18 +642,15 @@ void test_l1_wifi_client_hal_negative2_wifi_setCliWpsConfigMethodsEnabled (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_setCliWpsConfigMethodsEnabled API with ssidIndex = 1, methodString = NULL| ssidIndex = 1, methodString = NULL | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setCliWpsConfigMethodsEnabled() API with ssidIndex = 1, methodString = NULL| ssidIndex = 1, methodString = NULL | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative3_wifi_setCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_setCliWpsConfigMethodsEnabled...\n");
-    
-    INT ssidIndex = 1;
     CHAR* methodString = NULL;
 
     UT_LOG("Invoking wifi_setCliWpsConfigMethodsEnabled with ssidIndex 1 and methodString = NULL.\n");
-    INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(ssidIndex, methodString);
-        
+    INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(SSID_INDEX, methodString);
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns %d\n",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_ERR);
  
@@ -723,18 +673,15 @@ void test_l1_wifi_client_hal_negative3_wifi_setCliWpsConfigMethodsEnabled (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_setCliWpsConfigMethodsEnabled with ssidIndex = 1, invalid methodString = "IntegratedNFC"| ssidIndex = 1, methodString = "IntegratedNFC" | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setCliWpsConfigMethodsEnabled() with ssidIndex = 1, invalid methodString = "IntegratedNFC"| ssidIndex = 1, methodString = "IntegratedNFC" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative4_wifi_setCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative4_wifi_setCliWpsConfigMethodsEnabled...\n");
-    
-    INT ssidIndex = 1;
     CHAR* methodString = "IntegratedNFC";
     
     UT_LOG("Invoking wifi_setCliWpsConfigMethodsEnabled with ssidIndex 1 and methodString = \"IntegratedNFC\".\n");
-    INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(ssidIndex, methodString);
-        
+    INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(SSID_INDEX, methodString);
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns %d\n",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_ERR);
 
@@ -757,22 +704,18 @@ void test_l1_wifi_client_hal_negative4_wifi_setCliWpsConfigMethodsEnabled (void)
 * **Test Procedure:**  @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_setCliWpsConfigMethodsEnabled API without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, methodString = "USBFlashDrive" | RETURN_ERR | Should Fail |
+* | 01 | Invoke the wifi_setCliWpsConfigMethodsEnabled() API without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, methodString = "USBFlashDrive" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative5_wifi_setCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative5_wifi_setCliWpsConfigMethodsEnabled...\n");
-    INT ssidIndex = 1;
     CHAR* methodString = "USBFlashDrive";
-    WiFi_UnInitPosReq();
 
     UT_LOG("Invoking wifi_setCliWpsConfigMethodsEnabled without initializing WiFi, with ssidIndex 1 and methodString \"USBFlashDrive\".\n");
-    INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(ssidIndex, methodString);
-    
+    INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(SSID_INDEX, methodString);
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns : %d\n",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_ERR);
-    
-    WiFi_InitPreReq();
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative5_wifi_setCliWpsConfigMethodsEnabled...\n");
 }
 
@@ -792,17 +735,15 @@ void test_l1_wifi_client_hal_negative5_wifi_setCliWpsConfigMethodsEnabled (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_setCliWpsEnrolleePin API with valid ssidIndex = 1, EnrolleePin = "12345678" | ssidIndex = 1, EnrolleePin = "12345678" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_setCliWpsEnrolleePin() API with valid ssidIndex = 1, EnrolleePin = "12345678" | ssidIndex = 1, EnrolleePin = "12345678" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive1_wifi_setCliWpsEnrolleePin (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_setCliWpsEnrolleePin...\n");
-    INT ssidIndex = 1;
     CHAR EnrolleePin[] = "12345678";  /*Need to change to a valid value*/
 
     UT_LOG("Invoking wifi_setCliWpsEnrolleePin with valid ssidIndex and EnrolleePin\n");
-    INT retVal = wifi_setCliWpsEnrolleePin(ssidIndex, EnrolleePin);
-
+    INT retVal = wifi_setCliWpsEnrolleePin(SSID_INDEX, EnrolleePin);
     UT_LOG("wifi_setCliWpsEnrolleePin API returns %d\n",retVal);
     UT_ASSERT_EQUAL(retVal, RETURN_OK);
  
@@ -825,25 +766,20 @@ void test_l1_wifi_client_hal_positive1_wifi_setCliWpsEnrolleePin (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_setCliWpsEnrolleePin API with valid ssidIndex = 1, EnrolleePin = "12345678" | ssidIndex = 1, EnrolleePin = "12345678" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_uninit() API | NA | RETURN_OK | Should Pass |
+* | 02 | Invoke wifi_initWithConfig() API | NA | RETURN_OK | Should Pass |
+* | 03 | Invoke wifi_setCliWpsEnrolleePin() API with valid ssidIndex = 1, EnrolleePin = "12345678" | ssidIndex = 1, EnrolleePin = "12345678" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_setCliWpsEnrolleePin (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_setCliWpsEnrolleePin...\n");
-    INT ssidIndex = 1;
     CHAR EnrolleePin[] = "12345678";  /*Need to change to a valid value*/
-
-    WiFi_UnInitPosReq();
-    WiFi_InitWithConfigPreReq();
+    INT retVal;
 
     UT_LOG("Invoking wifi_setCliWpsEnrolleePin with valid ssidIndex and EnrolleePin\n");
-    INT retVal = wifi_setCliWpsEnrolleePin(ssidIndex, EnrolleePin);
-
+    retVal = wifi_setCliWpsEnrolleePin(SSID_INDEX, EnrolleePin);
     UT_LOG("wifi_setCliWpsEnrolleePin API returns %d\n",retVal);
     UT_ASSERT_EQUAL(retVal, RETURN_OK);
- 
-    WiFi_UnInitPosReq();
-    WiFi_InitPreReq();
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_setCliWpsEnrolleePin...\n");
 }
@@ -864,7 +800,7 @@ void test_l1_wifi_client_hal_positive2_wifi_setCliWpsEnrolleePin (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_setCliWpsEnrolleePin() with invalid ssidIndex = 2, EnrolleePin = "12345678" | ssidIndex = 2, EnrolleePin = "12345678" | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setCliWpsEnrolleePin() with invalid ssidIndex = 2, EnrolleePin = "12345678" | ssidIndex = 2, EnrolleePin = "12345678" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative1_wifi_setCliWpsEnrolleePin (void)
 {
@@ -872,10 +808,8 @@ void test_l1_wifi_client_hal_negative1_wifi_setCliWpsEnrolleePin (void)
     INT ssidIndex = 2;
     CHAR EnrolleePin[] = "12345678"; /*Need to change to a valid value*/
 
-    UT_LOG("WiFi init returned success\n");
     UT_LOG("Invoking wifi_setCliWpsEnrolleePin with invalid ssidIndex\n");
     INT retVal = wifi_setCliWpsEnrolleePin(ssidIndex, EnrolleePin);
-    
     UT_LOG("wifi_setCliWpsEnrolleePin API returns %d\n",retVal);
     UT_ASSERT_EQUAL(retVal, RETURN_ERR);
 
@@ -898,17 +832,15 @@ void test_l1_wifi_client_hal_negative1_wifi_setCliWpsEnrolleePin (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_setCliWpsEnrolleePin API with ssidIndex = 1, invalid EnrolleePin = NULL | ssidIndex = 1, EnrolleePin = NULL | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setCliWpsEnrolleePin() API with ssidIndex = 1, invalid EnrolleePin = NULL | ssidIndex = 1, EnrolleePin = NULL | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative2_wifi_setCliWpsEnrolleePin (void)
 {
-    UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_setCliWpsEnrolleePin...\n");  
-    INT ssidIndex = 1;
+    UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_setCliWpsEnrolleePin...\n"); 
     CHAR *EnrolleePin = NULL;
 
     UT_LOG("Invoking wifi_setCliWpsEnrolleePin with EnrolleePin is NULL\n");
-    INT retVal = wifi_setCliWpsEnrolleePin(ssidIndex, EnrolleePin);
-    
+    INT retVal = wifi_setCliWpsEnrolleePin(SSID_INDEX, EnrolleePin);
     UT_LOG("wifi_setCliWpsEnrolleePin API returns : %d\n",retVal);
     UT_ASSERT_EQUAL(retVal, RETURN_ERR);
  
@@ -931,22 +863,18 @@ void test_l1_wifi_client_hal_negative2_wifi_setCliWpsEnrolleePin (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invokung the wifi_setCliWpsEnrolleePin API without calling wifi_init() and wifi_connectEndpoint_callback_register() | ssidIndex = 1, EnrolleePin = "12345678" | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setCliWpsEnrolleePin() API without calling wifi_init() and wifi_connectEndpoint_callback_register() | ssidIndex = 1, EnrolleePin = "12345678" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin (void)
 {
-    UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin...\n");  
-    INT ssidIndex = 1;
+    UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin...\n");
     CHAR *EnrolleePin = "12345678"; /*Need to change to a valid value*/
-    WiFi_UnInitPosReq();
 
     UT_LOG("Invoking wifi_setCliWpsEnrolleePin without calling wifi_init() and wifi_connectEndpoint_callback_register() \n");
-    INT retVal = wifi_setCliWpsEnrolleePin(ssidIndex, EnrolleePin);
-    
+    INT retVal = wifi_setCliWpsEnrolleePin(SSID_INDEX, EnrolleePin);
     UT_LOG("wifi_setCliWpsEnrolleePin API returns : %d\n",retVal);
     UT_ASSERT_EQUAL(retVal, RETURN_ERR);
-    
-    WiFi_InitPreReq();
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin...\n");
 }
 
@@ -966,17 +894,15 @@ void test_l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoking the wifi_setCliWpsEnrolleePin API with ssidIndex = 1, invalid EnrolleePin = "1234ABCD" | ssidIndex = 1, EnrolleePin = '1234ABCD' | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_setCliWpsEnrolleePin() API with ssidIndex = 1, invalid EnrolleePin = "1234ABCD" | ssidIndex = 1, EnrolleePin = '1234ABCD' | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative4_wifi_setCliWpsEnrolleePin (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative4_wifi_setCliWpsEnrolleePin...\n");
-    INT ssidIndex = 1;
     CHAR EnrolleePin[] = "1234ABCD";
 
     UT_LOG("Invoking wifi_setCliWpsEnrolleePin with EnrolleePin containing character values\n");
-    INT retVal = wifi_setCliWpsEnrolleePin(ssidIndex, EnrolleePin);
-        
+    INT retVal = wifi_setCliWpsEnrolleePin(SSID_INDEX, EnrolleePin);
     UT_LOG("wifi_setCliWpsEnrolleePin API returns : %d\n",retVal);
     UT_ASSERT_EQUAL(retVal, RETURN_ERR);
 
@@ -999,7 +925,7 @@ void test_l1_wifi_client_hal_negative4_wifi_setCliWpsEnrolleePin (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_setCliWpsButtonPush API with valid ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_setCliWpsButtonPush() API with valid ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should Pass |
 **/
 void test_l1_wifi_client_hal_positive1_wifi_setCliWpsButtonPush (void)
 {
@@ -1008,7 +934,6 @@ void test_l1_wifi_client_hal_positive1_wifi_setCliWpsButtonPush (void)
 
     UT_LOG("Invoked wifi_setCliWpsButtonPush with valid ssidIndex = 1\n");
     INT returnStatus = wifi_setCliWpsButtonPush(ssidIndex);
-        
     UT_LOG("wifi_setCliWpsButtonPush API returns : %d\n",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_OK);
     
@@ -1031,23 +956,19 @@ void test_l1_wifi_client_hal_positive1_wifi_setCliWpsButtonPush (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_setCliWpsButtonPush API with valid ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_setCliWpsButtonPush() API with valid ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should Pass |
 **/
 void test_l1_wifi_client_hal_positive2_wifi_setCliWpsButtonPush (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_setCliWpsButtonPush...\n");
-    INT ssidIndex = 1;  
-    WiFi_UnInitPosReq();
-    WiFi_InitWithConfigPreReq();
+    INT ssidIndex = 1;
+    INT returnStatus;
 
     UT_LOG("Invoked wifi_setCliWpsButtonPush with valid ssidIndex = 1\n");
-    INT returnStatus = wifi_setCliWpsButtonPush(ssidIndex);
-        
+    returnStatus = wifi_setCliWpsButtonPush(ssidIndex);
     UT_LOG("wifi_setCliWpsButtonPush API returns : %d\n",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_OK);
-    
-    WiFi_UnInitPosReq();
-    WiFi_InitPreReq();
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_setCliWpsButtonPush...\n");
 }
 
@@ -1068,21 +989,18 @@ void test_l1_wifi_client_hal_positive2_wifi_setCliWpsButtonPush (void)
 * **Test Procedure:** @n
 * | Variation / Step  | Description | Test Data | Expected Result | Notes |
 * | :---------------: | ---------------| ------------ |------------| --------------- |
-* | 01 | Invoking wifi_setCliWpsButtonPush without initializing wifi_init() or wifi_initWithConfig() and wifi_connectEndpoint_callback_register()| ssidIndex = 1 | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setCliWpsButtonPush() without calling wifi_init() or wifi_initWithConfig() and wifi_connectEndpoint_callback_register()| ssidIndex = 1 | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative1_wifi_setCliWpsButtonPush (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_setCliWpsButtonPush...\n");
     INT ssidIndex = 1;
-    WiFi_UnInitPosReq();
 
     UT_LOG("Invoking the wifi_setCliWpsButtonPush API without pre-initializing.\n");
     INT returnStatus = wifi_setCliWpsButtonPush(ssidIndex);
-    
     UT_LOG("wifi_setCliWpsButtonPush API returns : %d\n",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_ERR);
 
-    WiFi_InitPreReq();
     UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_setCliWpsButtonPush...\n");
 }
 
@@ -1102,7 +1020,7 @@ void test_l1_wifi_client_hal_negative1_wifi_setCliWpsButtonPush (void)
 * **Test Procedure:** @n
 * | Variation / Step  | Description | Test Data | Expected Result | Notes |
 * | :---------------: | ---------------| ------------ |------------| --------------- |
-* | 01 | Invoking the wifi_setCliWpsButtonPush API with invalid ssidIndex = -1 | ssidIndex = -1 | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setCliWpsButtonPush() API with invalid ssidIndex = -1 | ssidIndex = -1 | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative2_wifi_setCliWpsButtonPush (void)
 {
@@ -1111,7 +1029,6 @@ void test_l1_wifi_client_hal_negative2_wifi_setCliWpsButtonPush (void)
 
     UT_LOG("Invoking the wifi_setCliWpsButtonPush API with ssidIndex = -1.\n");
     INT returnStatus = wifi_setCliWpsButtonPush(ssidIndex);
-    
     UT_LOG("wifi_setCliWpsButtonPush API returns : %d\n",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_ERR);
 
@@ -1134,13 +1051,12 @@ void test_l1_wifi_client_hal_negative2_wifi_setCliWpsButtonPush (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_connectEndpoint() API with valid input values | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = VALID_MODE, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass|
+* | 01 | Invoke wifi_connectEndpoint() API with valid input values | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = VALID_MODE, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass|
 */
 void test_l1_wifi_client_hal_positive1_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_connectEndpoint...\n");
 
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "ValidSSID";                                  /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
@@ -1153,8 +1069,7 @@ void test_l1_wifi_client_hal_positive1_wifi_connectEndpoint (void)
     CHAR privatekey[] = "ValidPrivateKeyFilePath";                 /*Need to replace with valid value*/
 
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
+    INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_OK);
     
@@ -1177,13 +1092,12 @@ void test_l1_wifi_client_hal_positive1_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_connectEndpoint() API with valid input values | ssidIndex = 1, AP_SSID = "", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_connectEndpoint() API with valid input values | ssidIndex = 1, AP_SSID = "", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_connectEndpoint...\n");
 
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "";                                  
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
@@ -1196,8 +1110,7 @@ void test_l1_wifi_client_hal_positive2_wifi_connectEndpoint (void)
     CHAR privatekey[] = "ValidPrivateKeyFilePath";                 /*Need to replace with valid value*/
 
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
+    INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_OK);
     
@@ -1221,13 +1134,12 @@ void test_l1_wifi_client_hal_positive2_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_connectEndpoint() API with valid input values | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 0, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_connectEndpoint() API with valid input values | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 0, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive3_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive3_validInputs...\n");
 
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "ValidSSID";                                  /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
@@ -1240,8 +1152,7 @@ void test_l1_wifi_client_hal_positive3_wifi_connectEndpoint (void)
     CHAR privatekey[] = "ValidPrivateKeyFilePath";                 /*Need to replace with valid value*/
 
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
+    INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_OK);
     
@@ -1265,15 +1176,13 @@ void test_l1_wifi_client_hal_positive3_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_connectEndpoint() API with valid input values after calling wifi_initWithConfig() | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 0, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_connectEndpoint() API with valid input values after calling wifi_initWithConfig() | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 0, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive4_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive4_wifi_connectEndpoint...\n");
-    WiFi_UnInitPosReq();
-    WiFi_InitWithConfigPreReq();
+    INT result;
 
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "ValidSSID";                                  /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
@@ -1286,13 +1195,10 @@ void test_l1_wifi_client_hal_positive4_wifi_connectEndpoint (void)
     CHAR privatekey[] = "ValidPrivateKeyFilePath";                 /*Need to replace with valid value*/
 
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
+    result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
 
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_OK);
-    
-    WiFi_UnInitPosReq();
-    WiFi_InitPreReq();
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive4_wifi_connectEndpoint...\n");
 }
@@ -1313,7 +1219,7 @@ void test_l1_wifi_client_hal_positive4_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_connectEndpoint() with an invalid SSID index | ssidIndex = 0, AP_SSID = ValidSSID, AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = ExampleWEPKey, AP_security_PreSharedKey = ExamplePreSharedKey, AP_security_KeyPassphrase = ExamplePassphrase, saveSSID = 1, eapIdentity = ValidIdentity, carootcert = ValidCARootCertFilePath, clientcert = ValidClientCertFilePath, privatekey = ValidPrivateKeyFilePath | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_connectEndpoint() with an invalid SSID index | ssidIndex = 0, AP_SSID = ValidSSID, AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = ExampleWEPKey, AP_security_PreSharedKey = ExamplePreSharedKey, AP_security_KeyPassphrase = ExamplePassphrase, saveSSID = 1, eapIdentity = ValidIdentity, carootcert = ValidCARootCertFilePath, clientcert = ValidClientCertFilePath, privatekey = ValidPrivateKeyFilePath | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative1_wifi_connectEndpoint (void)
 {
@@ -1333,7 +1239,6 @@ void test_l1_wifi_client_hal_negative1_wifi_connectEndpoint (void)
 
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid SSID index\n");
     INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     
@@ -1356,13 +1261,12 @@ void test_l1_wifi_client_hal_negative1_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 *  | Variation / Step | Description | Test Data | Expected Result | Notes |
 *  | :----: | ----------- | --------- | --------------- | ----- |
-*  | 01 | Invoking wifi_connectEndpoint() with an invalid AP_security_mode | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_NOT_SUPPORTED + 1, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
+*  | 01 | Invoke wifi_connectEndpoint() with an invalid AP_security_mode | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_NOT_SUPPORTED + 1, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative2_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_connectEndpoint...\n");
 
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_NOT_SUPPORTED + 1;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1375,8 +1279,7 @@ void test_l1_wifi_client_hal_negative2_wifi_connectEndpoint (void)
     CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
 
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid AP_security_mode\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
+    INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     
@@ -1399,13 +1302,12 @@ void test_l1_wifi_client_hal_negative2_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- | --------------- | ----- |
-* | 01 | Invoking wifi_connectEndpoint() with invalid AP_security_WEPKey | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64 , AP_security_WEPKey = NULL, AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_connectEndpoint() with invalid AP_security_WEPKey | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64 , AP_security_WEPKey = NULL, AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative3_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_connectEndpoint...\n");
 
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
     CHAR *AP_security_WEPKey = NULL;                           
@@ -1418,8 +1320,7 @@ void test_l1_wifi_client_hal_negative3_wifi_connectEndpoint (void)
     CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
 
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid AP_security_WEPKey\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
+    INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     
@@ -1443,13 +1344,12 @@ void test_l1_wifi_client_hal_negative3_wifi_connectEndpoint (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data | Expected Result | Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoking wifi_connectEndpoint() with invalid AP_security_PreSharedKey | ssidIndex = 1, AP_SSID = ValidSSID, AP_security_mode = VALID_MODE, AP_security_WEPKey = ExampleWEPKey, AP_security_PreSharedKey = NULL, AP_security_KeyPassphrase = ExamplePassphrase, saveSSID = 1, eapIdentity = ValidIdentity, carootcert = ValidCARootCertFilePath, clientcert = ValidClientCertFilePath, privatekey = ValidPrivateKeyFilePath | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_connectEndpoint() with invalid AP_security_PreSharedKey | ssidIndex = 1, AP_SSID = ValidSSID, AP_security_mode = VALID_MODE, AP_security_WEPKey = ExampleWEPKey, AP_security_PreSharedKey = NULL, AP_security_KeyPassphrase = ExamplePassphrase, saveSSID = 1, eapIdentity = ValidIdentity, carootcert = ValidCARootCertFilePath, clientcert = ValidClientCertFilePath, privatekey = ValidPrivateKeyFilePath | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative4_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative4_wifi_connectEndpoint...\n");
 
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1462,8 +1362,7 @@ void test_l1_wifi_client_hal_negative4_wifi_connectEndpoint (void)
     CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
 
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid AP_security_PreSharedKey\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
+    INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     
@@ -1486,13 +1385,12 @@ void test_l1_wifi_client_hal_negative4_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_connectEndpoint() with invalid AP_security_KeyPassphrase | ssidIndex=1, AP_SSID="ValidSSID", AP_security_mode=WIFI_SECURITY_WEP_64, AP_security_WEPKey="ExampleWEPKey", AP_security_PreSharedKey="ExamplePreSharedKey", AP_security_KeyPassphrase=NULL, saveSSID=1, eapIdentity="ValidIdentity", carootcert="ValidCARootCertFilePath", clientcert="ValidClientCertFilePath", privatekey="ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_connectEndpoint() with invalid AP_security_KeyPassphrase | ssidIndex=1, AP_SSID="ValidSSID", AP_security_mode=WIFI_SECURITY_WEP_64, AP_security_WEPKey="ExampleWEPKey", AP_security_PreSharedKey="ExamplePreSharedKey", AP_security_KeyPassphrase=NULL, saveSSID=1, eapIdentity="ValidIdentity", carootcert="ValidCARootCertFilePath", clientcert="ValidClientCertFilePath", privatekey="ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative5_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative5_wifi_connectEndpoint...\n");
 
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1505,8 +1403,7 @@ void test_l1_wifi_client_hal_negative5_wifi_connectEndpoint (void)
     CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
 
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid AP_security_KeyPassphrase\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
+    INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     
@@ -1528,12 +1425,11 @@ void test_l1_wifi_client_hal_negative5_wifi_connectEndpoint (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data | Expected Result | Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoking wifi_connectEndpoint() with invalid saveSSID value | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 2, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_connectEndpoint() with invalid saveSSID value | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 2, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative6_wifi_connectEndpoint(void) {
     UT_LOG("Entering test_l1_wifi_client_hal_negative6_wifi_connectEndpoint...\n");
 
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1546,8 +1442,7 @@ void test_l1_wifi_client_hal_negative6_wifi_connectEndpoint(void) {
     CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
 
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid saveSSID\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
+    INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     
@@ -1570,13 +1465,12 @@ void test_l1_wifi_client_hal_negative6_wifi_connectEndpoint(void) {
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data | Expected Result | Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoking wifi_connectEndpoint() with invalid eapIdentity value | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = NULL, carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_connectEndpoint() with invalid eapIdentity value | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = NULL, carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative7_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative7_wifi_connectEndpoint...\n");
 
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1589,8 +1483,7 @@ void test_l1_wifi_client_hal_negative7_wifi_connectEndpoint (void)
     CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
 
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid eapIdentity\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
+    INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     
@@ -1614,7 +1507,7 @@ void test_l1_wifi_client_hal_negative7_wifi_connectEndpoint (void)
  *
  * | Variation / Step | Description | Test Data | Expected Result | Notes |
  * | :----: | --------- | ---------- | --------------- | ----- |
- * | 01 | Invoking wifi_connectEndpoint() with invalid carootcert | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = NULL, clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_connectEndpoint() with invalid carootcert | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = NULL, clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative8_wifi_connectEndpoint (void)
 {
@@ -1633,8 +1526,7 @@ void test_l1_wifi_client_hal_negative8_wifi_connectEndpoint (void)
     CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
 
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid carootcert\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
+    INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     
@@ -1657,13 +1549,12 @@ void test_l1_wifi_client_hal_negative8_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- | -------------- | ----- |
-* | 01 | Invoking the API wifi_connectEndpoint with an invalid clientcert | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = NULL, privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_connectEndpoint() with an invalid clientcert | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = NULL, privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative9_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative9_wifi_connectEndpoint...\n");
 
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1676,8 +1567,7 @@ void test_l1_wifi_client_hal_negative9_wifi_connectEndpoint (void)
     CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
 
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid clientcert\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
+    INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     
@@ -1700,13 +1590,12 @@ void test_l1_wifi_client_hal_negative9_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- | -------------- | ----- |
-* | 01 | Invoking the API wifi_connectEndpoint with an invalid privatekey | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = NULL | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_connectEndpoint() with an invalid privatekey | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = NULL | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative10_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative10_wifi_connectEndpoint...\n");
 
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1719,8 +1608,7 @@ void test_l1_wifi_client_hal_negative10_wifi_connectEndpoint (void)
     CHAR *privatekey = NULL;                                                 
 
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid privatekey\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
+    INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
     
@@ -1743,14 +1631,12 @@ void test_l1_wifi_client_hal_negative10_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_connectEndpoint() API without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, AP_SSID = "", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_connectEndpoint() API without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, AP_SSID = "", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_negative11_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative11_wifi_connectEndpoint...\n");
-    WiFi_UnInitPosReq();
 
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "";                                  
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
@@ -1763,12 +1649,10 @@ void test_l1_wifi_client_hal_negative11_wifi_connectEndpoint (void)
     CHAR privatekey[] = "ValidPrivateKeyFilePath";                 /*Need to replace with valid value*/
 
     UT_LOG("Invoking wifi_connectEndpoint() API without calling wifi_init() or wifi_initWithConfig()\n");
-    INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
+    INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_OK);
-    
-    WiFi_InitPreReq();
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative11_wifi_connectEndpoint...\n");
 }
 
@@ -1790,17 +1674,15 @@ void test_l1_wifi_client_hal_negative11_wifi_connectEndpoint (void)
 * This test involves the following steps:
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_disconnectEndpoint API with valid ssidIndex = 1, AP_SSID = "valid_value" | ssidIndex = 1, AP_SSID = "valid_value" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_disconnectEndpoint() API with valid ssidIndex = 1, AP_SSID = "valid_value" | ssidIndex = 1, AP_SSID = "valid_value" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint...\n");
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "valid_value";     /*Need to replace with valid value*/
 
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 1 and AP_SSID = \"valid_value\"\n");
-    INT status = wifi_disconnectEndpoint(ssidIndex, AP_SSID);
-    
+    INT status = wifi_disconnectEndpoint(SSID_INDEX, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
     UT_ASSERT_EQUAL(status, RETURN_OK);
     
@@ -1825,25 +1707,19 @@ void test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint (void)
 * This test involves the following steps:
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_disconnectEndpoint API with valid ssidIndex = 1, AP_SSID = "valid_value" | ssidIndex = 1, AP_SSID = "valid_value" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_disconnectEndpoint() API with valid ssidIndex = 1, AP_SSID = "valid_value" | ssidIndex = 1, AP_SSID = "valid_value" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_disconnectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_disconnectEndpoint...\n");
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "valid_value";  /*Need to replace with valid value*/
-
-    WiFi_UnInitPosReq();
-    WiFi_InitWithConfigPreReq();
+    INT status;
 
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 1 and AP_SSID = \"valid_value\"\n");
-    INT status = wifi_disconnectEndpoint(ssidIndex, AP_SSID);
-    
+    status = wifi_disconnectEndpoint(SSID_INDEX, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
     UT_ASSERT_EQUAL(status, RETURN_OK);
-    
-    WiFi_UnInitPosReq();
-    WiFi_InitPreReq();
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_disconnectEndpoint...\n");
 }
 
@@ -1863,7 +1739,7 @@ void test_l1_wifi_client_hal_positive2_wifi_disconnectEndpoint (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoking wifi_disconnectEndpoint with invalid ssidIndex = 0, AP_SSID = "valid_value" | ssidIndex = 0, AP_SSID = "valid_value" | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_disconnectEndpoint() with invalid ssidIndex = 0, AP_SSID = "valid_value" | ssidIndex = 0, AP_SSID = "valid_value" | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint (void)
 {
@@ -1873,7 +1749,6 @@ void test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint (void)
 
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 0 and AP_SSID = \"valid_value\"\n");
     INT status = wifi_disconnectEndpoint(ssidIndex, AP_SSID);
-    
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
     
@@ -1896,17 +1771,15 @@ void test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoking wifi_disconnectEndpoint with invalid ssidIndex = 1, AP_SSID = "Invalid_value" | ssidIndex = 0, AP_SSID = "Invalid_value" | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_disconnectEndpoint() with invalid ssidIndex = 1, AP_SSID = "Invalid_value" | ssidIndex = 0, AP_SSID = "Invalid_value" | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative2_wifi_disconnectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_disconnectEndpoint...\n");
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "Invalid_value"; /*Need to replace with proper invalid value*/
 
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 0 and AP_SSID = \"Invalid_value\"\n");
-    INT status = wifi_disconnectEndpoint(ssidIndex, AP_SSID);
-    
+    INT status = wifi_disconnectEndpoint(SSID_INDEX, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
     
@@ -1929,17 +1802,15 @@ void test_l1_wifi_client_hal_negative2_wifi_disconnectEndpoint (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoking wifi_disconnectEndpoint with invalid ssidIndex = 1, AP_SSID = NULL | ssidIndex = 0, AP_SSID = NULL | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_disconnectEndpoint() with invalid ssidIndex = 1, AP_SSID = NULL | ssidIndex = 0, AP_SSID = NULL | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative3_wifi_disconnectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_disconnectEndpoint...\n");
-    INT ssidIndex = 1;
     CHAR *AP_SSID = NULL;
 
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 0 and AP_SSID = \"Invalid_value\"\n");
-    INT status = wifi_disconnectEndpoint(ssidIndex, AP_SSID);
-    
+    INT status = wifi_disconnectEndpoint(SSID_INDEX, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
     
@@ -1963,22 +1834,18 @@ void test_l1_wifi_client_hal_negative3_wifi_disconnectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step  | Description | Test Data | Expected Result | Notes |
 * | :---------------: | ---------------| ------------ |------------| --------------- |
-* | 01 | Invoking wifi_disconnectEndpoint without initializing wifi_init() or wifi_initWithConfig() and wifi_connectEndpoint_callback_register()| ssidIndex = 1, AP_SSID = "valid_value" | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_disconnectEndpoint() without calling wifi_init() or wifi_initWithConfig() and wifi_connectEndpoint_callback_register()| ssidIndex = 1, AP_SSID = "valid_value" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint...\n");
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "valid_value";  /*Need to replace with valid value*/
-    WiFi_UnInitPosReq();
 
     UT_LOG("Invoking wifi_disconnectEndpoint API without initializing wifi_init() and with ssidIndex = 1 and AP_SSID = \"valid_value\"\n");
-    INT status = wifi_disconnectEndpoint(ssidIndex, AP_SSID);
-    
+    INT status = wifi_disconnectEndpoint(SSID_INDEX, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
-    
-    WiFi_InitPreReq();
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint...\n");
 }
 
@@ -1998,7 +1865,7 @@ void test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_clearSSIDInfo API with ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should pass |
+* | 01 | Invoke wifi_clearSSIDInfo() API with ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should pass |
 */
 void test_l1_wifi_client_hal_positive1_wifi_clearSSIDInfo (void)
 {
@@ -2007,7 +1874,6 @@ void test_l1_wifi_client_hal_positive1_wifi_clearSSIDInfo (void)
     
     UT_LOG("Invoking wifi_clearSSIDInfo with valid SSID index %d\n", ssidIndex);
     INT returnValue = wifi_clearSSIDInfo(ssidIndex);
-
     UT_LOG("wifi_clearSSIDInfo API returns : %d\n",returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_OK);
 
@@ -2030,24 +1896,18 @@ void test_l1_wifi_client_hal_positive1_wifi_clearSSIDInfo (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_clearSSIDInfo API with ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should pass |
+* | 01 | Invoke wifi_clearSSIDInfo() API with ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_clearSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_clearSSIDInfo...\n");
     INT ssidIndex = 1;
-
-    WiFi_UnInitPosReq();
-    WiFi_InitWithConfigPreReq();
+    INT returnValue;
 
     UT_LOG("Invoking wifi_clearSSIDInfo with valid SSID index %d\n", ssidIndex);
-    INT returnValue = wifi_clearSSIDInfo(ssidIndex);
-
+    returnValue = wifi_clearSSIDInfo(ssidIndex);
     UT_LOG("wifi_clearSSIDInfo API returns : %d\n",returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_OK);
-
-    WiFi_UnInitPosReq();
-    WiFi_InitPreReq();
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_clearSSIDInfo...\n");
 }
@@ -2069,7 +1929,7 @@ void test_l1_wifi_client_hal_positive2_wifi_clearSSIDInfo (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_clearSSIDInfo API with invalid ssidIndex = 0 | SSID index = 0 | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_clearSSIDInfo() API with invalid ssidIndex = 0 | SSID index = 0 | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative1_wifi_clearSSIDInfo (void)
 {
@@ -2078,7 +1938,6 @@ void test_l1_wifi_client_hal_negative1_wifi_clearSSIDInfo (void)
     
     UT_LOG("Invoking wifi_clearSSIDInfo with ssidIndex = 0\n");
     INT returnValue = wifi_clearSSIDInfo(ssidIndex);
-        
     UT_LOG("wifi_clearSSIDInfo API returns : %d\n", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
     
@@ -2101,7 +1960,7 @@ void test_l1_wifi_client_hal_negative1_wifi_clearSSIDInfo (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_clearSSIDInfo API with invalid ssidIndex = -1 | SSID index = -1 | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_clearSSIDInfo() API with invalid ssidIndex = -1 | SSID index = -1 | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative2_wifi_clearSSIDInfo (void)
 {
@@ -2110,7 +1969,6 @@ void test_l1_wifi_client_hal_negative2_wifi_clearSSIDInfo (void)
     
     UT_LOG("Invoking wifi_clearSSIDInfo with ssidIndex = -1\n");
     INT returnValue = wifi_clearSSIDInfo(ssidIndex);
-        
     UT_LOG("wifi_clearSSIDInfo API returns : %d\n", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
     
@@ -2134,21 +1992,18 @@ void test_l1_wifi_client_hal_negative2_wifi_clearSSIDInfo (void)
 * **Test Procedure:** @n
 * | Variation / Step  | Description | Test Data | Expected Result | Notes |
 * | :---------------: | ---------------| ------------ |------------| --------------- |
-* | 01 | Invoking wifi_clearSSIDInfo without initializing wifi_init() or wifi_initWithConfig()| ssidIndex = 1 | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_clearSSIDInfo() without calling initializing wifi_init() or wifi_initWithConfig()| ssidIndex = 1 | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative3_wifi_clearSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_clearSSIDInfo...\n");
-    INT ssidIndex = 1;    
-    WiFi_UnInitPosReq();
+    INT ssidIndex = 1; 
 
     UT_LOG("Invoking wifi_clearSSIDInfo without initializing wifi_init()\n");
     INT returnValue = wifi_clearSSIDInfo(ssidIndex);
-        
     UT_LOG("wifi_clearSSIDInfo API returns : %d\n", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
-    
-    WiFi_InitPreReq();
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative3_wifi_clearSSIDInfo...\n");
 }
 
@@ -2170,7 +2025,7 @@ void test_l1_wifi_client_hal_negative3_wifi_clearSSIDInfo (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 02 | Invoking wifi_lastConnected_Endpoint API with ssidInfo = valid structure | ssidInfo = valid structure | RETURN_OK | Should Fail |
+* | 02 | Invoke wifi_lastConnected_Endpoint() API with ssidInfo = valid structure | ssidInfo = valid structure | RETURN_OK | Should Fail |
 */     
 void test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint (void)
 {
@@ -2181,7 +2036,6 @@ void test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint (void)
     {
         UT_LOG("Invoking the wifi_lastConnected_Endpoint API with valid ssidInfo structure\n");
         INT ret = wifi_lastConnected_Endpoint(ssidInfo);
-
         UT_LOG("wifi_lastConnected_Endpoint API returns : %d\n",ret);
         UT_ASSERT_EQUAL(ret, RETURN_OK);
 
@@ -2223,7 +2077,8 @@ void test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint (void)
     {
         UT_LOG("Malloc operation failed\n");
         UT_FAIL("Memory allocation with malloc failed\n");
-    }   
+    }
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint...\n");
 }
 
@@ -2245,20 +2100,18 @@ void test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 02 | Invoking wifi_lastConnected_Endpoint API with ssidInfo = valid structure | ssidInfo = valid structure | RETURN_OK | Should Fail |
+* | 01 | Invoke wifi_lastConnected_Endpoint() API with ssidInfo = valid structure | ssidInfo = valid structure | RETURN_OK | Should Fail |
 */     
 void test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint...\n");
-    WiFi_UnInitPosReq();
-    WiFi_InitWithConfigPreReq();
-    
+    INT ret;
     wifi_pairedSSIDInfo_t *ssidInfo = (wifi_pairedSSIDInfo_t*)malloc(sizeof(wifi_pairedSSIDInfo_t));
+
     if(ssidInfo != NULL)
     {
         UT_LOG("Invoking the wifi_lastConnected_Endpoint API with valid ssidInfo structure\n");
-        INT ret = wifi_lastConnected_Endpoint(ssidInfo);
-
+        ret = wifi_lastConnected_Endpoint(ssidInfo);
         UT_LOG("wifi_lastConnected_Endpoint API returns : %d\n",ret);
         UT_ASSERT_EQUAL(ret, RETURN_OK);
 
@@ -2300,9 +2153,7 @@ void test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint (void)
     {
         UT_LOG("Malloc operation failed\n");
         UT_FAIL("Memory allocation with malloc failed\n");
-    } 
-    WiFi_UnInitPosReq();
-    WiFi_InitPreReq();  
+    }  
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint...\n");
 }
@@ -2324,7 +2175,7 @@ void test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 02 | Invoking wifi_lastConnected_Endpoint with ssidInfo = NULL | ssidInfo = NULL | RETURN_ERR | Should Fail |
+* | 02 | Invoke wifi_lastConnected_Endpoint() with ssidInfo = NULL | ssidInfo = NULL | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative1_wifi_lastConnected_Endpoint (void)
 {
@@ -2333,7 +2184,6 @@ void test_l1_wifi_client_hal_negative1_wifi_lastConnected_Endpoint (void)
 
     UT_LOG("Invoking wifi_lastConnected_Endpoint with NULL ssidInfo structure\n");
     INT ret = wifi_lastConnected_Endpoint(ssidInfo);
-
     UT_LOG("wifi_lastConnected_Endpoint API returns : %d\n",ret);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
@@ -2356,19 +2206,17 @@ void test_l1_wifi_client_hal_negative1_wifi_lastConnected_Endpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke the wifi_lastConnected_Endpoint function without initializing wifi_init() or wifi_initWithConfig()| ssidInfo = valid structure | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_lastConnected_Endpoint() function without initializing wifi_init() or wifi_initWithConfig()| ssidInfo = valid structure | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint...\n");
-    WiFi_UnInitPosReq();
 
     wifi_pairedSSIDInfo_t *ssidInfo = (wifi_pairedSSIDInfo_t*)malloc(sizeof(wifi_pairedSSIDInfo_t));
     if(ssidInfo != NULL)
     {
         UT_LOG("Invoking wifi_lastConnected_Endpoint without initialising wifi\n");
         INT ret = wifi_lastConnected_Endpoint(ssidInfo);
-
         UT_LOG("wifi_lastConnected_Endpoint API returns : %d\n",ret);
         UT_ASSERT_EQUAL(ret, RETURN_ERR);
     }
@@ -2378,7 +2226,6 @@ void test_l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint (void)
         UT_FAIL("Memory allocation with malloc failed\n");
     } 
 
-    WiFi_InitPreReq();
     UT_LOG("Exiting test_l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint...\n");
 }
 
@@ -2398,13 +2245,12 @@ void test_l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_setRoamingControl with ssidIndex =1, pRoamingCtrl_data = valid structure | ssidIndex = 1, pRoamingCtrl_data = valid data structure | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_setRoamingControl() with ssidIndex =1, pRoamingCtrl_data = valid structure | ssidIndex = 1, pRoamingCtrl_data = valid data structure | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive1_wifi_setRoamingControl (void) 
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_setRoamingControl...\n");
 
-    int ssidIndex = 1;
     wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
     if(pRoamingCtrl_data != NULL )
     {
@@ -2422,8 +2268,7 @@ void test_l1_wifi_client_hal_positive1_wifi_setRoamingControl (void)
         pRoamingCtrl_data->postAssnAPctrlTimeframe = 60;
     
         UT_LOG("Invoking wifi_setRoamingControl with ssidIndex = 1 and a valid pRoamingCtrl_data structure.\n"); 
-        int retVal = wifi_setRoamingControl(ssidIndex, pRoamingCtrl_data);
-        
+        int retVal = wifi_setRoamingControl(SSID_INDEX, pRoamingCtrl_data);
         UT_LOG("wifi_setRoamingControl API returns : %d\n", retVal);
         UT_ASSERT_EQUAL(retVal, RETURN_OK);
     }
@@ -2431,7 +2276,8 @@ void test_l1_wifi_client_hal_positive1_wifi_setRoamingControl (void)
     {
         UT_LOG("Malloc operation failed\n");
         UT_FAIL("Memory allocation with malloc failed\n");
-    } 
+    }
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_setRoamingControl...\n");
 }
 
@@ -2451,16 +2297,14 @@ void test_l1_wifi_client_hal_positive1_wifi_setRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_setRoamingControl with ssidIndex =1, pRoamingCtrl_data = valid structure | ssidIndex = 1, pRoamingCtrl_data = valid data structure | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_setRoamingControl() with ssidIndex =1, pRoamingCtrl_data = valid structure | ssidIndex = 1, pRoamingCtrl_data = valid data structure | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_setRoamingControl (void) 
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_setRoamingControl...\n");
-    WiFi_UnInitPosReq();
-    WiFi_InitWithConfigPreReq();
-
-    int ssidIndex = 1;
+    int retVal;
     wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
+
     if(pRoamingCtrl_data != NULL )
     {
         pRoamingCtrl_data->roamingEnable = 1;                          
@@ -2477,8 +2321,7 @@ void test_l1_wifi_client_hal_positive2_wifi_setRoamingControl (void)
         pRoamingCtrl_data->postAssnAPctrlTimeframe = 60;
     
         UT_LOG("Invoking wifi_setRoamingControl with ssidIndex = 1 and a valid pRoamingCtrl_data structure.\n"); 
-        int retVal = wifi_setRoamingControl(ssidIndex, pRoamingCtrl_data);
-        
+        retVal = wifi_setRoamingControl(SSID_INDEX, pRoamingCtrl_data);
         UT_LOG("wifi_setRoamingControl API returns : %d\n", retVal);
         UT_ASSERT_EQUAL(retVal, RETURN_OK);
     }
@@ -2487,8 +2330,6 @@ void test_l1_wifi_client_hal_positive2_wifi_setRoamingControl (void)
         UT_LOG("Malloc operation failed\n");
         UT_FAIL("Memory allocation with malloc failed\n");
     }
-    WiFi_UnInitPosReq();
-    WiFi_InitPreReq(); 
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_setRoamingControl...\n");
 }
@@ -2509,17 +2350,15 @@ void test_l1_wifi_client_hal_positive2_wifi_setRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_setRoamingControl API with assidIndex = 1, pRoamingCtrl_data = NULL | ssidIndex = 1, pRoamingCtrl_data = NULL | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setRoamingControl() API with assidIndex = 1, pRoamingCtrl_data = NULL | ssidIndex = 1, pRoamingCtrl_data = NULL | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative1_wifi_setRoamingControl (void) 
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_setRoamingControl...\n");
-    int ssidIndex = 1;
     wifi_roamingCtrl_t* pRoamingCtrl_data = NULL;
     
     UT_LOG("Invoking wifi_setRoamingControl with ssidIndex = 1 and pRoamingCtrl_data structure = NULL.\n");
-    int retVal = wifi_setRoamingControl(ssidIndex, pRoamingCtrl_data);
-
+    int retVal = wifi_setRoamingControl(SSID_INDEX, pRoamingCtrl_data);
     UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
     UT_ASSERT_EQUAL(retVal, RETURN_ERR);
 
@@ -2542,14 +2381,12 @@ void test_l1_wifi_client_hal_negative1_wifi_setRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_setRoamingControl without calling wifi_init() or wifi_initWithConfig() | ssidIndex =1, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
+* | 01 | Invoke wifi_setRoamingControl() without calling wifi_init() or wifi_initWithConfig() | ssidIndex =1, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
 */
 void test_l1_wifi_client_hal_negative2_wifi_setRoamingControl (void) 
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_setRoamingControl...\n");
-    WiFi_UnInitPosReq();
 
-    int ssidIndex = 1;
     wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
     if(pRoamingCtrl_data != NULL )
     {
@@ -2567,8 +2404,7 @@ void test_l1_wifi_client_hal_negative2_wifi_setRoamingControl (void)
         pRoamingCtrl_data->postAssnAPctrlTimeframe = 60;
     
         UT_LOG("Invoking wifi_setRoamingControl without calling wifi_init()\n");
-        int retVal = wifi_setRoamingControl(ssidIndex, pRoamingCtrl_data);
-        
+        int retVal = wifi_setRoamingControl(SSID_INDEX, pRoamingCtrl_data);
         UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
         UT_ASSERT_EQUAL(retVal, RETURN_ERR);
     }
@@ -2577,7 +2413,6 @@ void test_l1_wifi_client_hal_negative2_wifi_setRoamingControl (void)
         UT_LOG("Malloc operation failed\n");
         UT_FAIL("Memory allocation with malloc failed\n");
     }
-    WiFi_InitPreReq();
 
     UT_LOG("Exiting test_l1_wifi_client_hal_negative2_wifi_setRoamingControl...\n");
 }
@@ -2598,7 +2433,7 @@ void test_l1_wifi_client_hal_negative2_wifi_setRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_setRoamingControl API with a invalid ssidIndex = 0, pRoamingCtrl_data = valid structure | ssidIndex = 0, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
+* | 01 | Invoke wifi_setRoamingControl() API with a invalid ssidIndex = 0, pRoamingCtrl_data = valid structure | ssidIndex = 0, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
 */
 void test_l1_wifi_client_hal_negative3_wifi_setRoamingControl (void) 
 {
@@ -2623,7 +2458,6 @@ void test_l1_wifi_client_hal_negative3_wifi_setRoamingControl (void)
     
         UT_LOG("Invoking wifi_setRoamingControl ssidIndex = 0, pRoamingCtrl_data = valid structure\n");
         int retVal = wifi_setRoamingControl(ssidIndex, pRoamingCtrl_data);
-        
         UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
         UT_ASSERT_EQUAL(retVal, RETURN_ERR);
     }
@@ -2632,6 +2466,7 @@ void test_l1_wifi_client_hal_negative3_wifi_setRoamingControl (void)
         UT_LOG("Malloc operation failed\n");
         UT_FAIL("Memory allocation with malloc failed\n");
     }
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative3_wifi_setRoamingControl...\n");
 }
 
@@ -2651,7 +2486,7 @@ void test_l1_wifi_client_hal_negative3_wifi_setRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_setRoamingControl API with a invalid ssidIndex = 100, pRoamingCtrl_data = valid structure | ssidIndex = 100, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
+* | 01 | Invoke wifi_setRoamingControl() API with a invalid ssidIndex = 100, pRoamingCtrl_data = valid structure | ssidIndex = 100, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
 */
 void test_l1_wifi_client_hal_negative4_wifi_setRoamingControl (void) 
 {
@@ -2676,7 +2511,6 @@ void test_l1_wifi_client_hal_negative4_wifi_setRoamingControl (void)
     
         UT_LOG("Invoking wifi_setRoamingControl ssidIndex = 100, pRoamingCtrl_data = valid structure\n");
         int retVal = wifi_setRoamingControl(ssidIndex, pRoamingCtrl_data);
-        
         UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
         UT_ASSERT_EQUAL(retVal, RETURN_ERR);
     }
@@ -2685,6 +2519,7 @@ void test_l1_wifi_client_hal_negative4_wifi_setRoamingControl (void)
         UT_LOG("Malloc operation failed\n");
         UT_FAIL("Memory allocation with malloc failed\n");
     }
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative4_wifi_setRoamingControl...\n");
 }
 
@@ -2704,7 +2539,7 @@ void test_l1_wifi_client_hal_negative4_wifi_setRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_setRoamingControl API with a invalid ssidIndex = -1, pRoamingCtrl_data = valid structure | ssidIndex = -1, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
+* | 01 | Invoke wifi_setRoamingControl() API with a invalid ssidIndex = -1, pRoamingCtrl_data = valid structure | ssidIndex = -1, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
 */
 void test_l1_wifi_client_hal_negative5_wifi_setRoamingControl (void) 
 {
@@ -2729,7 +2564,6 @@ void test_l1_wifi_client_hal_negative5_wifi_setRoamingControl (void)
     
         UT_LOG("Invoking wifi_setRoamingControl ssidIndex = -1, pRoamingCtrl_data = valid structure\n");
         int retVal = wifi_setRoamingControl(ssidIndex, pRoamingCtrl_data);
-        
         UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
         UT_ASSERT_EQUAL(retVal, RETURN_ERR);
     }
@@ -2738,6 +2572,7 @@ void test_l1_wifi_client_hal_negative5_wifi_setRoamingControl (void)
         UT_LOG("Malloc operation failed\n");
         UT_FAIL("Memory allocation with malloc failed\n");
     }
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative5_wifi_setRoamingControl...\n");
 }
 
@@ -2758,18 +2593,17 @@ void test_l1_wifi_client_hal_negative5_wifi_setRoamingControl (void)
 *
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_getRoamingControl API with ssidIndex = 1 and pRoamingCtrl_data = valid structure | ssidIndex = 1 and pRoamingCtrl_data = valid structure | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_getRoamingControl() API with ssidIndex = 1 and pRoamingCtrl_data = valid structure | ssidIndex = 1 and pRoamingCtrl_data = valid structure | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive1_wifi_getRoamingControl (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_getRoamingControl...\n");
-    int ssidIndex = 1;
     wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
+
     if(pRoamingCtrl_data != NULL)
     { 
         UT_LOG("Invoking wifi_getRoamingControl with ssidIndex = 1 and pRoamingCtrl_data = valid structure.\n");
-        int retVal = wifi_getRoamingControl(ssidIndex, pRoamingCtrl_data);
-    
+        int retVal = wifi_getRoamingControl(SSID_INDEX, pRoamingCtrl_data);
         UT_LOG("wifi_getRoamingControl API returns : %d\n",retVal);
         UT_ASSERT_EQUAL(retVal, RETURN_OK);
     
@@ -2900,6 +2734,7 @@ void test_l1_wifi_client_hal_positive1_wifi_getRoamingControl (void)
         UT_LOG("Malloc operation failed\n");
         UT_FAIL("Memory allocation with malloc failed\n");
     }
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_getRoamingControl...\n");
 }
 
@@ -2920,21 +2755,18 @@ void test_l1_wifi_client_hal_positive1_wifi_getRoamingControl (void)
 *
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking the wifi_getRoamingControl API with ssidIndex = 1 and pRoamingCtrl_data = valid structure | ssidIndex = 1 and pRoamingCtrl_data = valid structure | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_getRoamingControl() API with ssidIndex = 1 and pRoamingCtrl_data = valid structure | ssidIndex = 1 and pRoamingCtrl_data = valid structure | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_getRoamingControl (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_getRoamingControl...\n");
-    WiFi_UnInitPosReq();
-    WiFi_InitWithConfigPreReq();
+    int retVal;
 
-    int ssidIndex = 1;
     wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
     if(pRoamingCtrl_data != NULL)
     { 
         UT_LOG("Invoking wifi_getRoamingControl with ssidIndex = 1 and pRoamingCtrl_data = valid structure.\n");
-        int retVal = wifi_getRoamingControl(ssidIndex, pRoamingCtrl_data);
-    
+        retVal = wifi_getRoamingControl(SSID_INDEX, pRoamingCtrl_data);
         UT_LOG("wifi_getRoamingControl API returns : %d\n",retVal);
         UT_ASSERT_EQUAL(retVal, RETURN_OK);
     
@@ -3065,8 +2897,6 @@ void test_l1_wifi_client_hal_positive2_wifi_getRoamingControl (void)
         UT_LOG("Malloc operation failed\n");
         UT_FAIL("Memory allocation with malloc failed\n");
     }
-    WiFi_UnInitPosReq();
-    WiFi_InitPreReq();
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_getRoamingControl...\n");
 }
@@ -3087,18 +2917,18 @@ void test_l1_wifi_client_hal_positive2_wifi_getRoamingControl (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoke wifi_getRoamingControl with invalid ssidIndex = 0, pRoamingCtrl_data = valid strcuture  | ssidIndex = 0, pRoamingCtrl_data = valid strcuture | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_getRoamingControl() with invalid ssidIndex = 0, pRoamingCtrl_data = valid strcuture  | ssidIndex = 0, pRoamingCtrl_data = valid strcuture | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative1_wifi_getRoamingControl (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_getRoamingControl...\n");
     int ssidIndex = 0;
     wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
+
     if(pRoamingCtrl_data != NULL)
     { 
         UT_LOG("Invoked wifi_getRoamingControl with ssidIndex=0 and pRoamingCtrl_data = valid structure.\n");
         int retVal = wifi_getRoamingControl(ssidIndex, pRoamingCtrl_data);
-        
         UT_LOG("wifi_getRoamingContro API returns :%d\n", retVal);
         UT_ASSERT_EQUAL(retVal, RETURN_ERR);
     }
@@ -3106,7 +2936,8 @@ void test_l1_wifi_client_hal_negative1_wifi_getRoamingControl (void)
     {
         UT_LOG("Malloc operation failed\n");
         UT_FAIL("Memory allocation with malloc failed\n");
-    }  
+    }
+ 
     UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_getRoamingControl...\n");
 }
 
@@ -3127,17 +2958,15 @@ void test_l1_wifi_client_hal_negative1_wifi_getRoamingControl (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | The wifi_getRoamingControl API is invoked with ssidIndex = 1, pRoamingCtrl_data = NULL | ssidIndex = 1, pRoamingCtrl_data = NULL | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_getRoamingControl() API is invoked with ssidIndex = 1, pRoamingCtrl_data = NULL | ssidIndex = 1, pRoamingCtrl_data = NULL | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative2_wifi_getRoamingControl (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_getRoamingControl...\n");
-    int ssidIndex = 1;
     wifi_roamingCtrl_t *pRoamingCtrl_data = NULL;
 
     UT_LOG("Invoking wifi_getRoamingControl with ssidIndex = 1 and pRoamingCtrl_data = NULL\n");
-    int retVal = wifi_getRoamingControl(ssidIndex, pRoamingCtrl_data);
-    
+    int retVal = wifi_getRoamingControl(SSID_INDEX, pRoamingCtrl_data);
     UT_LOG("wifi_getRoamingControl API returns : %d\n",retVal);
     UT_ASSERT_EQUAL(retVal, RETURN_ERR);
 
@@ -3160,19 +2989,17 @@ void test_l1_wifi_client_hal_negative2_wifi_getRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: |--------- | ---------- |-------------- | ----- |
-* | 01 | Call the function wifi_getRoamingControl without calling wifi_init or wifi_initWithConfig | ssidIndex = 1, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_getRoamingControl() without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative3_wifi_getRoamingControl (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_getRoamingControl...\n");
-    WiFi_UnInitPosReq();
 
-    int ssidIndex = 1;
     wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
     if(pRoamingCtrl_data != NULL)
     {
         UT_LOG("Invoked wifi_getRoamingControl without prior call to wifi_init or wifi_initWithConfig\n");
-        int retVal = wifi_getRoamingControl(ssidIndex, pRoamingCtrl_data);
+        int retVal = wifi_getRoamingControl(SSID_INDEX, pRoamingCtrl_data);
     
         UT_LOG("wifi_getRoamingControl API Returns : %d\n",retVal);
         UT_ASSERT_EQUAL(retVal, RETURN_ERR);
@@ -3183,7 +3010,6 @@ void test_l1_wifi_client_hal_negative3_wifi_getRoamingControl (void)
         UT_FAIL("Memory allocation with malloc failed\n");
     } 
 
-    WiFi_InitPreReq();
     UT_LOG("Exiting test_l1_wifi_client_hal_negative3_wifi_getRoamingControl...\n");
 }
 
@@ -3203,7 +3029,7 @@ void test_l1_wifi_client_hal_negative3_wifi_getRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_cancelWpsPairing API | NA | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_cancelWpsPairing() API | NA | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive1_wifi_cancelWpsPairing (void)
 {
@@ -3211,7 +3037,6 @@ void test_l1_wifi_client_hal_positive1_wifi_cancelWpsPairing (void)
 
     UT_LOG("Invoking wifi_cancelWpsPairing API.\n");
     INT status = wifi_cancelWpsPairing();
-    
     UT_LOG("wifi_cancelWpsPairing API returns : %d\n",status);
     UT_ASSERT_EQUAL(status, RETURN_OK);
 
@@ -3234,23 +3059,17 @@ void test_l1_wifi_client_hal_positive1_wifi_cancelWpsPairing (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoking wifi_cancelWpsPairing API | NA | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_cancelWpsPairing() API | NA | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_cancelWpsPairing (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_cancelWpsPairing...\n");
-
-    WiFi_UnInitPosReq();
-    WiFi_InitWithConfigPreReq();
+    INT status;
 
     UT_LOG("Invoking wifi_cancelWpsPairing API.\n");
-    INT status = wifi_cancelWpsPairing();
-    
+    status = wifi_cancelWpsPairing();
     UT_LOG("wifi_cancelWpsPairing API returns : %d\n",status);
     UT_ASSERT_EQUAL(status, RETURN_OK);
-
-    WiFi_UnInitPosReq();
-    WiFi_InitPreReq();
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_cancelWpsPairing...\n");
 }
@@ -3271,112 +3090,142 @@ void test_l1_wifi_client_hal_positive2_wifi_cancelWpsPairing (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 02 | Invoking wifi_cancelWpsPairing API without calling wifi_init() or wifi_initWithConfig() | NA | RETURN_ERR| Should Fail | 
+* | 02 | Invoke wifi_cancelWpsPairing() without calling wifi_init() or wifi_initWithConfig() | NA | RETURN_ERR| Should Fail | 
 */
 void test_l1_wifi_client_hal_negative1_wifi_cancelWpsPairing (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_cancelWpsPairing...\n");
-    WiFi_UnInitPosReq();
 
     UT_LOG("Invoking wifi_cancelWpsPairing API.\n");
     INT status = wifi_cancelWpsPairing();
-    
     UT_LOG("wifi_cancelWpsPairing API returns : %d\n",status);
     UT_ASSERT_EQUAL(status, RETURN_OK);
-    
-    WiFi_InitPreReq();
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_cancelWpsPairing...\n");
 }
 
-static UT_test_suite_t * pSuite = NULL;
+static UT_test_suite_t * pSuite_with_no_wifi_init = NULL;
+static UT_test_suite_t * pSuite_with_wifi_init = NULL;
+static UT_test_suite_t * pSuite_with_wifi_init_with_config = NULL;
 
 /**
- * @brief Register the main tests for this module
+ * @brief Register the tests that require wifi_init()/wifi_initWithConfig() to not be called as a prerequisite
  *
  * @return int - 0 on success, otherwise failure
  */
-
-int test_wifi_client_hal_register (void)
+int test_wifi_client_hal_register_pre_init_tests (void)
 {
-    // Create the test suite
-    pSuite = UT_add_suite("[L1 wifi_client_hal]", NULL, NULL);
-    if (pSuite == NULL) {
+    pSuite_with_no_wifi_init = UT_add_suite("[L1 wifi_client_hal pre-init tests]", NULL, NULL);
+    if (pSuite_with_no_wifi_init == NULL) {
         return -1;
     }
 
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsSupported);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsEnabled);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsEnabled);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive1_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive1_wifi_setCliWpsConfigMethodsEnabled);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive2_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive2_wifi_setCliWpsConfigMethodsEnabled);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive3_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive3_wifi_setCliWpsConfigMethodsEnabled);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative1_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative1_wifi_setCliWpsConfigMethodsEnabled);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative2_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative2_wifi_setCliWpsConfigMethodsEnabled);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative3_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative3_wifi_setCliWpsConfigMethodsEnabled);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative4_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative4_wifi_setCliWpsConfigMethodsEnabled);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative5_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative5_wifi_setCliWpsConfigMethodsEnabled);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive1_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_positive1_wifi_setCliWpsEnrolleePin);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive2_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_positive2_wifi_setCliWpsEnrolleePin);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative1_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_negative1_wifi_setCliWpsEnrolleePin);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative2_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_negative2_wifi_setCliWpsEnrolleePin);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative4_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_negative4_wifi_setCliWpsEnrolleePin);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive1_wifi_setCliWpsButtonPush", test_l1_wifi_client_hal_positive1_wifi_setCliWpsButtonPush);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive2_wifi_setCliWpsButtonPush", test_l1_wifi_client_hal_positive2_wifi_setCliWpsButtonPush);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative1_wifi_setCliWpsButtonPush", test_l1_wifi_client_hal_negative1_wifi_setCliWpsButtonPush);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative2_wifi_setCliWpsButtonPush", test_l1_wifi_client_hal_negative2_wifi_setCliWpsButtonPush);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive1_wifi_connectEndpoint", test_l1_wifi_client_hal_positive1_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive2_wifi_connectEndpoint", test_l1_wifi_client_hal_positive2_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive3_wifi_connectEndpoint", test_l1_wifi_client_hal_positive3_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive4_wifi_connectEndpoint", test_l1_wifi_client_hal_positive4_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative1_wifi_connectEndpoint", test_l1_wifi_client_hal_negative1_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative2_wifi_connectEndpoint", test_l1_wifi_client_hal_negative2_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative3_wifi_connectEndpoint", test_l1_wifi_client_hal_negative3_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative4_wifi_connectEndpoint", test_l1_wifi_client_hal_negative4_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative5_wifi_connectEndpoint", test_l1_wifi_client_hal_negative5_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative6_wifi_connectEndpoint", test_l1_wifi_client_hal_negative6_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative7_wifi_connectEndpoint", test_l1_wifi_client_hal_negative7_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative8_wifi_connectEndpoint", test_l1_wifi_client_hal_negative8_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative9_wifi_connectEndpoint", test_l1_wifi_client_hal_negative9_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative10_wifi_connectEndpoint", test_l1_wifi_client_hal_negative10_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative11_wifi_connectEndpoint", test_l1_wifi_client_hal_negative11_wifi_connectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive1_wifi_disconnectEndpoint", test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive2_wifi_disconnectEndpoint", test_l1_wifi_client_hal_positive2_wifi_disconnectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative1_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative2_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negative2_wifi_disconnectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative3_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negative3_wifi_disconnectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive1_wifi_clearSSIDInfo", test_l1_wifi_client_hal_positive1_wifi_clearSSIDInfo);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive2_wifi_clearSSIDInfo", test_l1_wifi_client_hal_positive2_wifi_clearSSIDInfo);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative1_wifi_clearSSIDInfo", test_l1_wifi_client_hal_negative1_wifi_clearSSIDInfo);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative2_wifi_clearSSIDInfo", test_l1_wifi_client_hal_negative2_wifi_clearSSIDInfo);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative3_wifi_clearSSIDInfo", test_l1_wifi_client_hal_negative3_wifi_clearSSIDInfo);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative1_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_negative1_wifi_lastConnected_Endpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive1_wifi_setRoamingControl", test_l1_wifi_client_hal_positive1_wifi_setRoamingControl);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive2_wifi_setRoamingControl", test_l1_wifi_client_hal_positive2_wifi_setRoamingControl);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative1_wifi_setRoamingControl", test_l1_wifi_client_hal_negative1_wifi_setRoamingControl);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative2_wifi_setRoamingControl", test_l1_wifi_client_hal_negative2_wifi_setRoamingControl);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative3_wifi_setRoamingControl", test_l1_wifi_client_hal_negative3_wifi_setRoamingControl);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative4_wifi_setRoamingControl", test_l1_wifi_client_hal_negative4_wifi_setRoamingControl);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative5_wifi_setRoamingControl", test_l1_wifi_client_hal_negative5_wifi_setRoamingControl);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive1_wifi_getRoamingControl", test_l1_wifi_client_hal_positive1_wifi_getRoamingControl);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive2_wifi_getRoamingControl", test_l1_wifi_client_hal_positive2_wifi_getRoamingControl);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative1_wifi_getRoamingControl", test_l1_wifi_client_hal_negative1_wifi_getRoamingControl);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative2_wifi_getRoamingControl", test_l1_wifi_client_hal_negative2_wifi_getRoamingControl);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative3_wifi_getRoamingControl", test_l1_wifi_client_hal_negative3_wifi_getRoamingControl);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive1_wifi_cancelWpsPairing", test_l1_wifi_client_hal_positive1_wifi_cancelWpsPairing);
-    UT_add_test(pSuite, "l1_wifi_client_hal_positive2_wifi_cancelWpsPairing", test_l1_wifi_client_hal_positive2_wifi_cancelWpsPairing);
-    UT_add_test(pSuite, "l1_wifi_client_hal_negative1_wifi_cancelWpsPairing", test_l1_wifi_client_hal_negative1_wifi_cancelWpsPairing);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsSupported);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative5_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative5_wifi_setCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative1_wifi_setCliWpsButtonPush", test_l1_wifi_client_hal_negative1_wifi_setCliWpsButtonPush);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative11_wifi_connectEndpoint", test_l1_wifi_client_hal_negative11_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative3_wifi_clearSSIDInfo", test_l1_wifi_client_hal_negative3_wifi_clearSSIDInfo);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative2_wifi_setRoamingControl", test_l1_wifi_client_hal_negative2_wifi_setRoamingControl);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative3_wifi_getRoamingControl", test_l1_wifi_client_hal_negative3_wifi_getRoamingControl);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative1_wifi_cancelWpsPairing", test_l1_wifi_client_hal_negative1_wifi_cancelWpsPairing);
+
+    return 0;
+}
+
+/**
+ * @brief Register the tests that require wifi_initWithConfig() to be called as a prerequisite
+ *
+ * @return int - 0 on success, otherwise failure
+ */
+int test_wifi_client_hal_register_pre_init_with_config_tests (void)
+{
+    pSuite_with_wifi_init_with_config = UT_add_suite("[L1 wifi_client_hal pre-init tests]", WiFi_InitWithConfigPreReq, WiFi_UnInitPosReq);
+    if (pSuite_with_wifi_init_with_config == NULL) {
+        return -1;
+    }
+
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive2_wifi_setCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_positive2_wifi_setCliWpsEnrolleePin);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_setCliWpsButtonPush", test_l1_wifi_client_hal_positive2_wifi_setCliWpsButtonPush);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive4_wifi_connectEndpoint", test_l1_wifi_client_hal_positive4_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_disconnectEndpoint", test_l1_wifi_client_hal_positive2_wifi_disconnectEndpoint);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_clearSSIDInfo", test_l1_wifi_client_hal_positive2_wifi_clearSSIDInfo);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_setRoamingControl", test_l1_wifi_client_hal_positive2_wifi_setRoamingControl);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_getRoamingControl", test_l1_wifi_client_hal_positive2_wifi_getRoamingControl);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_cancelWpsPairing", test_l1_wifi_client_hal_positive2_wifi_cancelWpsPairing);
+
+    return 0;
+}
+
+/**
+ * @brief Register the tests that require wifi_init() to be called as a prerequisite
+ *
+ * @return int - 0 on success, otherwise failure
+ */
+int test_wifi_client_hal_register_post_init_tests (void)
+{
+    // Create the test suite
+    pSuite_with_wifi_init = UT_add_suite("[L1 wifi_client_hal post-init tests]", WiFi_InitPreReq, WiFi_UnInitPosReq);
+    if (pSuite_with_wifi_init == NULL) {
+        return -1;
+    }
+
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive1_wifi_setCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive3_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive3_wifi_setCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative1_wifi_setCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative2_wifi_setCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative3_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative3_wifi_setCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative4_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative4_wifi_setCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_positive1_wifi_setCliWpsEnrolleePin);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_negative1_wifi_setCliWpsEnrolleePin);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_negative2_wifi_setCliWpsEnrolleePin);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative4_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_negative4_wifi_setCliWpsEnrolleePin);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_setCliWpsButtonPush", test_l1_wifi_client_hal_positive1_wifi_setCliWpsButtonPush);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_setCliWpsButtonPush", test_l1_wifi_client_hal_negative2_wifi_setCliWpsButtonPush);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_connectEndpoint", test_l1_wifi_client_hal_positive1_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive2_wifi_connectEndpoint", test_l1_wifi_client_hal_positive2_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive3_wifi_connectEndpoint", test_l1_wifi_client_hal_positive3_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_connectEndpoint", test_l1_wifi_client_hal_negative1_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_connectEndpoint", test_l1_wifi_client_hal_negative2_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative3_wifi_connectEndpoint", test_l1_wifi_client_hal_negative3_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative4_wifi_connectEndpoint", test_l1_wifi_client_hal_negative4_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative5_wifi_connectEndpoint", test_l1_wifi_client_hal_negative5_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative6_wifi_connectEndpoint", test_l1_wifi_client_hal_negative6_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative7_wifi_connectEndpoint", test_l1_wifi_client_hal_negative7_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative8_wifi_connectEndpoint", test_l1_wifi_client_hal_negative8_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative9_wifi_connectEndpoint", test_l1_wifi_client_hal_negative9_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative10_wifi_connectEndpoint", test_l1_wifi_client_hal_negative10_wifi_connectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_disconnectEndpoint", test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negative2_wifi_disconnectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative3_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negative3_wifi_disconnectEndpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_clearSSIDInfo", test_l1_wifi_client_hal_positive1_wifi_clearSSIDInfo);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_clearSSIDInfo", test_l1_wifi_client_hal_negative1_wifi_clearSSIDInfo);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_clearSSIDInfo", test_l1_wifi_client_hal_negative2_wifi_clearSSIDInfo);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_negative1_wifi_lastConnected_Endpoint);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_setRoamingControl", test_l1_wifi_client_hal_positive1_wifi_setRoamingControl);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_setRoamingControl", test_l1_wifi_client_hal_negative1_wifi_setRoamingControl);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative3_wifi_setRoamingControl", test_l1_wifi_client_hal_negative3_wifi_setRoamingControl);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative4_wifi_setRoamingControl", test_l1_wifi_client_hal_negative4_wifi_setRoamingControl);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative5_wifi_setRoamingControl", test_l1_wifi_client_hal_negative5_wifi_setRoamingControl);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_getRoamingControl", test_l1_wifi_client_hal_positive1_wifi_getRoamingControl);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_getRoamingControl", test_l1_wifi_client_hal_negative1_wifi_getRoamingControl);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_getRoamingControl", test_l1_wifi_client_hal_negative2_wifi_getRoamingControl);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_cancelWpsPairing", test_l1_wifi_client_hal_positive1_wifi_cancelWpsPairing);
   
     return 0;
 }

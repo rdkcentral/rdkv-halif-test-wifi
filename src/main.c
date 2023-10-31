@@ -16,31 +16,6 @@
 * limitations under the License.
 */
  
-/**
- * @addtogroup HPK Hardware Porting Kit
- * @{
- * @par The Hardware Porting Kit
- * HPK is the next evolution of the well-defined Hardware Abstraction Layer
- * (HAL), but augmented with more comprehensive documentation and test suites
- * that OEM or SOC vendors can use to self-certify their ports before taking
- * them to RDKM for validation or to an operator for final integration and
- * deployment. The Hardware Porting Kit effectively enables an OEM and/or SOC
- * vendor to self-certify their own Video Accelerator devices, with minimal RDKM
- * assistance.
- *
- */
-/**
- * @addtogroup RDKV_WIFI RDK-V WiFi
- * @{
- */
-/**
- * @defgroup RDKV_WIFI_HALTEST RDK-V WiFi HAL Tests
- * @{
- */
-/**
- * @defgroup RDKV_WIFI_HALTEST_MAIN RDKV WiFi HALTEST MAIN
- * @{
- */
 
 #include <ut.h>
 #include <ut_log.h>
@@ -49,55 +24,61 @@
 
 extern int register_hal_l1_tests( void );
 
-void WiFi_InitPreReq(){
+int WiFi_InitPreReq(){
     int ret = 0;
     ret = wifi_init();
     if (ret == 0)
     {
         UT_LOG("WiFi init returned success");
+        return 0;
     }
     else
     {
         UT_LOG("WiFi init returned failure");
         UT_FAIL_FATAL("WiFi initialization with config pre-requisite failed");
     }
+    return -1;
 }
 
-void WiFi_InitWithConfigPreReq(){
+int WiFi_InitWithConfigPreReq(){
     int ret = 0;
     wifi_halConfig_t *conf = (wifi_halConfig_t*)malloc(sizeof(wifi_halConfig_t));
     if(conf != NULL){
-	strcpy(conf->wlan_Interface,"wlan1");
+	strcpy(conf->wlan_Interface,"wlan0");
         ret = wifi_initWithConfig(conf);
         if (ret == 0)
         {
             UT_LOG("WiFi init with config returned success");
+            return 0;
         }
         else
         {
            UT_LOG("WiFi init with config returned failure");
            UT_FAIL_FATAL("WiFi initialization with config pre-requisite failed");
-        }        
+        }
     }
     else
     {
         UT_LOG("Malloc operation failed");
         UT_FAIL_FATAL("Memory allocation with malloc failed");
     }
+    return -1;
 }
 
-void WiFi_UnInitPosReq(){
+int WiFi_UnInitPosReq(){
     int ret = 0;
     ret = wifi_uninit();
     if (ret == 0)
     {
         UT_LOG("WiFi uninit returned success");
+        return 0;
     }
     else
     {
         UT_LOG("WiFi uninit returned failure");
         UT_FAIL_FATAL("WiFi uninit post-requisite failed");
     }
+    return -1;
 }
 
  
@@ -117,18 +98,10 @@ int main(int argc, char** argv)
         printf("register_hal_l1_tests() returned failure");
         return 1;
     }
-	
-    WiFi_InitPreReq();
     
     /* Begin test executions */
     UT_run_tests();
-    
-    WiFi_UnInitPosReq();
 	
     return 0;
 }
 
-/** @} */ // End of RDKV_WIFI_HALTEST_MAIN
-/** @} */ // End of RDKV_WIFI_HALTEST
-/** @} */ // End of RDKV_WIFI
-/** @} */ // End of HPK
