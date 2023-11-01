@@ -1563,23 +1563,13 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioIfName (void)
 * **Test Procedure:**@n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_uninit() API | NA | RETURN_OK | Should Pass |
-* | 02 | Invoke wifi_initWithConfig() API | NA | RETURN_OK | Should Pass |
-* | 03 | Invoke wifi_getRadioIfName() after wifi_initWithConfig() with valid radioIndex, NULL interface | radioIndex = valid value, output_string = NULL | RETURN_ERR | Should return error |
+* | 01 | Invoke wifi_getRadioIfName() after wifi_initWithConfig() with valid radioIndex, NULL interface | radioIndex = valid value, output_string = NULL | RETURN_ERR | Should return error |
 */
 void test_l1_wifi_common_hal_negative5_wifi_getRadioIfName (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative5_wifi_getRadioIfName...\n");
     CHAR *output_string = NULL;
     INT status;
-    wifi_halConfig_t conf;
-    strcpy(conf.wlan_Interface,"wlan0");
-
-    status = wifi_uninit();
-    UT_ASSERT_EQUAL(status, RETURN_OK);
-
-    status = wifi_initWithConfig(&conf);
-    UT_ASSERT_EQUAL(status, RETURN_OK);
         
     UT_LOG("Invoking wifi_getRadioIfName after wifi_initWithConfig with valid radio index and NULL CHAR pointer.\n");
     status = wifi_getRadioIfName(RADIO_INDEX, output_string);
@@ -6864,6 +6854,7 @@ void test_l1_wifi_common_hal_negative1_wifi_waitForScanResults (void)
 static UT_test_suite_t * pSuite_with_no_wifi_init = NULL;
 static UT_test_suite_t * pSuite_for_wifi_init_uninit = NULL;
 static UT_test_suite_t * pSuite_with_wifi_init = NULL;
+static UT_test_suite_t * pSuite_with_wifi_init_with_config = NULL;
 
 /**
  * @brief Register the tests that require wifi_init()/wifi_initWithConfig() to not be called as a prerequisite
@@ -6945,6 +6936,23 @@ int test_wifi_common_hal_register_init_uninit_tests (void)
 }
 
 /**
+ * @brief Register the tests that require wifi_initWithConfig() to be called as a prerequisite
+ *
+ * @return int - 0 on success, otherwise failure
+ */
+int test_wifi_common_hal_register_pre_init_with_config_tests (void)
+{
+    pSuite_with_wifi_init_with_config = UT_add_suite("[L1 wifi_common_hal pre-init with config tests]", WiFi_InitWithConfigPreReq, WiFi_UnInitPosReq);
+    if (pSuite_with_wifi_init_with_config == NULL) {
+        return -1;
+    }
+
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_common_hal_negative5_wifi_getRadioIfName", test_l1_wifi_common_hal_negative5_wifi_getRadioIfName);
+
+    return 0;
+}
+
+/**
  * @brief Register the tests that require wifi_init() to be called as a prerequisite
  *
  * @return int - 0 on success, otherwise failure
@@ -6977,7 +6985,6 @@ int test_wifi_common_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioIfName", test_l1_wifi_common_hal_negative2_wifi_getRadioIfName);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioIfName", test_l1_wifi_common_hal_negative3_wifi_getRadioIfName);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioIfName", test_l1_wifi_common_hal_negative4_wifi_getRadioIfName);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative5_wifi_getRadioIfName", test_l1_wifi_common_hal_negative5_wifi_getRadioIfName);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate", test_l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate", test_l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate", test_l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate);
