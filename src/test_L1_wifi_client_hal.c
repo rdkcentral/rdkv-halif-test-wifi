@@ -88,7 +88,7 @@ extern const int SSID_INDEX;
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_getCliWpsConfigMethodsSupported() API with ssidIndex = 1 and methods = valid buffer | ssidIndex = 1, methods = valid buffer | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_getCliWpsConfigMethodsSupported() with ssidIndex = 1 and methods = valid buffer | ssidIndex = 1, methods = valid buffer | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported (void)
 {
@@ -114,7 +114,6 @@ void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported (voi
             {
                 UT_LOG("WPS supported methods is %s which is an invalid value", method);
                 UT_FAIL("WPS supported methods validation failed\n");
-
             }
         }
         method = strtok(NULL, ",");
@@ -139,7 +138,7 @@ void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported (voi
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_getCliWpsConfigMethodsSupported() API with ssidIndex = 1 and methods = valid buffer | ssidIndex = 1, methods = valid buffer | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_getCliWpsConfigMethodsSupported() with ssidIndex = 1 and methods = valid buffer | ssidIndex = 1, methods = valid buffer | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported (void)
 {
@@ -166,7 +165,6 @@ void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported (voi
             {
                 UT_LOG("WPS supported methods is %s which is an invalid value", method);
                 UT_FAIL("WPS supported methods validation failed\n");
-
             }
         }
         method = strtok(NULL, ",");
@@ -191,7 +189,7 @@ void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported (voi
 * **Test Procedure:** @n
 *| Variation / Step | Description | Test Data |Expected Result |Notes |
 *| :----: | --------- | ---------- |-------------- | ----- |
-*| 01 | Invoke wifi_getCliWpsConfigMethodsSupported() API with invalid ssidIndex=-1 and methods = valid buffer | ssidIndex=-1 and methods = valid buffer | RETURN_ERR | Should Fail |
+*| 01 | Invoke wifi_getCliWpsConfigMethodsSupported() with invalid ssidIndex=-1 and methods = valid buffer | ssidIndex=-1 and methods = valid buffer | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported (void)
 {
@@ -203,7 +201,7 @@ void test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported (voi
     INT res = wifi_getCliWpsConfigMethodsSupported(ssidIndex, methods);
     UT_LOG("wifi_getCliWpsConfigMethodsSupported retuns %d", res);
     UT_ASSERT_EQUAL(res, RETURN_ERR);
-   
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported...\n");
 }
 
@@ -224,18 +222,18 @@ void test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported (voi
 * Below is the outline of steps followed in this test. 
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_getCliWpsConfigMethodsSupported() API with ssidIndex = 1 and invalid methods = NULL | ssidIndex = 1, methods = NULL | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_getCliWpsConfigMethodsSupported() with ssidIndex = 1 and invalid methods = NULL | ssidIndex = 1, methods = NULL | RETURN_ERR | Should Fail |
 */ 
 void test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported...\n");
     CHAR *methods = NULL;
-    
+
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsSupported with NULL buffer for methods\n");
     INT res = wifi_getCliWpsConfigMethodsSupported(SSID_INDEX, methods);
     UT_LOG("wifi_getCliWpsConfigMethodsSupported API returns %d", res);
     UT_ASSERT_EQUAL(res, RETURN_ERR);
-   
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported...\n");
 }
 
@@ -256,13 +254,13 @@ void test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported (voi
 * The steps to run this test and add a line in the below table for each input variation tried in this function.
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_getCliWpsConfigMethodsSupported() API without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, methods = valid buffer | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_getCliWpsConfigMethodsSupported() without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, methods = valid buffer | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsSupported (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsSupported...\n");
     CHAR methods[200] = {"\0"};
-    
+
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsSupported without calling wifi_init()\n");
     INT res = wifi_getCliWpsConfigMethodsSupported(SSID_INDEX, methods);
     UT_LOG("wifi_getCliWpsConfigMethodsSupported API returns %d",res);
@@ -288,13 +286,13 @@ void test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsSupported (voi
  *
  * | Variation / Step     | Description                                                                                           | Test Data                                      | Expected Result | Notes       |
  * | :------------------: | ----------------------------------------------------------------------------------------------------- | -----------------------------------------------| ----------------|-------------|
- * | 01                   | Invoke wifi_getCliWpsConfigMethodsEnabled() API with ssidIndex = 1 and output_string = valid buffer | ssidIndex = 1 and output_string = valid buffer | RETURN_OK       | Should Pass |
+ * | 01                   | Invoke wifi_getCliWpsConfigMethodsEnabled() with ssidIndex = 1 and output_string = valid buffer | ssidIndex = 1 and output_string = valid buffer | RETURN_OK       | Should Pass |
  */
 void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled...\n");
     CHAR output_string[] = {"\0"};
-    
+
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsEnabled with input parameter ssidIndex=1 and valid output_string buffer\n");
     INT return_val = wifi_getCliWpsConfigMethodsEnabled(SSID_INDEX, output_string);
     UT_LOG("wifi_getCliWpsConfigMethodsEnabled API retunrs : %d",return_val);
@@ -314,7 +312,6 @@ void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled (void)
             {
                 UT_LOG("current WPS methods is %s which is an invalid value", method);
                 UT_FAIL("current WPS methods validation failed\n");
-
             }
         }
         method = strtok(NULL, ",");
@@ -340,7 +337,7 @@ void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled (void)
  *
  * | Variation / Step     | Description                                                                                           | Test Data                                      | Expected Result | Notes       |
  * | :------------------: | ----------------------------------------------------------------------------------------------------- | -----------------------------------------------| ----------------|-------------|
- * | 01 | Invoke wifi_getCliWpsConfigMethodsEnabled() API with ssidIndex = 1 and output_string = valid buffer | ssidIndex = 1 and output_string = valid buffer | RETURN_OK       | Should Pass |
+ * | 01 | Invoke wifi_getCliWpsConfigMethodsEnabled() with ssidIndex = 1 and output_string = valid buffer | ssidIndex = 1 and output_string = valid buffer | RETURN_OK       | Should Pass |
  */
 void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled (void)
 {
@@ -367,7 +364,6 @@ void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled (void)
             {
                 UT_LOG("WPS supported methods is %s which is an invalid value", method);
                 UT_FAIL("WPS supported methods validation failed\n");
-
             }
         }
         method = strtok(NULL, ",");
@@ -392,7 +388,7 @@ void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_getCliWpsConfigMethodsEnabled() API without calling wifi_init() or wifi_initWithConfig()| ssidIndex = 1, output_string = valid buffer | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_getCliWpsConfigMethodsEnabled() without calling wifi_init() or wifi_initWithConfig()| ssidIndex = 1, output_string = valid buffer | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsEnabled (void)
 {
@@ -430,12 +426,12 @@ void test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsEnabled (void)
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsEnabled...\n");
     INT ssidIndex = 2;
     CHAR output_string[100] = {"\0"};
-    
+
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsEnabled with invalid input parameter ssidIndex=2 and valid output_string buffer.\n");
     INT return_val = wifi_getCliWpsConfigMethodsEnabled(ssidIndex, output_string);
     UT_LOG("wifi_getCliWpsConfigMethodsEnabled API returns %d",return_val);
     UT_ASSERT_EQUAL(return_val, RETURN_ERR);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsEnabled...\n");
 }
 
@@ -455,18 +451,18 @@ void test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsEnabled (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_getCliWpsConfigMethodsEnabled() API with ssidIndex = 1, invalid output_string = NULL  | ssidIndex = 1, output_string = NULL | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_getCliWpsConfigMethodsEnabled() with ssidIndex = 1, invalid output_string = NULL  | ssidIndex = 1, output_string = NULL | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled...\n");
     CHAR *output_string = NULL;
-  
+
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsEnabled with input parameter ssidIndex=1 and NULL output_string buffer.\n");
     INT return_val = wifi_getCliWpsConfigMethodsEnabled(SSID_INDEX, output_string);
     UT_LOG("wifi_getCliWpsConfigMethodsEnabled API retuns %d",return_val);
     UT_ASSERT_EQUAL(return_val, RETURN_ERR);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled...\n");
 }
 
@@ -486,7 +482,7 @@ void test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoke wifi_setCliWpsConfigMethodsEnabled() API with ssidIndex = 1, methodString = "USBFlashDrive" | ssidIndex = 1, methodString = "USBFlashDrive" | RETURN_OK | Should Pass |
+ * | 01 | Invoke wifi_setCliWpsConfigMethodsEnabled() with ssidIndex = 1, methodString = "USBFlashDrive" | ssidIndex = 1, methodString = "USBFlashDrive" | RETURN_OK | Should Pass |
  */
 void test_l1_wifi_client_hal_positive1_wifi_setCliWpsConfigMethodsEnabled (void)
 {
@@ -517,7 +513,7 @@ void test_l1_wifi_client_hal_positive1_wifi_setCliWpsConfigMethodsEnabled (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoke the wifi_setCliWpsConfigMethodsEnabled() API with ssidIndex = 1, methodString = "USBFlashDrive" | ssidIndex = 1, methodString = "USBFlashDrive" | RETURN_OK | Should Pass |
+ * | 01 | Invoke the wifi_setCliWpsConfigMethodsEnabled() with ssidIndex = 1, methodString = "USBFlashDrive" | ssidIndex = 1, methodString = "USBFlashDrive" | RETURN_OK | Should Pass |
  */
 void test_l1_wifi_client_hal_positive2_wifi_setCliWpsConfigMethodsEnabled (void)
 {
@@ -529,7 +525,7 @@ void test_l1_wifi_client_hal_positive2_wifi_setCliWpsConfigMethodsEnabled (void)
     returnStatus = wifi_setCliWpsConfigMethodsEnabled(SSID_INDEX, methodString);
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns %d",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_OK);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_setCliWpsConfigMethodsEnabled...\n");
 }
 
@@ -560,7 +556,7 @@ void test_l1_wifi_client_hal_positive3_wifi_setCliWpsConfigMethodsEnabled (void)
     INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(SSID_INDEX, methodString);
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns %d",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_OK);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive3_wifi_setCliWpsConfigMethodsEnabled...\n");
 }
 
@@ -592,7 +588,7 @@ void test_l1_wifi_client_hal_negative1_wifi_setCliWpsConfigMethodsEnabled (void)
     INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(ssidIndex, methodString);
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns %d",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_ERR);
-  
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_setCliWpsConfigMethodsEnabled...\n");
 }
 
@@ -623,7 +619,7 @@ void test_l1_wifi_client_hal_negative2_wifi_setCliWpsConfigMethodsEnabled (void)
     INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(SSID_INDEX, methodString);
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns %d",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_ERR);
-   
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative2_wifi_setCliWpsConfigMethodsEnabled...\n");
 }
 /**
@@ -642,7 +638,7 @@ void test_l1_wifi_client_hal_negative2_wifi_setCliWpsConfigMethodsEnabled (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_setCliWpsConfigMethodsEnabled() API with ssidIndex = 1, methodString = NULL| ssidIndex = 1, methodString = NULL | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setCliWpsConfigMethodsEnabled() with ssidIndex = 1, methodString = NULL| ssidIndex = 1, methodString = NULL | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative3_wifi_setCliWpsConfigMethodsEnabled (void)
 {
@@ -653,7 +649,7 @@ void test_l1_wifi_client_hal_negative3_wifi_setCliWpsConfigMethodsEnabled (void)
     INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(SSID_INDEX, methodString);
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns %d\n",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_ERR);
- 
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative3_wifi_setCliWpsConfigMethodsEnabled...\n");
 }
 
@@ -679,7 +675,7 @@ void test_l1_wifi_client_hal_negative4_wifi_setCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative4_wifi_setCliWpsConfigMethodsEnabled...\n");
     CHAR* methodString = "IntegratedNFC";
-    
+
     UT_LOG("Invoking wifi_setCliWpsConfigMethodsEnabled with ssidIndex 1 and methodString = \"IntegratedNFC\".\n");
     INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(SSID_INDEX, methodString);
     UT_LOG("wifi_setCliWpsConfigMethodsEnabled API returns %d\n",returnStatus);
@@ -704,7 +700,7 @@ void test_l1_wifi_client_hal_negative4_wifi_setCliWpsConfigMethodsEnabled (void)
 * **Test Procedure:**  @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke the wifi_setCliWpsConfigMethodsEnabled() API without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, methodString = "USBFlashDrive" | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setCliWpsConfigMethodsEnabled() without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, methodString = "USBFlashDrive" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative5_wifi_setCliWpsConfigMethodsEnabled (void)
 {
@@ -735,7 +731,7 @@ void test_l1_wifi_client_hal_negative5_wifi_setCliWpsConfigMethodsEnabled (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_setCliWpsEnrolleePin() API with valid ssidIndex = 1, EnrolleePin = "12345678" | ssidIndex = 1, EnrolleePin = "12345678" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_setCliWpsEnrolleePin() with valid ssidIndex = 1, EnrolleePin = "12345678" | ssidIndex = 1, EnrolleePin = "12345678" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive1_wifi_setCliWpsEnrolleePin (void)
 {
@@ -766,9 +762,7 @@ void test_l1_wifi_client_hal_positive1_wifi_setCliWpsEnrolleePin (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_uninit() API | NA | RETURN_OK | Should Pass |
-* | 02 | Invoke wifi_initWithConfig() API | NA | RETURN_OK | Should Pass |
-* | 03 | Invoke wifi_setCliWpsEnrolleePin() API with valid ssidIndex = 1, EnrolleePin = "12345678" | ssidIndex = 1, EnrolleePin = "12345678" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_setCliWpsEnrolleePin() with valid ssidIndex = 1, EnrolleePin = "12345678" | ssidIndex = 1, EnrolleePin = "12345678" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_setCliWpsEnrolleePin (void)
 {
@@ -832,7 +826,7 @@ void test_l1_wifi_client_hal_negative1_wifi_setCliWpsEnrolleePin (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_setCliWpsEnrolleePin() API with ssidIndex = 1, invalid EnrolleePin = NULL | ssidIndex = 1, EnrolleePin = NULL | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setCliWpsEnrolleePin() with ssidIndex = 1, invalid EnrolleePin = NULL | ssidIndex = 1, EnrolleePin = NULL | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative2_wifi_setCliWpsEnrolleePin (void)
 {
@@ -843,7 +837,7 @@ void test_l1_wifi_client_hal_negative2_wifi_setCliWpsEnrolleePin (void)
     INT retVal = wifi_setCliWpsEnrolleePin(SSID_INDEX, EnrolleePin);
     UT_LOG("wifi_setCliWpsEnrolleePin API returns : %d\n",retVal);
     UT_ASSERT_EQUAL(retVal, RETURN_ERR);
- 
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative2_wifi_setCliWpsEnrolleePin...\n");
 }
 
@@ -863,7 +857,7 @@ void test_l1_wifi_client_hal_negative2_wifi_setCliWpsEnrolleePin (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_setCliWpsEnrolleePin() API without calling wifi_init() and wifi_connectEndpoint_callback_register() | ssidIndex = 1, EnrolleePin = "12345678" | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setCliWpsEnrolleePin() without calling wifi_init() and wifi_connectEndpoint_callback_register() | ssidIndex = 1, EnrolleePin = "12345678" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin (void)
 {
@@ -894,7 +888,7 @@ void test_l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoke wifi_setCliWpsEnrolleePin() API with ssidIndex = 1, invalid EnrolleePin = "1234ABCD" | ssidIndex = 1, EnrolleePin = '1234ABCD' | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_setCliWpsEnrolleePin() with ssidIndex = 1, invalid EnrolleePin = "1234ABCD" | ssidIndex = 1, EnrolleePin = '1234ABCD' | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative4_wifi_setCliWpsEnrolleePin (void)
 {
@@ -925,7 +919,7 @@ void test_l1_wifi_client_hal_negative4_wifi_setCliWpsEnrolleePin (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_setCliWpsButtonPush() API with valid ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_setCliWpsButtonPush() with valid ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should Pass |
 **/
 void test_l1_wifi_client_hal_positive1_wifi_setCliWpsButtonPush (void)
 {
@@ -936,7 +930,7 @@ void test_l1_wifi_client_hal_positive1_wifi_setCliWpsButtonPush (void)
     INT returnStatus = wifi_setCliWpsButtonPush(ssidIndex);
     UT_LOG("wifi_setCliWpsButtonPush API returns : %d\n",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_OK);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_setCliWpsButtonPush...\n");
 }
 
@@ -994,10 +988,9 @@ void test_l1_wifi_client_hal_positive2_wifi_setCliWpsButtonPush (void)
 void test_l1_wifi_client_hal_negative1_wifi_setCliWpsButtonPush (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_setCliWpsButtonPush...\n");
-    INT ssidIndex = 1;
 
     UT_LOG("Invoking the wifi_setCliWpsButtonPush API without pre-initializing.\n");
-    INT returnStatus = wifi_setCliWpsButtonPush(ssidIndex);
+    INT returnStatus = wifi_setCliWpsButtonPush(SSID_INDEX);
     UT_LOG("wifi_setCliWpsButtonPush API returns : %d\n",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_ERR);
 
@@ -1020,7 +1013,7 @@ void test_l1_wifi_client_hal_negative1_wifi_setCliWpsButtonPush (void)
 * **Test Procedure:** @n
 * | Variation / Step  | Description | Test Data | Expected Result | Notes |
 * | :---------------: | ---------------| ------------ |------------| --------------- |
-* | 01 | Invoke wifi_setCliWpsButtonPush() API with invalid ssidIndex = -1 | ssidIndex = -1 | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setCliWpsButtonPush() with invalid ssidIndex = -1 | ssidIndex = -1 | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative2_wifi_setCliWpsButtonPush (void)
 {
@@ -1051,12 +1044,11 @@ void test_l1_wifi_client_hal_negative2_wifi_setCliWpsButtonPush (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_connectEndpoint() API with valid input values | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = VALID_MODE, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass|
+* | 01 | Invoke wifi_connectEndpoint() with valid input values | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = VALID_MODE, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass|
 */
 void test_l1_wifi_client_hal_positive1_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_connectEndpoint...\n");
-
     CHAR AP_SSID[] = "ValidSSID";                                  /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
@@ -1072,7 +1064,7 @@ void test_l1_wifi_client_hal_positive1_wifi_connectEndpoint (void)
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_OK);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_connectEndpoint...\n");
 }
 
@@ -1092,12 +1084,11 @@ void test_l1_wifi_client_hal_positive1_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_connectEndpoint() API with valid input values | ssidIndex = 1, AP_SSID = "", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_connectEndpoint() with valid input values | ssidIndex = 1, AP_SSID = "", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_connectEndpoint...\n");
-
     CHAR AP_SSID[] = "";                                  
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
@@ -1113,7 +1104,7 @@ void test_l1_wifi_client_hal_positive2_wifi_connectEndpoint (void)
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_OK);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_connectEndpoint...\n");
 }
 
@@ -1134,12 +1125,11 @@ void test_l1_wifi_client_hal_positive2_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_connectEndpoint() API with valid input values | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 0, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_connectEndpoint() with valid input values | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 0, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive3_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive3_validInputs...\n");
-
     CHAR AP_SSID[] = "ValidSSID";                                  /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
@@ -1155,7 +1145,7 @@ void test_l1_wifi_client_hal_positive3_wifi_connectEndpoint (void)
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_OK);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive3_wifi_connectEndpoint...\n");
 }
 
@@ -1176,13 +1166,12 @@ void test_l1_wifi_client_hal_positive3_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_connectEndpoint() API with valid input values after calling wifi_initWithConfig() | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 0, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_connectEndpoint() with valid input values after calling wifi_initWithConfig() | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 0, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive4_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive4_wifi_connectEndpoint...\n");
     INT result;
-
     CHAR AP_SSID[] = "ValidSSID";                                  /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
@@ -1196,7 +1185,6 @@ void test_l1_wifi_client_hal_positive4_wifi_connectEndpoint (void)
 
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
-
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_OK);
 
@@ -1224,7 +1212,6 @@ void test_l1_wifi_client_hal_positive4_wifi_connectEndpoint (void)
 void test_l1_wifi_client_hal_negative1_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_connectEndpoint...\n");
-
     INT ssidIndex = 0;
     CHAR AP_SSID[] = "ValidSSID";                                  /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
@@ -1241,7 +1228,7 @@ void test_l1_wifi_client_hal_negative1_wifi_connectEndpoint (void)
     INT result = wifi_connectEndpoint(ssidIndex, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
-    
+
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative1_wifi_connectEndpoint...\n");
 }
 
@@ -1266,7 +1253,6 @@ void test_l1_wifi_client_hal_negative1_wifi_connectEndpoint (void)
 void test_l1_wifi_client_hal_negative2_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_connectEndpoint...\n");
-
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_NOT_SUPPORTED + 1;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1282,7 +1268,7 @@ void test_l1_wifi_client_hal_negative2_wifi_connectEndpoint (void)
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
-    
+
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative2_wifi_connectEndpoint...\n");
 }
 
@@ -1307,7 +1293,6 @@ void test_l1_wifi_client_hal_negative2_wifi_connectEndpoint (void)
 void test_l1_wifi_client_hal_negative3_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_connectEndpoint...\n");
-
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
     CHAR *AP_security_WEPKey = NULL;                           
@@ -1323,7 +1308,7 @@ void test_l1_wifi_client_hal_negative3_wifi_connectEndpoint (void)
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
-    
+
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative3_wifi_connectEndpoint...\n");
 }
 
@@ -1365,7 +1350,7 @@ void test_l1_wifi_client_hal_negative4_wifi_connectEndpoint (void)
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
-    
+
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative4_wifi_connectEndpoint...\n");
 }
 
@@ -1390,7 +1375,6 @@ void test_l1_wifi_client_hal_negative4_wifi_connectEndpoint (void)
 void test_l1_wifi_client_hal_negative5_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative5_wifi_connectEndpoint...\n");
-
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1406,7 +1390,7 @@ void test_l1_wifi_client_hal_negative5_wifi_connectEndpoint (void)
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
-    
+
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative5_wifi_connectEndpoint...\n");
 }
 /**
@@ -1427,9 +1411,9 @@ void test_l1_wifi_client_hal_negative5_wifi_connectEndpoint (void)
  * | :----: | --------- | ---------- |-------------- | ----- |
  * | 01 | Invoke wifi_connectEndpoint() with invalid saveSSID value | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 2, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
  */
-void test_l1_wifi_client_hal_negative6_wifi_connectEndpoint(void) {
+void test_l1_wifi_client_hal_negative6_wifi_connectEndpoint (void)
+{
     UT_LOG("Entering test_l1_wifi_client_hal_negative6_wifi_connectEndpoint...\n");
-
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1445,7 +1429,7 @@ void test_l1_wifi_client_hal_negative6_wifi_connectEndpoint(void) {
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
-    
+
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative6_wifi_connectEndpoint...\n");
 } 
 
@@ -1470,7 +1454,6 @@ void test_l1_wifi_client_hal_negative6_wifi_connectEndpoint(void) {
 void test_l1_wifi_client_hal_negative7_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative7_wifi_connectEndpoint...\n");
-
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1486,7 +1469,7 @@ void test_l1_wifi_client_hal_negative7_wifi_connectEndpoint (void)
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
-    
+
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative7_wifi_connectEndpoint...\n");
 } 
 
@@ -1512,8 +1495,6 @@ void test_l1_wifi_client_hal_negative7_wifi_connectEndpoint (void)
 void test_l1_wifi_client_hal_negative8_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative8_wifi_connectEndpoint...\n");
-
-    INT ssidIndex = 1;
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1529,7 +1510,7 @@ void test_l1_wifi_client_hal_negative8_wifi_connectEndpoint (void)
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
-    
+
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative8_wifi_connectEndpoint...\n");
 }
 
@@ -1554,7 +1535,6 @@ void test_l1_wifi_client_hal_negative8_wifi_connectEndpoint (void)
 void test_l1_wifi_client_hal_negative9_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative9_wifi_connectEndpoint...\n");
-
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1570,7 +1550,7 @@ void test_l1_wifi_client_hal_negative9_wifi_connectEndpoint (void)
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
-    
+
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative9_wifi_connectEndpoint...\n");
 }
 
@@ -1595,7 +1575,6 @@ void test_l1_wifi_client_hal_negative9_wifi_connectEndpoint (void)
 void test_l1_wifi_client_hal_negative10_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative10_wifi_connectEndpoint...\n");
-
     CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
@@ -1611,7 +1590,7 @@ void test_l1_wifi_client_hal_negative10_wifi_connectEndpoint (void)
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
-    
+
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative10_wifi_connectEndpoint...\n");
 }
 
@@ -1631,12 +1610,11 @@ void test_l1_wifi_client_hal_negative10_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_connectEndpoint() API without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, AP_SSID = "", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_connectEndpoint() without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, AP_SSID = "", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_negative11_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative11_wifi_connectEndpoint...\n");
-
     CHAR AP_SSID[] = "";                                  
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
     CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
@@ -1674,7 +1652,7 @@ void test_l1_wifi_client_hal_negative11_wifi_connectEndpoint (void)
 * This test involves the following steps:
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_disconnectEndpoint() API with valid ssidIndex = 1, AP_SSID = "valid_value" | ssidIndex = 1, AP_SSID = "valid_value" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_disconnectEndpoint() with valid ssidIndex = 1, AP_SSID = "valid_value" | ssidIndex = 1, AP_SSID = "valid_value" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint (void)
 {
@@ -1685,7 +1663,7 @@ void test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint (void)
     INT status = wifi_disconnectEndpoint(SSID_INDEX, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
     UT_ASSERT_EQUAL(status, RETURN_OK);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint...\n");
 }
 
@@ -1707,7 +1685,7 @@ void test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint (void)
 * This test involves the following steps:
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_disconnectEndpoint() API with valid ssidIndex = 1, AP_SSID = "valid_value" | ssidIndex = 1, AP_SSID = "valid_value" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_disconnectEndpoint() with valid ssidIndex = 1, AP_SSID = "valid_value" | ssidIndex = 1, AP_SSID = "valid_value" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_disconnectEndpoint (void)
 {
@@ -1751,7 +1729,7 @@ void test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint (void)
     INT status = wifi_disconnectEndpoint(ssidIndex, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint...\n");
 }
 
@@ -1782,7 +1760,7 @@ void test_l1_wifi_client_hal_negative2_wifi_disconnectEndpoint (void)
     INT status = wifi_disconnectEndpoint(SSID_INDEX, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative2_wifi_disconnectEndpoint...\n");
 }
 
@@ -1813,7 +1791,7 @@ void test_l1_wifi_client_hal_negative3_wifi_disconnectEndpoint (void)
     INT status = wifi_disconnectEndpoint(SSID_INDEX, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative3_wifi_disconnectEndpoint...\n");
 }
 
@@ -1865,15 +1843,14 @@ void test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_clearSSIDInfo() API with ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should pass |
+* | 01 | Invoke wifi_clearSSIDInfo() with ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should pass |
 */
 void test_l1_wifi_client_hal_positive1_wifi_clearSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_clearSSIDInfo...\n");
-    INT ssidIndex = 1;
     
-    UT_LOG("Invoking wifi_clearSSIDInfo with valid SSID index %d\n", ssidIndex);
-    INT returnValue = wifi_clearSSIDInfo(ssidIndex);
+    UT_LOG("Invoking wifi_clearSSIDInfo with valid SSID index %d\n", SSID_INDEX);
+    INT returnValue = wifi_clearSSIDInfo(SSID_INDEX);
     UT_LOG("wifi_clearSSIDInfo API returns : %d\n",returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_OK);
 
@@ -1896,16 +1873,15 @@ void test_l1_wifi_client_hal_positive1_wifi_clearSSIDInfo (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_clearSSIDInfo() API with ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should pass |
+* | 01 | Invoke wifi_clearSSIDInfo() with ssidIndex = 1 | ssidIndex = 1 | RETURN_OK | Should pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_clearSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_clearSSIDInfo...\n");
-    INT ssidIndex = 1;
     INT returnValue;
 
-    UT_LOG("Invoking wifi_clearSSIDInfo with valid SSID index %d\n", ssidIndex);
-    returnValue = wifi_clearSSIDInfo(ssidIndex);
+    UT_LOG("Invoking wifi_clearSSIDInfo with valid SSID index %d\n", SSID_INDEX);
+    returnValue = wifi_clearSSIDInfo(SSID_INDEX);
     UT_LOG("wifi_clearSSIDInfo API returns : %d\n",returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_OK);
 
@@ -1929,18 +1905,18 @@ void test_l1_wifi_client_hal_positive2_wifi_clearSSIDInfo (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_clearSSIDInfo() API with invalid ssidIndex = 0 | SSID index = 0 | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_clearSSIDInfo() with invalid ssidIndex = 0 | SSID index = 0 | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative1_wifi_clearSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_clearSSIDInfo...\n");
     INT ssidIndex = 0;
-    
+
     UT_LOG("Invoking wifi_clearSSIDInfo with ssidIndex = 0\n");
     INT returnValue = wifi_clearSSIDInfo(ssidIndex);
     UT_LOG("wifi_clearSSIDInfo API returns : %d\n", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_clearSSIDInfo...\n");
 }
 
@@ -1960,18 +1936,18 @@ void test_l1_wifi_client_hal_negative1_wifi_clearSSIDInfo (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_clearSSIDInfo() API with invalid ssidIndex = -1 | SSID index = -1 | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_clearSSIDInfo() with invalid ssidIndex = -1 | SSID index = -1 | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative2_wifi_clearSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_clearSSIDInfo...\n");
     INT ssidIndex = -1;
-    
+
     UT_LOG("Invoking wifi_clearSSIDInfo with ssidIndex = -1\n");
     INT returnValue = wifi_clearSSIDInfo(ssidIndex);
     UT_LOG("wifi_clearSSIDInfo API returns : %d\n", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
-    
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative2_wifi_clearSSIDInfo...\n");
 }
 
@@ -1997,10 +1973,9 @@ void test_l1_wifi_client_hal_negative2_wifi_clearSSIDInfo (void)
 void test_l1_wifi_client_hal_negative3_wifi_clearSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_clearSSIDInfo...\n");
-    INT ssidIndex = 1; 
 
     UT_LOG("Invoking wifi_clearSSIDInfo without initializing wifi_init()\n");
-    INT returnValue = wifi_clearSSIDInfo(ssidIndex);
+    INT returnValue = wifi_clearSSIDInfo(SSID_INDEX);
     UT_LOG("wifi_clearSSIDInfo API returns : %d\n", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
 
@@ -2025,58 +2000,53 @@ void test_l1_wifi_client_hal_negative3_wifi_clearSSIDInfo (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 02 | Invoke wifi_lastConnected_Endpoint() API with ssidInfo = valid structure | ssidInfo = valid structure | RETURN_OK | Should Fail |
+* | 02 | Invoke wifi_lastConnected_Endpoint() with ssidInfo = valid structure | ssidInfo = valid structure | RETURN_OK | Should Pass |
 */     
 void test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint...\n");
-    
-    wifi_pairedSSIDInfo_t *ssidInfo = (wifi_pairedSSIDInfo_t*)malloc(sizeof(wifi_pairedSSIDInfo_t));
-    if(ssidInfo != NULL)
-    {
-        UT_LOG("Invoking the wifi_lastConnected_Endpoint API with valid ssidInfo structure\n");
-        INT ret = wifi_lastConnected_Endpoint(ssidInfo);
-        UT_LOG("wifi_lastConnected_Endpoint API returns : %d\n",ret);
-        UT_ASSERT_EQUAL(ret, RETURN_OK);
+    wifi_pairedSSIDInfo_t ssidInfo;
+    INT ret;
 
-        UT_LOG("Values are, ap_ssid :%s, ap_bssid : %s, ap_security : %s, ap_passphrase : %s, ap_wep_key : %s\n",ssidInfo->ap_ssid, ssidInfo->ap_bssid,ssidInfo->ap_security,ssidInfo->ap_passphrase,ssidInfo->ap_wep_key);
-        if(!strcmp(ssidInfo->ap_ssid,"") || !strcmp(ssidInfo->ap_ssid,"valid_value"))  /*TODO need to replace with to valid value*/
-        {
-            UT_LOG("Current service set identifier %s which is an valid value\n", ssidInfo->ap_ssid);
-            UT_PASS("Current service set identifier validation success\n");
-        }
-        else
-        {
-            UT_LOG("Current service set identifier %s which is a invalid value\n", ssidInfo->ap_ssid);
-            UT_FAIL("Current service set identifier validation failed\n");
-        }
-        if(!strcmp(ssidInfo->ap_bssid,""))  /*TODO need to replace with to valid value*/
-        {
-            UT_LOG("Basic Service Set ID %s which is a valid value\n", ssidInfo->ap_bssid);
-            UT_PASS("Basic Service Set ID validation success\n");
-        }
-        else
-        {
-            UT_LOG("Basic Service Set ID %s which is an invalid value\n", ssidInfo->ap_bssid);
-            UT_FAIL("Basic Service Set ID validation failed\n");
-        }
-        const char *valid_security_values[] = {"NONE", "WPA-NONE", "WPA-PSK", "WPA-EAP", "IEEE8021X", "FT-PSK", "FT-EAP", "FT-EAP-SHA384", "WPA-PSK-SHA256", "WPA-EAP-SHA256", "SAE", "FT-SAE", "WPA-EAP-SUITE-B", "WPA-EAP-SUITE-B-192", "OSEN", "FILS-SHA256", "FILS-SHA384", "FT-FILS-SHA256", "FT-FILS-SHA384", "OWE", "DPP"};
-        for (int i = 0; i < sizeof(valid_security_values) / sizeof(valid_security_values[0]); i++) {
-            if (!strcmp(ssidInfo->ap_security, valid_security_values[i])) {
-                UT_LOG("Security mode of AP is %s which is a valid value", ssidInfo->ap_security);
-                UT_PASS("Security mode of AP validation success\n");
-            }
-            else
-            {
-                UT_LOG("Security mode of AP is %s which is a invalid value\n", ssidInfo->ap_security);
-                UT_FAIL("Security mode of AP validation failed\n");
-            }
-        }
+    UT_LOG("Invoking the wifi_lastConnected_Endpoint API with valid ssidInfo structure\n");
+    memset(&ssidInfo, 0, sizeof(wifi_pairedSSIDInfo_t));
+    ret = wifi_lastConnected_Endpoint(&ssidInfo);
+    UT_LOG("wifi_lastConnected_Endpoint API returns : %d\n",ret);
+    UT_ASSERT_EQUAL(ret, RETURN_OK);
+
+    UT_LOG("Values are, ap_ssid :%s, ap_bssid : %s, ap_security : %s, ap_passphrase : %s, ap_wep_key : %s\n",
+           ssidInfo.ap_ssid, ssidInfo.ap_bssid,ssidInfo.ap_security,ssidInfo.ap_passphrase,ssidInfo.ap_wep_key);
+    if (!strcmp(ssidInfo.ap_ssid,"") || !strcmp(ssidInfo.ap_ssid,"valid_value"))  /*TODO need to replace with to valid value*/
+    {
+        UT_LOG("Current service set identifier %s which is an valid value\n", ssidInfo.ap_ssid);
+        UT_PASS("Current service set identifier validation success\n");
     }
     else
     {
-        UT_LOG("Malloc operation failed\n");
-        UT_FAIL("Memory allocation with malloc failed\n");
+        UT_LOG("Current service set identifier %s which is a invalid value\n", ssidInfo.ap_ssid);
+        UT_FAIL("Current service set identifier validation failed\n");
+    }
+    if (!strcmp(ssidInfo.ap_bssid,""))  /*TODO need to replace with to valid value*/
+    {
+        UT_LOG("Basic Service Set ID %s which is a valid value\n", ssidInfo.ap_bssid);
+        UT_PASS("Basic Service Set ID validation success\n");
+    }
+    else
+    {
+        UT_LOG("Basic Service Set ID %s which is an invalid value\n", ssidInfo.ap_bssid);
+        UT_FAIL("Basic Service Set ID validation failed\n");
+    }
+    const char *valid_security_values[] = {"NONE", "WPA-NONE", "WPA-PSK", "WPA-EAP", "IEEE8021X", "FT-PSK", "FT-EAP", "FT-EAP-SHA384", "WPA-PSK-SHA256", "WPA-EAP-SHA256", "SAE", "FT-SAE", "WPA-EAP-SUITE-B", "WPA-EAP-SUITE-B-192", "OSEN", "FILS-SHA256", "FILS-SHA384", "FT-FILS-SHA256", "FT-FILS-SHA384", "OWE", "DPP"};
+    for (int i = 0; i < sizeof(valid_security_values) / sizeof(valid_security_values[0]); i++) {
+        if (!strcmp(ssidInfo.ap_security, valid_security_values[i])) {
+            UT_LOG("Security mode of AP is %s which is a valid value", ssidInfo.ap_security);
+            UT_PASS("Security mode of AP validation success\n");
+        }
+        else
+        {
+            UT_LOG("Security mode of AP is %s which is a invalid value\n", ssidInfo.ap_security);
+            UT_FAIL("Security mode of AP validation failed\n");
+        }
     }
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint...\n");
@@ -2100,60 +2070,56 @@ void test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_lastConnected_Endpoint() API with ssidInfo = valid structure | ssidInfo = valid structure | RETURN_OK | Should Fail |
+* | 01 | Invoke wifi_lastConnected_Endpoint() with ssidInfo = valid structure | ssidInfo = valid structure | RETURN_OK | Should Pass |
 */     
 void test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint...\n");
     INT ret;
-    wifi_pairedSSIDInfo_t *ssidInfo = (wifi_pairedSSIDInfo_t*)malloc(sizeof(wifi_pairedSSIDInfo_t));
+    wifi_pairedSSIDInfo_t ssidInfo;
 
-    if(ssidInfo != NULL)
+    UT_LOG("Invoking the wifi_lastConnected_Endpoint API with valid ssidInfo structure\n");
+    memset(&ssidInfo, 0, sizeof(wifi_pairedSSIDInfo_t));
+    ret = wifi_lastConnected_Endpoint(&ssidInfo);
+    UT_LOG("wifi_lastConnected_Endpoint API returns : %d\n",ret);
+    UT_ASSERT_EQUAL(ret, RETURN_OK);
+
+    UT_LOG("Values are, ap_ssid :%s, ap_bssid : %s, ap_security : %s, ap_passphrase : %s, ap_wep_key : %s\n",
+            ssidInfo.ap_ssid, ssidInfo.ap_bssid,ssidInfo.ap_security,ssidInfo.ap_passphrase,ssidInfo.ap_wep_key);
+    if(!strcmp(ssidInfo.ap_ssid,"") || !strcmp(ssidInfo.ap_ssid,"valid_value"))  /*TODO need to replace with to valid value*/
     {
-        UT_LOG("Invoking the wifi_lastConnected_Endpoint API with valid ssidInfo structure\n");
-        ret = wifi_lastConnected_Endpoint(ssidInfo);
-        UT_LOG("wifi_lastConnected_Endpoint API returns : %d\n",ret);
-        UT_ASSERT_EQUAL(ret, RETURN_OK);
-
-        UT_LOG("Values are, ap_ssid :%s, ap_bssid : %s, ap_security : %s, ap_passphrase : %s, ap_wep_key : %s\n",ssidInfo->ap_ssid, ssidInfo->ap_bssid,ssidInfo->ap_security,ssidInfo->ap_passphrase,ssidInfo->ap_wep_key);
-        if(!strcmp(ssidInfo->ap_ssid,"") || !strcmp(ssidInfo->ap_ssid,"valid_value"))  /*TODO need to replace with to valid value*/
-        {
-            UT_LOG("Current service set identifier %s which is an valid value\n", ssidInfo->ap_ssid);
-            UT_PASS("Current service set identifier validation success\n");
-        }
-        else
-        {
-            UT_LOG("Current service set identifier %s which is a invalid value\n", ssidInfo->ap_ssid);
-            UT_FAIL("Current service set identifier validation failed\n");
-        }
-        if(!strcmp(ssidInfo->ap_bssid,""))  /*TODO need to replace with to valid value*/
-        {
-            UT_LOG("Basic Service Set ID %s which is a valid value\n", ssidInfo->ap_bssid);
-            UT_PASS("Basic Service Set ID validation success\n");
-        }
-        else
-        {
-            UT_LOG("Basic Service Set ID %s which is an invalid value\n", ssidInfo->ap_bssid);
-            UT_FAIL("Basic Service Set ID validation failed\n");
-        }
-        const char *valid_security_values[] = {"NONE", "WPA-NONE", "WPA-PSK", "WPA-EAP", "IEEE8021X", "FT-PSK", "FT-EAP", "FT-EAP-SHA384", "WPA-PSK-SHA256", "WPA-EAP-SHA256", "SAE", "FT-SAE", "WPA-EAP-SUITE-B", "WPA-EAP-SUITE-B-192", "OSEN", "FILS-SHA256", "FILS-SHA384", "FT-FILS-SHA256", "FT-FILS-SHA384", "OWE", "DPP"};
-        for (int i = 0; i < sizeof(valid_security_values) / sizeof(valid_security_values[0]); i++) {
-            if (!strcmp(ssidInfo->ap_security, valid_security_values[i])) {
-                UT_LOG("Security mode of AP is %s which is a valid value", ssidInfo->ap_security);
-                UT_PASS("Security mode of AP validation success\n");
-            }
-            else
-            {
-                UT_LOG("Security mode of AP is %s which is a invalid value\n", ssidInfo->ap_security);
-                UT_FAIL("Security mode of AP validation failed\n");
-            }
-        }
+        UT_LOG("Current service set identifier %s which is an valid value\n", ssidInfo.ap_ssid);
+        UT_PASS("Current service set identifier validation success\n");
     }
     else
     {
-        UT_LOG("Malloc operation failed\n");
-        UT_FAIL("Memory allocation with malloc failed\n");
-    }  
+        UT_LOG("Current service set identifier %s which is a invalid value\n", ssidInfo.ap_ssid);
+        UT_FAIL("Current service set identifier validation failed\n");
+    }
+    if(!strcmp(ssidInfo.ap_bssid,""))  /*TODO need to replace with to valid value*/
+    {
+        UT_LOG("Basic Service Set ID %s which is a valid value\n", ssidInfo.ap_bssid);
+        UT_PASS("Basic Service Set ID validation success\n");
+    }
+    else
+    {
+        UT_LOG("Basic Service Set ID %s which is an invalid value\n", ssidInfo.ap_bssid);
+        UT_FAIL("Basic Service Set ID validation failed\n");
+    }
+    const char *valid_security_values[] = {"NONE", "WPA-NONE", "WPA-PSK", "WPA-EAP", "IEEE8021X", "FT-PSK", "FT-EAP", "FT-EAP-SHA384", "WPA-PSK-SHA256", "WPA-EAP-SHA256", "SAE", "FT-SAE", "WPA-EAP-SUITE-B", "WPA-EAP-SUITE-B-192", "OSEN", "FILS-SHA256", "FILS-SHA384", "FT-FILS-SHA256", "FT-FILS-SHA384", "OWE", "DPP"};
+    for (int i = 0; i < sizeof(valid_security_values) / sizeof(valid_security_values[0]); i++)
+    {
+        if (!strcmp(ssidInfo.ap_security, valid_security_values[i]))
+        {
+            UT_LOG("Security mode of AP is %s which is a valid value", ssidInfo.ap_security);
+            UT_PASS("Security mode of AP validation success\n");
+        }
+        else
+        {
+            UT_LOG("Security mode of AP is %s which is a invalid value\n", ssidInfo.ap_security);
+            UT_FAIL("Security mode of AP validation failed\n");
+        }
+    }
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint...\n");
 }
@@ -2211,20 +2177,13 @@ void test_l1_wifi_client_hal_negative1_wifi_lastConnected_Endpoint (void)
 void test_l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint...\n");
+    wifi_pairedSSIDInfo_t ssidInfo;
 
-    wifi_pairedSSIDInfo_t *ssidInfo = (wifi_pairedSSIDInfo_t*)malloc(sizeof(wifi_pairedSSIDInfo_t));
-    if(ssidInfo != NULL)
-    {
-        UT_LOG("Invoking wifi_lastConnected_Endpoint without initialising wifi\n");
-        INT ret = wifi_lastConnected_Endpoint(ssidInfo);
-        UT_LOG("wifi_lastConnected_Endpoint API returns : %d\n",ret);
-        UT_ASSERT_EQUAL(ret, RETURN_ERR);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed\n");
-        UT_FAIL("Memory allocation with malloc failed\n");
-    } 
+    memset(&ssidInfo, 0, sizeof(wifi_pairedSSIDInfo_t));
+    UT_LOG("Invoking wifi_lastConnected_Endpoint without initialising wifi\n");
+    INT ret = wifi_lastConnected_Endpoint(&ssidInfo);
+    UT_LOG("wifi_lastConnected_Endpoint API returns : %d\n",ret);
+    UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint...\n");
 }
@@ -2250,33 +2209,26 @@ void test_l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint (void)
 void test_l1_wifi_client_hal_positive1_wifi_setRoamingControl (void) 
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_setRoamingControl...\n");
+    wifi_roamingCtrl_t pRoamingCtrl_data;
 
-    wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
-    if(pRoamingCtrl_data != NULL )
-    {
-        pRoamingCtrl_data->roamingEnable = 1;                          
-        pRoamingCtrl_data->selfSteerOverride = 1;                      
-        pRoamingCtrl_data->roam80211kvrEnable = 1;                     
-        pRoamingCtrl_data->preassnBestThreshold = -67;                    
-        pRoamingCtrl_data->preassnBestDelta = 3;                        
-        pRoamingCtrl_data->postAssnLevelDeltaConnected = 12;             
-        pRoamingCtrl_data->postAssnLevelDeltaDisconnected = 8;          
-        pRoamingCtrl_data->postAssnSelfSteerThreshold = -75;              
-        pRoamingCtrl_data->postAssnSelfSteerTimeframe = 60;              
-        pRoamingCtrl_data->postAssnBackOffTime = 2;                     
-        pRoamingCtrl_data->postAssnAPctrlThreshold = -75;                 
-        pRoamingCtrl_data->postAssnAPctrlTimeframe = 60;
+    memset(&pRoamingCtrl_data, 0, sizeof(wifi_roamingCtrl_t));
+    pRoamingCtrl_data.roamingEnable = 1;                          
+    pRoamingCtrl_data.selfSteerOverride = 1;                      
+    pRoamingCtrl_data.roam80211kvrEnable = 1;                     
+    pRoamingCtrl_data.preassnBestThreshold = -67;                    
+    pRoamingCtrl_data.preassnBestDelta = 3;                        
+    pRoamingCtrl_data.postAssnLevelDeltaConnected = 12;             
+    pRoamingCtrl_data.postAssnLevelDeltaDisconnected = 8;          
+    pRoamingCtrl_data.postAssnSelfSteerThreshold = -75;              
+    pRoamingCtrl_data.postAssnSelfSteerTimeframe = 60;              
+    pRoamingCtrl_data.postAssnBackOffTime = 2;                     
+    pRoamingCtrl_data.postAssnAPctrlThreshold = -75;                 
+    pRoamingCtrl_data.postAssnAPctrlTimeframe = 60;
     
-        UT_LOG("Invoking wifi_setRoamingControl with ssidIndex = 1 and a valid pRoamingCtrl_data structure.\n"); 
-        int retVal = wifi_setRoamingControl(SSID_INDEX, pRoamingCtrl_data);
-        UT_LOG("wifi_setRoamingControl API returns : %d\n", retVal);
-        UT_ASSERT_EQUAL(retVal, RETURN_OK);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed\n");
-        UT_FAIL("Memory allocation with malloc failed\n");
-    }
+    UT_LOG("Invoking wifi_setRoamingControl with ssidIndex = 1 and a valid pRoamingCtrl_data structure.\n"); 
+    int retVal = wifi_setRoamingControl(SSID_INDEX, &pRoamingCtrl_data);
+    UT_LOG("wifi_setRoamingControl API returns : %d\n", retVal);
+    UT_ASSERT_EQUAL(retVal, RETURN_OK);
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_setRoamingControl...\n");
 }
@@ -2303,33 +2255,26 @@ void test_l1_wifi_client_hal_positive2_wifi_setRoamingControl (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_setRoamingControl...\n");
     int retVal;
-    wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
+    wifi_roamingCtrl_t pRoamingCtrl_data;
 
-    if(pRoamingCtrl_data != NULL )
-    {
-        pRoamingCtrl_data->roamingEnable = 1;                          
-        pRoamingCtrl_data->selfSteerOverride = 1;                      
-        pRoamingCtrl_data->roam80211kvrEnable = 1;                     
-        pRoamingCtrl_data->preassnBestThreshold = -67;                    
-        pRoamingCtrl_data->preassnBestDelta = 3;                        
-        pRoamingCtrl_data->postAssnLevelDeltaConnected = 12;             
-        pRoamingCtrl_data->postAssnLevelDeltaDisconnected = 8;          
-        pRoamingCtrl_data->postAssnSelfSteerThreshold = -75;              
-        pRoamingCtrl_data->postAssnSelfSteerTimeframe = 60;              
-        pRoamingCtrl_data->postAssnBackOffTime = 2;                     
-        pRoamingCtrl_data->postAssnAPctrlThreshold = -75;                 
-        pRoamingCtrl_data->postAssnAPctrlTimeframe = 60;
-    
-        UT_LOG("Invoking wifi_setRoamingControl with ssidIndex = 1 and a valid pRoamingCtrl_data structure.\n"); 
-        retVal = wifi_setRoamingControl(SSID_INDEX, pRoamingCtrl_data);
-        UT_LOG("wifi_setRoamingControl API returns : %d\n", retVal);
-        UT_ASSERT_EQUAL(retVal, RETURN_OK);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed\n");
-        UT_FAIL("Memory allocation with malloc failed\n");
-    }
+    memset(&pRoamingCtrl_data, 0, sizeof(wifi_roamingCtrl_t));
+    pRoamingCtrl_data.roamingEnable = 1;                          
+    pRoamingCtrl_data.selfSteerOverride = 1;                      
+    pRoamingCtrl_data.roam80211kvrEnable = 1;                     
+    pRoamingCtrl_data.preassnBestThreshold = -67;                    
+    pRoamingCtrl_data.preassnBestDelta = 3;                        
+    pRoamingCtrl_data.postAssnLevelDeltaConnected = 12;             
+    pRoamingCtrl_data.postAssnLevelDeltaDisconnected = 8;          
+    pRoamingCtrl_data.postAssnSelfSteerThreshold = -75;              
+    pRoamingCtrl_data.postAssnSelfSteerTimeframe = 60;              
+    pRoamingCtrl_data.postAssnBackOffTime = 2;                     
+    pRoamingCtrl_data.postAssnAPctrlThreshold = -75;                 
+    pRoamingCtrl_data.postAssnAPctrlTimeframe = 60;
+
+    UT_LOG("Invoking wifi_setRoamingControl with ssidIndex = 1 and a valid pRoamingCtrl_data structure.\n"); 
+    retVal = wifi_setRoamingControl(SSID_INDEX, &pRoamingCtrl_data);
+    UT_LOG("wifi_setRoamingControl API returns : %d\n", retVal);
+    UT_ASSERT_EQUAL(retVal, RETURN_OK);
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_setRoamingControl...\n");
 }
@@ -2350,13 +2295,13 @@ void test_l1_wifi_client_hal_positive2_wifi_setRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_setRoamingControl() API with assidIndex = 1, pRoamingCtrl_data = NULL | ssidIndex = 1, pRoamingCtrl_data = NULL | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setRoamingControl() with assidIndex = 1, pRoamingCtrl_data = NULL | ssidIndex = 1, pRoamingCtrl_data = NULL | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative1_wifi_setRoamingControl (void) 
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_setRoamingControl...\n");
     wifi_roamingCtrl_t* pRoamingCtrl_data = NULL;
-    
+
     UT_LOG("Invoking wifi_setRoamingControl with ssidIndex = 1 and pRoamingCtrl_data structure = NULL.\n");
     int retVal = wifi_setRoamingControl(SSID_INDEX, pRoamingCtrl_data);
     UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
@@ -2386,33 +2331,26 @@ void test_l1_wifi_client_hal_negative1_wifi_setRoamingControl (void)
 void test_l1_wifi_client_hal_negative2_wifi_setRoamingControl (void) 
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_setRoamingControl...\n");
+    wifi_roamingCtrl_t pRoamingCtrl_data;
 
-    wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
-    if(pRoamingCtrl_data != NULL )
-    {
-        pRoamingCtrl_data->roamingEnable = 1;                          
-        pRoamingCtrl_data->selfSteerOverride = 1;                      
-        pRoamingCtrl_data->roam80211kvrEnable = 1;                     
-        pRoamingCtrl_data->preassnBestThreshold = -67;                    
-        pRoamingCtrl_data->preassnBestDelta = 3;                        
-        pRoamingCtrl_data->postAssnLevelDeltaConnected = 12;             
-        pRoamingCtrl_data->postAssnLevelDeltaDisconnected = 8;          
-        pRoamingCtrl_data->postAssnSelfSteerThreshold = -75;              
-        pRoamingCtrl_data->postAssnSelfSteerTimeframe = 60;              
-        pRoamingCtrl_data->postAssnBackOffTime = 2;                     
-        pRoamingCtrl_data->postAssnAPctrlThreshold = -75;                 
-        pRoamingCtrl_data->postAssnAPctrlTimeframe = 60;
+    memset(&pRoamingCtrl_data, 0, sizeof(wifi_roamingCtrl_t));
+    pRoamingCtrl_data.roamingEnable = 1;                          
+    pRoamingCtrl_data.selfSteerOverride = 1;                      
+    pRoamingCtrl_data.roam80211kvrEnable = 1;                     
+    pRoamingCtrl_data.preassnBestThreshold = -67;                    
+    pRoamingCtrl_data.preassnBestDelta = 3;                        
+    pRoamingCtrl_data.postAssnLevelDeltaConnected = 12;             
+    pRoamingCtrl_data.postAssnLevelDeltaDisconnected = 8;          
+    pRoamingCtrl_data.postAssnSelfSteerThreshold = -75;              
+    pRoamingCtrl_data.postAssnSelfSteerTimeframe = 60;              
+    pRoamingCtrl_data.postAssnBackOffTime = 2;                     
+    pRoamingCtrl_data.postAssnAPctrlThreshold = -75;                 
+    pRoamingCtrl_data.postAssnAPctrlTimeframe = 60;
     
-        UT_LOG("Invoking wifi_setRoamingControl without calling wifi_init()\n");
-        int retVal = wifi_setRoamingControl(SSID_INDEX, pRoamingCtrl_data);
-        UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
-        UT_ASSERT_EQUAL(retVal, RETURN_ERR);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed\n");
-        UT_FAIL("Memory allocation with malloc failed\n");
-    }
+    UT_LOG("Invoking wifi_setRoamingControl without calling wifi_init()\n");
+    int retVal = wifi_setRoamingControl(SSID_INDEX, &pRoamingCtrl_data);
+    UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
+    UT_ASSERT_EQUAL(retVal, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_client_hal_negative2_wifi_setRoamingControl...\n");
 }
@@ -2433,39 +2371,32 @@ void test_l1_wifi_client_hal_negative2_wifi_setRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_setRoamingControl() API with a invalid ssidIndex = 0, pRoamingCtrl_data = valid structure | ssidIndex = 0, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
+* | 01 | Invoke wifi_setRoamingControl() with a invalid ssidIndex = 0, pRoamingCtrl_data = valid structure | ssidIndex = 0, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
 */
 void test_l1_wifi_client_hal_negative3_wifi_setRoamingControl (void) 
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_setRoamingControl...\n");
-    
     int ssidIndex = 0;
-    wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
-    if(pRoamingCtrl_data != NULL )
-    {
-        pRoamingCtrl_data->roamingEnable = 1;                          
-        pRoamingCtrl_data->selfSteerOverride = 1;                      
-        pRoamingCtrl_data->roam80211kvrEnable = 1;                     
-        pRoamingCtrl_data->preassnBestThreshold = -67;                    
-        pRoamingCtrl_data->preassnBestDelta = 3;                        
-        pRoamingCtrl_data->postAssnLevelDeltaConnected = 12;             
-        pRoamingCtrl_data->postAssnLevelDeltaDisconnected = 8;          
-        pRoamingCtrl_data->postAssnSelfSteerThreshold = -75;              
-        pRoamingCtrl_data->postAssnSelfSteerTimeframe = 60;              
-        pRoamingCtrl_data->postAssnBackOffTime = 2;                     
-        pRoamingCtrl_data->postAssnAPctrlThreshold = -75;                 
-        pRoamingCtrl_data->postAssnAPctrlTimeframe = 60;
+    wifi_roamingCtrl_t pRoamingCtrl_data;
+
+    memset(&pRoamingCtrl_data, 0, sizeof(wifi_roamingCtrl_t));
+    pRoamingCtrl_data.roamingEnable = 1;                          
+    pRoamingCtrl_data.selfSteerOverride = 1;                      
+    pRoamingCtrl_data.roam80211kvrEnable = 1;                     
+    pRoamingCtrl_data.preassnBestThreshold = -67;                    
+    pRoamingCtrl_data.preassnBestDelta = 3;                        
+    pRoamingCtrl_data.postAssnLevelDeltaConnected = 12;             
+    pRoamingCtrl_data.postAssnLevelDeltaDisconnected = 8;          
+    pRoamingCtrl_data.postAssnSelfSteerThreshold = -75;              
+    pRoamingCtrl_data.postAssnSelfSteerTimeframe = 60;              
+    pRoamingCtrl_data.postAssnBackOffTime = 2;                     
+    pRoamingCtrl_data.postAssnAPctrlThreshold = -75;                 
+    pRoamingCtrl_data.postAssnAPctrlTimeframe = 60;
     
-        UT_LOG("Invoking wifi_setRoamingControl ssidIndex = 0, pRoamingCtrl_data = valid structure\n");
-        int retVal = wifi_setRoamingControl(ssidIndex, pRoamingCtrl_data);
-        UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
-        UT_ASSERT_EQUAL(retVal, RETURN_ERR);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed\n");
-        UT_FAIL("Memory allocation with malloc failed\n");
-    }
+    UT_LOG("Invoking wifi_setRoamingControl ssidIndex = 0, pRoamingCtrl_data = valid structure\n");
+    int retVal = wifi_setRoamingControl(ssidIndex, &pRoamingCtrl_data);
+    UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
+    UT_ASSERT_EQUAL(retVal, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_client_hal_negative3_wifi_setRoamingControl...\n");
 }
@@ -2486,39 +2417,32 @@ void test_l1_wifi_client_hal_negative3_wifi_setRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_setRoamingControl() API with a invalid ssidIndex = 100, pRoamingCtrl_data = valid structure | ssidIndex = 100, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
+* | 01 | Invoke wifi_setRoamingControl() with a invalid ssidIndex = 100, pRoamingCtrl_data = valid structure | ssidIndex = 100, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
 */
 void test_l1_wifi_client_hal_negative4_wifi_setRoamingControl (void) 
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative4_wifi_setRoamingControl...\n");
-    
     int ssidIndex = 100;
-    wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
-    if(pRoamingCtrl_data != NULL )
-    {
-        pRoamingCtrl_data->roamingEnable = 1;                          
-        pRoamingCtrl_data->selfSteerOverride = 1;                      
-        pRoamingCtrl_data->roam80211kvrEnable = 1;                     
-        pRoamingCtrl_data->preassnBestThreshold = -67;                    
-        pRoamingCtrl_data->preassnBestDelta = 3;                        
-        pRoamingCtrl_data->postAssnLevelDeltaConnected = 12;             
-        pRoamingCtrl_data->postAssnLevelDeltaDisconnected = 8;          
-        pRoamingCtrl_data->postAssnSelfSteerThreshold = -75;              
-        pRoamingCtrl_data->postAssnSelfSteerTimeframe = 60;              
-        pRoamingCtrl_data->postAssnBackOffTime = 2;                     
-        pRoamingCtrl_data->postAssnAPctrlThreshold = -75;                 
-        pRoamingCtrl_data->postAssnAPctrlTimeframe = 60;
+    wifi_roamingCtrl_t pRoamingCtrl_data;
+
+    memset(&pRoamingCtrl_data, 0, sizeof(wifi_roamingCtrl_t));
+    pRoamingCtrl_data.roamingEnable = 1;                          
+    pRoamingCtrl_data.selfSteerOverride = 1;                      
+    pRoamingCtrl_data.roam80211kvrEnable = 1;                     
+    pRoamingCtrl_data.preassnBestThreshold = -67;                    
+    pRoamingCtrl_data.preassnBestDelta = 3;                        
+    pRoamingCtrl_data.postAssnLevelDeltaConnected = 12;             
+    pRoamingCtrl_data.postAssnLevelDeltaDisconnected = 8;          
+    pRoamingCtrl_data.postAssnSelfSteerThreshold = -75;              
+    pRoamingCtrl_data.postAssnSelfSteerTimeframe = 60;              
+    pRoamingCtrl_data.postAssnBackOffTime = 2;                     
+    pRoamingCtrl_data.postAssnAPctrlThreshold = -75;                 
+    pRoamingCtrl_data.postAssnAPctrlTimeframe = 60;
     
-        UT_LOG("Invoking wifi_setRoamingControl ssidIndex = 100, pRoamingCtrl_data = valid structure\n");
-        int retVal = wifi_setRoamingControl(ssidIndex, pRoamingCtrl_data);
-        UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
-        UT_ASSERT_EQUAL(retVal, RETURN_ERR);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed\n");
-        UT_FAIL("Memory allocation with malloc failed\n");
-    }
+    UT_LOG("Invoking wifi_setRoamingControl ssidIndex = 100, pRoamingCtrl_data = valid structure\n");
+    int retVal = wifi_setRoamingControl(ssidIndex, &pRoamingCtrl_data);
+    UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
+    UT_ASSERT_EQUAL(retVal, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_client_hal_negative4_wifi_setRoamingControl...\n");
 }
@@ -2539,39 +2463,32 @@ void test_l1_wifi_client_hal_negative4_wifi_setRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_setRoamingControl() API with a invalid ssidIndex = -1, pRoamingCtrl_data = valid structure | ssidIndex = -1, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
+* | 01 | Invoke wifi_setRoamingControl() with a invalid ssidIndex = -1, pRoamingCtrl_data = valid structure | ssidIndex = -1, pRoamingCtrl_data = valid structure | RETURN_ERR | Should Fail  |
 */
 void test_l1_wifi_client_hal_negative5_wifi_setRoamingControl (void) 
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative5_wifi_setRoamingControl...\n");
-    
     int ssidIndex = -1;
-    wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
-    if(pRoamingCtrl_data != NULL )
-    {
-        pRoamingCtrl_data->roamingEnable = 1;                          
-        pRoamingCtrl_data->selfSteerOverride = 1;                      
-        pRoamingCtrl_data->roam80211kvrEnable = 1;                     
-        pRoamingCtrl_data->preassnBestThreshold = -67;                    
-        pRoamingCtrl_data->preassnBestDelta = 3;                        
-        pRoamingCtrl_data->postAssnLevelDeltaConnected = 12;             
-        pRoamingCtrl_data->postAssnLevelDeltaDisconnected = 8;          
-        pRoamingCtrl_data->postAssnSelfSteerThreshold = -75;              
-        pRoamingCtrl_data->postAssnSelfSteerTimeframe = 60;              
-        pRoamingCtrl_data->postAssnBackOffTime = 2;                     
-        pRoamingCtrl_data->postAssnAPctrlThreshold = -75;                 
-        pRoamingCtrl_data->postAssnAPctrlTimeframe = 60;
-    
-        UT_LOG("Invoking wifi_setRoamingControl ssidIndex = -1, pRoamingCtrl_data = valid structure\n");
-        int retVal = wifi_setRoamingControl(ssidIndex, pRoamingCtrl_data);
-        UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
-        UT_ASSERT_EQUAL(retVal, RETURN_ERR);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed\n");
-        UT_FAIL("Memory allocation with malloc failed\n");
-    }
+    wifi_roamingCtrl_t pRoamingCtrl_data;
+
+    memset(&pRoamingCtrl_data, 0, sizeof(wifi_roamingCtrl_t));
+    pRoamingCtrl_data.roamingEnable = 1;                          
+    pRoamingCtrl_data.selfSteerOverride = 1;                      
+    pRoamingCtrl_data.roam80211kvrEnable = 1;                     
+    pRoamingCtrl_data.preassnBestThreshold = -67;                    
+    pRoamingCtrl_data.preassnBestDelta = 3;                        
+    pRoamingCtrl_data.postAssnLevelDeltaConnected = 12;             
+    pRoamingCtrl_data.postAssnLevelDeltaDisconnected = 8;          
+    pRoamingCtrl_data.postAssnSelfSteerThreshold = -75;              
+    pRoamingCtrl_data.postAssnSelfSteerTimeframe = 60;              
+    pRoamingCtrl_data.postAssnBackOffTime = 2;                     
+    pRoamingCtrl_data.postAssnAPctrlThreshold = -75;                 
+    pRoamingCtrl_data.postAssnAPctrlTimeframe = 60;
+
+    UT_LOG("Invoking wifi_setRoamingControl ssidIndex = -1, pRoamingCtrl_data = valid structure\n");
+    int retVal = wifi_setRoamingControl(ssidIndex, &pRoamingCtrl_data);
+    UT_LOG("wifi_setRoamingControl API returns : %d\n",retVal);
+    UT_ASSERT_EQUAL(retVal, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_client_hal_negative5_wifi_setRoamingControl...\n");
 }
@@ -2593,146 +2510,148 @@ void test_l1_wifi_client_hal_negative5_wifi_setRoamingControl (void)
 *
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_getRoamingControl() API with ssidIndex = 1 and pRoamingCtrl_data = valid structure | ssidIndex = 1 and pRoamingCtrl_data = valid structure | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_getRoamingControl() with ssidIndex = 1 and pRoamingCtrl_data = valid structure | ssidIndex = 1 and pRoamingCtrl_data = valid structure | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive1_wifi_getRoamingControl (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_getRoamingControl...\n");
-    wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
+    wifi_roamingCtrl_t pRoamingCtrl_data;
 
-    if(pRoamingCtrl_data != NULL)
-    { 
-        UT_LOG("Invoking wifi_getRoamingControl with ssidIndex = 1 and pRoamingCtrl_data = valid structure.\n");
-        int retVal = wifi_getRoamingControl(SSID_INDEX, pRoamingCtrl_data);
-        UT_LOG("wifi_getRoamingControl API returns : %d\n",retVal);
-        UT_ASSERT_EQUAL(retVal, RETURN_OK);
-    
-        UT_LOG("Values are, roaming control :%d, selfSteerOverride : %d, roam80211kvrEnable : %d, Pre-association best RSSI threshold : %d, Pre-association best RSSI delta : %d, Post-association delta level if WiFi connected : %d, Post-association delta level if WiFi disconnected : %d, Post-association self steer threshold : %d, Post-association self steer timeframe : %d, Post-association backoff time : %d, Post-association AP steer control threshold : %d, Post-association AP steer control time frame : %d\n",pRoamingCtrl_data->roamingEnable, pRoamingCtrl_data->selfSteerOverride, pRoamingCtrl_data->preassnBestThreshold, pRoamingCtrl_data->preassnBestDelta, pRoamingCtrl_data->postAssnLevelDeltaConnected, pRoamingCtrl_data->postAssnLevelDeltaDisconnected,pRoamingCtrl_data->postAssnSelfSteerThreshold, pRoamingCtrl_data->postAssnSelfSteerTimeframe, pRoamingCtrl_data->postAssnBackOffTime, pRoamingCtrl_data->postAssnAPctrlThreshold, pRoamingCtrl_data->postAssnAPctrlTimeframe );
-        if ( pRoamingCtrl_data->roamingEnable == 0 || pRoamingCtrl_data->roamingEnable == 1 )
-        {
-            UT_LOG("roaming control is %d which is a valid value\n", pRoamingCtrl_data->roamingEnable);
-            UT_PASS("roaming control validation success\n");
-        }
-        else
-        {
-            UT_LOG("roaming control is %d which is an invalid value\n", pRoamingCtrl_data->roamingEnable);
-            UT_FAIL("roaming control validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> selfSteerOverride == 0 || pRoamingCtrl_data-> selfSteerOverride == 1 )
-        {
-            UT_LOG("self Steer Override is %d which is a valid value\n", pRoamingCtrl_data-> selfSteerOverride);
-            UT_PASS("self Steer Override validation success\n");
-        }
-        else
-        {
-            UT_LOG("self Steer Override is %d which is a valid value\n", pRoamingCtrl_data-> selfSteerOverride);
-            UT_FAIL("self Steer Override validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> roam80211kvrEnable == 0 || pRoamingCtrl_data-> roam80211kvrEnable == 1 )
-        {
-            UT_LOG("roam 80211kvr Enable is %d which is a valid value\n", pRoamingCtrl_data-> roam80211kvrEnable);
-            UT_PASS("roam 80211kvr Enable validation success\n");
-        }
-        else
-        {
-            UT_LOG("roam 80211kvr Enable is %d which is an invalid value\n", pRoamingCtrl_data-> roam80211kvrEnable);
-            UT_FAIL("roam 80211kvr Enable validation failed\n");
-        }
-        if ( pRoamingCtrl_data->preassnBestThreshold >= -100 && pRoamingCtrl_data->preassnBestThreshold <= 0 )
-        {
-            UT_LOG("Pre-association best RSSI threshold is %d which is a valid value\n", pRoamingCtrl_data->preassnBestThreshold);
-            UT_PASS("Pre-association best RSSI threshold validation success\n");
-        }
-        else
-        {
-            UT_LOG("Pre-association best RSSI threshold is %d which is a invalid value\n", pRoamingCtrl_data->preassnBestThreshold);
-            UT_FAIL("Pre-association best RSSI threshold validation failed\n");
-        }
-        if ( pRoamingCtrl_data->preassnBestDelta >= 0 && pRoamingCtrl_data->preassnBestDelta <= 100 )
-        {
-            UT_LOG("Pre-association best RSSI delta is %d which is a valid value\n", pRoamingCtrl_data->preassnBestDelta);
-            UT_PASS("Pre-association best RSSI delta validation success\n");
-        }
-        else
-        {
-            UT_LOG("Pre-association best RSSI delta %d which is an invalid value\n", pRoamingCtrl_data->preassnBestDelta);
-            UT_FAIL("Pre-association best RSSI delta validation failed\n");
-        }
-        if ( pRoamingCtrl_data->postAssnLevelDeltaConnected >= 0 && pRoamingCtrl_data->postAssnLevelDeltaConnected <= 100 )
-        {
-            UT_LOG("Post-association delta level if WiFi connected is %d which is a valid value\n", pRoamingCtrl_data->postAssnLevelDeltaConnected);
-            UT_PASS("Post-association delta level validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association delta level if WiFi connected is %d which is a invalid value\n", pRoamingCtrl_data->postAssnLevelDeltaConnected);
-            UT_FAIL("Post-association delta level validation failed\n");
-        }
-        if ( pRoamingCtrl_data->postAssnLevelDeltaDisconnected >= 0 && pRoamingCtrl_data->postAssnLevelDeltaDisconnected <= 100 )
-        {
-            UT_LOG("Post-association delta level if WiFi disconnected is %d which is a valid value\n", pRoamingCtrl_data->postAssnLevelDeltaDisconnected);
-            UT_PASS("Post-association delta level if WiFi disconnected validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association delta level if WiFi disconnected is %d which is a invalid value\n", pRoamingCtrl_data->postAssnLevelDeltaDisconnected);
-            UT_FAIL("Post-association delta level if WiFi disconnected validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> postAssnSelfSteerThreshold >= -100 && pRoamingCtrl_data-> postAssnSelfSteerThreshold <= 0 )
-        {
-            UT_LOG("Post-association self steer threshold is %d which is a valid value\n", pRoamingCtrl_data-> postAssnSelfSteerThreshold);
-            UT_PASS("Post-association self steer threshold validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association self steer threshold is %d which is a invalid value\n", pRoamingCtrl_data-> postAssnSelfSteerThreshold);
-            UT_FAIL("Post-association self steer threshold validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> postAssnSelfSteerTimeframe >= 0 && pRoamingCtrl_data-> postAssnSelfSteerTimeframe <= 36000 )
-        {
-            UT_LOG("Post-association self steer timeframe is %d which is a valid value\n", pRoamingCtrl_data-> postAssnSelfSteerTimeframe);
-            UT_PASS("Post-association self steer timeframe validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association self steer timeframe is  %d which is a invalid value\n", pRoamingCtrl_data-> postAssnSelfSteerTimeframe);
-            UT_FAIL("Post-association self steer timeframe validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> postAssnBackOffTime >= 0 && pRoamingCtrl_data-> postAssnBackOffTime <= 36000 )
-        {
-            UT_LOG("Post-association backoff time is %d which is a valid value\n", pRoamingCtrl_data-> postAssnBackOffTime);
-            UT_PASS("Post-association backoff time validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association backoff time is  %d which is a invalid value\n", pRoamingCtrl_data-> postAssnBackOffTime);
-            UT_FAIL("Post-association backoff time validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> postAssnAPctrlThreshold >= -100 && pRoamingCtrl_data-> postAssnAPctrlThreshold <= 0 )
-        {
-            UT_LOG("Post-association AP steer control threshold is %d which is a valid value\n", pRoamingCtrl_data-> postAssnAPctrlThreshold);
-            UT_PASS("Post-association AP steer control threshold validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association AP steer control threshold is %d which is a invalid value\n", pRoamingCtrl_data-> postAssnAPctrlThreshold);
-            UT_FAIL("Post-association AP steer control threshold validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> postAssnAPctrlTimeframe >= -100 && pRoamingCtrl_data->postAssnAPctrlTimeframe <= 0 )
-        {
-            UT_LOG("Post-association AP steer control time frame is %d which is a valid value\n", pRoamingCtrl_data-> postAssnAPctrlTimeframe);
-            UT_PASS("Post-association AP steer control time frame validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association AP steer control time frame is %d which is a invalid value\n", pRoamingCtrl_data-> postAssnAPctrlTimeframe);
-            UT_FAIL("Post-association AP steer control time frame validation failed\n");
-        }
+    UT_LOG("Invoking wifi_getRoamingControl with ssidIndex = 1 and pRoamingCtrl_data = valid structure.\n");
+    memset(&pRoamingCtrl_data, 0, sizeof(wifi_roamingCtrl_t));
+    int retVal = wifi_getRoamingControl(SSID_INDEX, &pRoamingCtrl_data);
+    UT_LOG("wifi_getRoamingControl API returns : %d\n",retVal);
+    UT_ASSERT_EQUAL(retVal, RETURN_OK);
+
+    UT_LOG("Values are, roaming control :%d, selfSteerOverride : %d, roam80211kvrEnable : %d, Pre-association best RSSI threshold : %d,"
+           " Pre-association best RSSI delta : %d, Post-association delta level if WiFi connected : %d,"
+           " Post-association delta level if WiFi disconnected : %d, Post-association self steer threshold : %d,"
+           " Post-association self steer timeframe : %d, Post-association backoff time : %d,"
+           " Post-association AP steer control threshold : %d, Post-association AP steer control time frame : %d\n",
+           pRoamingCtrl_data.roamingEnable, pRoamingCtrl_data.selfSteerOverride, pRoamingCtrl_data.preassnBestThreshold, 
+           pRoamingCtrl_data.preassnBestDelta, pRoamingCtrl_data.postAssnLevelDeltaConnected, 
+           pRoamingCtrl_data.postAssnLevelDeltaDisconnected,pRoamingCtrl_data.postAssnSelfSteerThreshold, 
+           pRoamingCtrl_data.postAssnSelfSteerTimeframe, pRoamingCtrl_data.postAssnBackOffTime, 
+           pRoamingCtrl_data.postAssnAPctrlThreshold, pRoamingCtrl_data.postAssnAPctrlTimeframe );
+    if ( pRoamingCtrl_data.roamingEnable == 0 || pRoamingCtrl_data.roamingEnable == 1 )
+    {
+        UT_LOG("roaming control is %d which is a valid value\n", pRoamingCtrl_data.roamingEnable);
+        UT_PASS("roaming control validation success\n");
     }
     else
     {
-        UT_LOG("Malloc operation failed\n");
-        UT_FAIL("Memory allocation with malloc failed\n");
+        UT_LOG("roaming control is %d which is an invalid value\n", pRoamingCtrl_data.roamingEnable);
+        UT_FAIL("roaming control validation failed\n");
+    }
+    if ( pRoamingCtrl_data.selfSteerOverride == 0 || pRoamingCtrl_data.selfSteerOverride == 1 )
+    {
+        UT_LOG("self Steer Override is %d which is a valid value\n", pRoamingCtrl_data.selfSteerOverride);
+        UT_PASS("self Steer Override validation success\n");
+    }
+    else
+    {
+        UT_LOG("self Steer Override is %d which is a valid value\n", pRoamingCtrl_data.selfSteerOverride);
+        UT_FAIL("self Steer Override validation failed\n");
+    }
+    if ( pRoamingCtrl_data.roam80211kvrEnable == 0 || pRoamingCtrl_data.roam80211kvrEnable == 1 )
+    {
+        UT_LOG("roam 80211kvr Enable is %d which is a valid value\n", pRoamingCtrl_data.roam80211kvrEnable);
+        UT_PASS("roam 80211kvr Enable validation success\n");
+    }
+    else
+    {
+        UT_LOG("roam 80211kvr Enable is %d which is an invalid value\n", pRoamingCtrl_data.roam80211kvrEnable);
+        UT_FAIL("roam 80211kvr Enable validation failed\n");
+    }
+    if ( pRoamingCtrl_data.preassnBestThreshold >= -100 && pRoamingCtrl_data.preassnBestThreshold <= 0 )
+    {
+        UT_LOG("Pre-association best RSSI threshold is %d which is a valid value\n", pRoamingCtrl_data.preassnBestThreshold);
+        UT_PASS("Pre-association best RSSI threshold validation success\n");
+    }
+    else
+    {
+        UT_LOG("Pre-association best RSSI threshold is %d which is a invalid value\n", pRoamingCtrl_data.preassnBestThreshold);
+        UT_FAIL("Pre-association best RSSI threshold validation failed\n");
+    }
+    if ( pRoamingCtrl_data.preassnBestDelta >= 0 && pRoamingCtrl_data.preassnBestDelta <= 100 )
+    {
+        UT_LOG("Pre-association best RSSI delta is %d which is a valid value\n", pRoamingCtrl_data.preassnBestDelta);
+        UT_PASS("Pre-association best RSSI delta validation success\n");
+    }
+    else
+    {
+        UT_LOG("Pre-association best RSSI delta %d which is an invalid value\n", pRoamingCtrl_data.preassnBestDelta);
+        UT_FAIL("Pre-association best RSSI delta validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnLevelDeltaConnected >= 0 && pRoamingCtrl_data.postAssnLevelDeltaConnected <= 100 )
+    {
+        UT_LOG("Post-association delta level if WiFi connected is %d which is a valid value\n", pRoamingCtrl_data.postAssnLevelDeltaConnected);
+        UT_PASS("Post-association delta level validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association delta level if WiFi connected is %d which is a invalid value\n", pRoamingCtrl_data.postAssnLevelDeltaConnected);
+        UT_FAIL("Post-association delta level validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnLevelDeltaDisconnected >= 0 && pRoamingCtrl_data.postAssnLevelDeltaDisconnected <= 100 )
+    {
+        UT_LOG("Post-association delta level if WiFi disconnected is %d which is a valid value\n", pRoamingCtrl_data.postAssnLevelDeltaDisconnected);
+        UT_PASS("Post-association delta level if WiFi disconnected validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association delta level if WiFi disconnected is %d which is a invalid value\n", pRoamingCtrl_data.postAssnLevelDeltaDisconnected);
+        UT_FAIL("Post-association delta level if WiFi disconnected validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnSelfSteerThreshold >= -100 && pRoamingCtrl_data.postAssnSelfSteerThreshold <= 0 )
+    {
+        UT_LOG("Post-association self steer threshold is %d which is a valid value\n", pRoamingCtrl_data.postAssnSelfSteerThreshold);
+        UT_PASS("Post-association self steer threshold validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association self steer threshold is %d which is a invalid value\n", pRoamingCtrl_data.postAssnSelfSteerThreshold);
+        UT_FAIL("Post-association self steer threshold validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnSelfSteerTimeframe >= 0 && pRoamingCtrl_data.postAssnSelfSteerTimeframe <= 36000 )
+    {
+        UT_LOG("Post-association self steer timeframe is %d which is a valid value\n", pRoamingCtrl_data.postAssnSelfSteerTimeframe);
+        UT_PASS("Post-association self steer timeframe validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association self steer timeframe is  %d which is a invalid value\n", pRoamingCtrl_data.postAssnSelfSteerTimeframe);
+        UT_FAIL("Post-association self steer timeframe validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnBackOffTime >= 0 && pRoamingCtrl_data.postAssnBackOffTime <= 36000 )
+    {
+        UT_LOG("Post-association backoff time is %d which is a valid value\n", pRoamingCtrl_data.postAssnBackOffTime);
+        UT_PASS("Post-association backoff time validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association backoff time is  %d which is a invalid value\n", pRoamingCtrl_data.postAssnBackOffTime);
+        UT_FAIL("Post-association backoff time validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnAPctrlThreshold >= -100 && pRoamingCtrl_data.postAssnAPctrlThreshold <= 0 )
+    {
+        UT_LOG("Post-association AP steer control threshold is %d which is a valid value\n", pRoamingCtrl_data.postAssnAPctrlThreshold);
+        UT_PASS("Post-association AP steer control threshold validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association AP steer control threshold is %d which is a invalid value\n", pRoamingCtrl_data.postAssnAPctrlThreshold);
+        UT_FAIL("Post-association AP steer control threshold validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnAPctrlTimeframe >= -100 && pRoamingCtrl_data.postAssnAPctrlTimeframe <= 0 )
+    {
+        UT_LOG("Post-association AP steer control time frame is %d which is a valid value\n", pRoamingCtrl_data.postAssnAPctrlTimeframe);
+        UT_PASS("Post-association AP steer control time frame validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association AP steer control time frame is %d which is a invalid value\n", pRoamingCtrl_data.postAssnAPctrlTimeframe);
+        UT_FAIL("Post-association AP steer control time frame validation failed\n");
     }
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_getRoamingControl...\n");
@@ -2755,147 +2674,149 @@ void test_l1_wifi_client_hal_positive1_wifi_getRoamingControl (void)
 *
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_getRoamingControl() API with ssidIndex = 1 and pRoamingCtrl_data = valid structure | ssidIndex = 1 and pRoamingCtrl_data = valid structure | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_getRoamingControl() with ssidIndex = 1 and pRoamingCtrl_data = valid structure | ssidIndex = 1 and pRoamingCtrl_data = valid structure | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_getRoamingControl (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_getRoamingControl...\n");
     int retVal;
+    wifi_roamingCtrl_t pRoamingCtrl_data;
 
-    wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
-    if(pRoamingCtrl_data != NULL)
-    { 
-        UT_LOG("Invoking wifi_getRoamingControl with ssidIndex = 1 and pRoamingCtrl_data = valid structure.\n");
-        retVal = wifi_getRoamingControl(SSID_INDEX, pRoamingCtrl_data);
-        UT_LOG("wifi_getRoamingControl API returns : %d\n",retVal);
-        UT_ASSERT_EQUAL(retVal, RETURN_OK);
-    
-        UT_LOG("Values are, roaming control :%d, selfSteerOverride : %d, roam80211kvrEnable : %d, Pre-association best RSSI threshold : %d, Pre-association best RSSI delta : %d, Post-association delta level if WiFi connected : %d, Post-association delta level if WiFi disconnected : %d, Post-association self steer threshold : %d, Post-association self steer timeframe : %d, Post-association backoff time : %d, Post-association AP steer control threshold : %d, Post-association AP steer control time frame : %d\n",pRoamingCtrl_data->roamingEnable, pRoamingCtrl_data->selfSteerOverride, pRoamingCtrl_data->preassnBestThreshold, pRoamingCtrl_data->preassnBestDelta, pRoamingCtrl_data->postAssnLevelDeltaConnected, pRoamingCtrl_data->postAssnLevelDeltaDisconnected,pRoamingCtrl_data->postAssnSelfSteerThreshold, pRoamingCtrl_data->postAssnSelfSteerTimeframe, pRoamingCtrl_data->postAssnBackOffTime, pRoamingCtrl_data->postAssnAPctrlThreshold, pRoamingCtrl_data->postAssnAPctrlTimeframe );
-        if ( pRoamingCtrl_data->roamingEnable == 0 || pRoamingCtrl_data->roamingEnable == 1 )
-        {
-            UT_LOG("roaming control is %d which is a valid value\n", pRoamingCtrl_data->roamingEnable);
-            UT_PASS("roaming control validation success\n");
-        }
-        else
-        {
-            UT_LOG("roaming control is %d which is an invalid value\n", pRoamingCtrl_data->roamingEnable);
-            UT_FAIL("roaming control validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> selfSteerOverride == 0 || pRoamingCtrl_data-> selfSteerOverride == 1 )
-        {
-            UT_LOG("self Steer Override is %d which is a valid value\n", pRoamingCtrl_data-> selfSteerOverride);
-            UT_PASS("self Steer Override validation success\n");
-        }
-        else
-        {
-            UT_LOG("self Steer Override is %d which is a valid value\n", pRoamingCtrl_data-> selfSteerOverride);
-            UT_FAIL("self Steer Override validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> roam80211kvrEnable == 0 || pRoamingCtrl_data-> roam80211kvrEnable == 1 )
-        {
-            UT_LOG("roam 80211kvr Enable is %d which is a valid value\n", pRoamingCtrl_data-> roam80211kvrEnable);
-            UT_PASS("roam 80211kvr Enable validation success\n");
-        }
-        else
-        {
-            UT_LOG("roam 80211kvr Enable is %d which is an invalid value\n", pRoamingCtrl_data-> roam80211kvrEnable);
-            UT_FAIL("roam 80211kvr Enable validation failed\n");
-        }
-        if ( pRoamingCtrl_data->preassnBestThreshold >= -100 && pRoamingCtrl_data->preassnBestThreshold <= 0 )
-        {
-            UT_LOG("Pre-association best RSSI threshold is %d which is a valid value\n", pRoamingCtrl_data->preassnBestThreshold);
-            UT_PASS("Pre-association best RSSI threshold validation success\n");
-        }
-        else
-        {
-            UT_LOG("Pre-association best RSSI threshold is %d which is a invalid value\n", pRoamingCtrl_data->preassnBestThreshold);
-            UT_FAIL("Pre-association best RSSI threshold validation failed\n");
-        }
-        if ( pRoamingCtrl_data->preassnBestDelta >= 0 && pRoamingCtrl_data->preassnBestDelta <= 100 )
-        {
-            UT_LOG("Pre-association best RSSI delta is %d which is a valid value\n", pRoamingCtrl_data->preassnBestDelta);
-            UT_PASS("Pre-association best RSSI delta validation success\n");
-        }
-        else
-        {
-            UT_LOG("Pre-association best RSSI delta %d which is an invalid value\n", pRoamingCtrl_data->preassnBestDelta);
-            UT_FAIL("Pre-association best RSSI delta validation failed\n");
-        }
-        if ( pRoamingCtrl_data->postAssnLevelDeltaConnected >= 0 && pRoamingCtrl_data->postAssnLevelDeltaConnected <= 100 )
-        {
-            UT_LOG("Post-association delta level if WiFi connected is %d which is a valid value\n", pRoamingCtrl_data->postAssnLevelDeltaConnected);
-            UT_PASS("Post-association delta level validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association delta level if WiFi connected is %d which is a invalid value\n", pRoamingCtrl_data->postAssnLevelDeltaConnected);
-            UT_FAIL("Post-association delta level validation failed\n");
-        }
-        if ( pRoamingCtrl_data->postAssnLevelDeltaDisconnected >= 0 && pRoamingCtrl_data->postAssnLevelDeltaDisconnected <= 100 )
-        {
-            UT_LOG("Post-association delta level if WiFi disconnected is %d which is a valid value\n", pRoamingCtrl_data->postAssnLevelDeltaDisconnected);
-            UT_PASS("Post-association delta level if WiFi disconnected validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association delta level if WiFi disconnected is %d which is a invalid value\n", pRoamingCtrl_data->postAssnLevelDeltaDisconnected);
-            UT_FAIL("Post-association delta level if WiFi disconnected validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> postAssnSelfSteerThreshold >= -100 && pRoamingCtrl_data-> postAssnSelfSteerThreshold <= 0 )
-        {
-            UT_LOG("Post-association self steer threshold is %d which is a valid value\n", pRoamingCtrl_data-> postAssnSelfSteerThreshold);
-            UT_PASS("Post-association self steer threshold validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association self steer threshold is %d which is a invalid value\n", pRoamingCtrl_data-> postAssnSelfSteerThreshold);
-            UT_FAIL("Post-association self steer threshold validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> postAssnSelfSteerTimeframe >= 0 && pRoamingCtrl_data-> postAssnSelfSteerTimeframe <= 36000 )
-        {
-            UT_LOG("Post-association self steer timeframe is %d which is a valid value\n", pRoamingCtrl_data-> postAssnSelfSteerTimeframe);
-            UT_PASS("Post-association self steer timeframe validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association self steer timeframe is  %d which is a invalid value\n", pRoamingCtrl_data-> postAssnSelfSteerTimeframe);
-            UT_FAIL("Post-association self steer timeframe validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> postAssnBackOffTime >= 0 && pRoamingCtrl_data-> postAssnBackOffTime >= 36000 )
-        {
-            UT_LOG("Post-association backoff time is %d which is a valid value\n", pRoamingCtrl_data-> postAssnBackOffTime);
-            UT_PASS("Post-association backoff time validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association backoff time is  %d which is a invalid value\n", pRoamingCtrl_data-> postAssnBackOffTime);
-            UT_FAIL("Post-association backoff time validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> postAssnAPctrlThreshold >= -100 && pRoamingCtrl_data-> postAssnAPctrlThreshold <= 0 )
-        {
-            UT_LOG("Post-association AP steer control threshold is %d which is a valid value\n", pRoamingCtrl_data-> postAssnAPctrlThreshold);
-            UT_PASS("Post-association AP steer control threshold validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association AP steer control threshold is %d which is a invalid value\n", pRoamingCtrl_data-> postAssnAPctrlThreshold);
-            UT_FAIL("Post-association AP steer control threshold validation failed\n");
-        }
-        if ( pRoamingCtrl_data-> postAssnAPctrlTimeframe >= -100 && pRoamingCtrl_data->postAssnAPctrlTimeframe <= 0 )
-        {
-            UT_LOG("Post-association AP steer control time frame is %d which is a valid value\n", pRoamingCtrl_data-> postAssnAPctrlTimeframe);
-            UT_PASS("Post-association AP steer control time frame validation success\n");
-        }
-        else
-        {
-            UT_LOG("Post-association AP steer control time frame is %d which is a invalid value\n", pRoamingCtrl_data-> postAssnAPctrlTimeframe);
-            UT_FAIL("Post-association AP steer control time frame validation failed\n");
-        }
+    memset(&pRoamingCtrl_data, 0, sizeof(wifi_roamingCtrl_t));
+    UT_LOG("Invoking wifi_getRoamingControl with ssidIndex = 1 and pRoamingCtrl_data = valid structure.\n");
+    retVal = wifi_getRoamingControl(SSID_INDEX, &pRoamingCtrl_data);
+    UT_LOG("wifi_getRoamingControl API returns : %d\n",retVal);
+    UT_ASSERT_EQUAL(retVal, RETURN_OK);
+
+    UT_LOG("Values are, roaming control :%d, selfSteerOverride : %d, roam80211kvrEnable : %d,"
+           " Pre-association best RSSI threshold : %d, Pre-association best RSSI delta : %d,"
+           " Post-association delta level if WiFi connected : %d, Post-association delta level if WiFi disconnected : %d,"
+           " Post-association self steer threshold : %d, Post-association self steer timeframe : %d, Post-association backoff time : %d,"
+           " Post-association AP steer control threshold : %d, Post-association AP steer control time frame : %d\n",
+           pRoamingCtrl_data.roamingEnable, pRoamingCtrl_data.selfSteerOverride, pRoamingCtrl_data.preassnBestThreshold, 
+           pRoamingCtrl_data.preassnBestDelta, pRoamingCtrl_data.postAssnLevelDeltaConnected, 
+           pRoamingCtrl_data.postAssnLevelDeltaDisconnected,pRoamingCtrl_data.postAssnSelfSteerThreshold, 
+           pRoamingCtrl_data.postAssnSelfSteerTimeframe, pRoamingCtrl_data.postAssnBackOffTime, 
+           pRoamingCtrl_data.postAssnAPctrlThreshold, pRoamingCtrl_data.postAssnAPctrlTimeframe );
+    if ( pRoamingCtrl_data.roamingEnable == 0 || pRoamingCtrl_data.roamingEnable == 1 )
+    {
+        UT_LOG("roaming control is %d which is a valid value\n", pRoamingCtrl_data.roamingEnable);
+        UT_PASS("roaming control validation success\n");
     }
     else
     {
-        UT_LOG("Malloc operation failed\n");
-        UT_FAIL("Memory allocation with malloc failed\n");
+        UT_LOG("roaming control is %d which is an invalid value\n", pRoamingCtrl_data.roamingEnable);
+        UT_FAIL("roaming control validation failed\n");
+    }
+    if ( pRoamingCtrl_data.selfSteerOverride == 0 || pRoamingCtrl_data. selfSteerOverride == 1 )
+    {
+        UT_LOG("self Steer Override is %d which is a valid value\n", pRoamingCtrl_data.selfSteerOverride);
+        UT_PASS("self Steer Override validation success\n");
+    }
+    else
+    {
+        UT_LOG("self Steer Override is %d which is a valid value\n", pRoamingCtrl_data.selfSteerOverride);
+        UT_FAIL("self Steer Override validation failed\n");
+    }
+    if ( pRoamingCtrl_data.roam80211kvrEnable == 0 || pRoamingCtrl_data. roam80211kvrEnable == 1 )
+    {
+        UT_LOG("roam 80211kvr Enable is %d which is a valid value\n", pRoamingCtrl_data.roam80211kvrEnable);
+        UT_PASS("roam 80211kvr Enable validation success\n");
+    }
+    else
+    {
+        UT_LOG("roam 80211kvr Enable is %d which is an invalid value\n", pRoamingCtrl_data.roam80211kvrEnable);
+        UT_FAIL("roam 80211kvr Enable validation failed\n");
+    }
+    if ( pRoamingCtrl_data.preassnBestThreshold >= -100 && pRoamingCtrl_data.preassnBestThreshold <= 0 )
+    {
+        UT_LOG("Pre-association best RSSI threshold is %d which is a valid value\n", pRoamingCtrl_data.preassnBestThreshold);
+        UT_PASS("Pre-association best RSSI threshold validation success\n");
+    }
+    else
+    {
+        UT_LOG("Pre-association best RSSI threshold is %d which is a invalid value\n", pRoamingCtrl_data.preassnBestThreshold);
+        UT_FAIL("Pre-association best RSSI threshold validation failed\n");
+    }
+    if ( pRoamingCtrl_data.preassnBestDelta >= 0 && pRoamingCtrl_data.preassnBestDelta <= 100 )
+    {
+        UT_LOG("Pre-association best RSSI delta is %d which is a valid value\n", pRoamingCtrl_data.preassnBestDelta);
+        UT_PASS("Pre-association best RSSI delta validation success\n");
+    }
+    else
+    {
+        UT_LOG("Pre-association best RSSI delta %d which is an invalid value\n", pRoamingCtrl_data.preassnBestDelta);
+        UT_FAIL("Pre-association best RSSI delta validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnLevelDeltaConnected >= 0 && pRoamingCtrl_data.postAssnLevelDeltaConnected <= 100 )
+    {
+        UT_LOG("Post-association delta level if WiFi connected is %d which is a valid value\n", pRoamingCtrl_data.postAssnLevelDeltaConnected);
+        UT_PASS("Post-association delta level validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association delta level if WiFi connected is %d which is a invalid value\n", pRoamingCtrl_data.postAssnLevelDeltaConnected);
+        UT_FAIL("Post-association delta level validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnLevelDeltaDisconnected >= 0 && pRoamingCtrl_data.postAssnLevelDeltaDisconnected <= 100 )
+    {
+        UT_LOG("Post-association delta level if WiFi disconnected is %d which is a valid value\n", pRoamingCtrl_data.postAssnLevelDeltaDisconnected);
+        UT_PASS("Post-association delta level if WiFi disconnected validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association delta level if WiFi disconnected is %d which is a invalid value\n", pRoamingCtrl_data.postAssnLevelDeltaDisconnected);
+        UT_FAIL("Post-association delta level if WiFi disconnected validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnSelfSteerThreshold >= -100 && pRoamingCtrl_data. postAssnSelfSteerThreshold <= 0 )
+    {
+        UT_LOG("Post-association self steer threshold is %d which is a valid value\n", pRoamingCtrl_data.postAssnSelfSteerThreshold);
+        UT_PASS("Post-association self steer threshold validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association self steer threshold is %d which is a invalid value\n", pRoamingCtrl_data.postAssnSelfSteerThreshold);
+        UT_FAIL("Post-association self steer threshold validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnSelfSteerTimeframe >= 0 && pRoamingCtrl_data. postAssnSelfSteerTimeframe <= 36000 )
+    {
+        UT_LOG("Post-association self steer timeframe is %d which is a valid value\n", pRoamingCtrl_data.postAssnSelfSteerTimeframe);
+        UT_PASS("Post-association self steer timeframe validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association self steer timeframe is  %d which is a invalid value\n", pRoamingCtrl_data.postAssnSelfSteerTimeframe);
+        UT_FAIL("Post-association self steer timeframe validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnBackOffTime >= 0 && pRoamingCtrl_data. postAssnBackOffTime >= 36000 )
+    {
+        UT_LOG("Post-association backoff time is %d which is a valid value\n", pRoamingCtrl_data.postAssnBackOffTime);
+        UT_PASS("Post-association backoff time validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association backoff time is  %d which is a invalid value\n", pRoamingCtrl_data.postAssnBackOffTime);
+        UT_FAIL("Post-association backoff time validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnAPctrlThreshold >= -100 && pRoamingCtrl_data. postAssnAPctrlThreshold <= 0 )
+    {
+        UT_LOG("Post-association AP steer control threshold is %d which is a valid value\n", pRoamingCtrl_data.postAssnAPctrlThreshold);
+        UT_PASS("Post-association AP steer control threshold validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association AP steer control threshold is %d which is a invalid value\n", pRoamingCtrl_data.postAssnAPctrlThreshold);
+        UT_FAIL("Post-association AP steer control threshold validation failed\n");
+    }
+    if ( pRoamingCtrl_data.postAssnAPctrlTimeframe >= -100 && pRoamingCtrl_data.postAssnAPctrlTimeframe <= 0 )
+    {
+        UT_LOG("Post-association AP steer control time frame is %d which is a valid value\n", pRoamingCtrl_data.postAssnAPctrlTimeframe);
+        UT_PASS("Post-association AP steer control time frame validation success\n");
+    }
+    else
+    {
+        UT_LOG("Post-association AP steer control time frame is %d which is a invalid value\n", pRoamingCtrl_data.postAssnAPctrlTimeframe);
+        UT_FAIL("Post-association AP steer control time frame validation failed\n");
     }
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_getRoamingControl...\n");
@@ -2923,21 +2844,14 @@ void test_l1_wifi_client_hal_negative1_wifi_getRoamingControl (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_getRoamingControl...\n");
     int ssidIndex = 0;
-    wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
+    wifi_roamingCtrl_t pRoamingCtrl_data;
 
-    if(pRoamingCtrl_data != NULL)
-    { 
-        UT_LOG("Invoked wifi_getRoamingControl with ssidIndex=0 and pRoamingCtrl_data = valid structure.\n");
-        int retVal = wifi_getRoamingControl(ssidIndex, pRoamingCtrl_data);
-        UT_LOG("wifi_getRoamingContro API returns :%d\n", retVal);
-        UT_ASSERT_EQUAL(retVal, RETURN_ERR);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed\n");
-        UT_FAIL("Memory allocation with malloc failed\n");
-    }
- 
+    UT_LOG("Invoked wifi_getRoamingControl with ssidIndex=0 and pRoamingCtrl_data = valid structure.\n");
+    memset(&pRoamingCtrl_data, 0, sizeof(wifi_roamingCtrl_t));
+    int retVal = wifi_getRoamingControl(ssidIndex, &pRoamingCtrl_data);
+    UT_LOG("wifi_getRoamingContro API returns :%d\n", retVal);
+    UT_ASSERT_EQUAL(retVal, RETURN_ERR);
+
     UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_getRoamingControl...\n");
 }
 
@@ -2958,7 +2872,7 @@ void test_l1_wifi_client_hal_negative1_wifi_getRoamingControl (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data |Expected Result |Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoke wifi_getRoamingControl() API is invoked with ssidIndex = 1, pRoamingCtrl_data = NULL | ssidIndex = 1, pRoamingCtrl_data = NULL | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_getRoamingControl() with ssidIndex = 1, pRoamingCtrl_data = NULL | ssidIndex = 1, pRoamingCtrl_data = NULL | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative2_wifi_getRoamingControl (void)
 {
@@ -2994,21 +2908,13 @@ void test_l1_wifi_client_hal_negative2_wifi_getRoamingControl (void)
 void test_l1_wifi_client_hal_negative3_wifi_getRoamingControl (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_getRoamingControl...\n");
+    wifi_roamingCtrl_t pRoamingCtrl_data;
 
-    wifi_roamingCtrl_t *pRoamingCtrl_data = (wifi_roamingCtrl_t*)malloc(sizeof(wifi_roamingCtrl_t));
-    if(pRoamingCtrl_data != NULL)
-    {
-        UT_LOG("Invoked wifi_getRoamingControl without prior call to wifi_init or wifi_initWithConfig\n");
-        int retVal = wifi_getRoamingControl(SSID_INDEX, pRoamingCtrl_data);
-    
-        UT_LOG("wifi_getRoamingControl API Returns : %d\n",retVal);
-        UT_ASSERT_EQUAL(retVal, RETURN_ERR);
-    }
-    else
-    {
-        UT_LOG("Malloc operation failed\n");
-        UT_FAIL("Memory allocation with malloc failed\n");
-    } 
+    memset(&pRoamingCtrl_data, 0, sizeof(wifi_roamingCtrl_t));
+    UT_LOG("Invoked wifi_getRoamingControl without prior call to wifi_init or wifi_initWithConfig\n");
+    int retVal = wifi_getRoamingControl(SSID_INDEX, &pRoamingCtrl_data);
+    UT_LOG("wifi_getRoamingControl API Returns : %d\n",retVal);
+    UT_ASSERT_EQUAL(retVal, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_client_hal_negative3_wifi_getRoamingControl...\n");
 }
@@ -3029,7 +2935,7 @@ void test_l1_wifi_client_hal_negative3_wifi_getRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_cancelWpsPairing() API | NA | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_cancelWpsPairing() | NA | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive1_wifi_cancelWpsPairing (void)
 {
@@ -3059,7 +2965,7 @@ void test_l1_wifi_client_hal_positive1_wifi_cancelWpsPairing (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_cancelWpsPairing() API | NA | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_cancelWpsPairing() | NA | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_cancelWpsPairing (void)
 {

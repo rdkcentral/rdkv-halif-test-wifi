@@ -15,7 +15,33 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
- 
+
+/**
+ * @addtogroup HPK Hardware Porting Kit
+ * @{
+ * @par The Hardware Porting Kit
+ * HPK is the next evolution of the well-defined Hardware Abstraction Layer
+ * (HAL), but augmented with more comprehensive documentation and test suites
+ * that OEM or SOC vendors can use to self-certify their ports before taking
+ * them to RDKM for validation or to an operator for final integration and
+ * deployment. The Hardware Porting Kit effectively enables an OEM and/or SOC
+ * vendor to self-certify their own Video Accelerator devices, with minimal RDKM
+ * assistance.
+ *
+ */
+/**
+ * @addtogroup RDKV_WIFI RDK-V WiFi
+ * @{
+ */
+/**
+ * @addtogroup RDKV_WIFI_HALTEST RDK-V WiFi HAL Tests
+ * @{
+ */
+/**
+ * @defgroup RDKV_WIFI_HALTEST_REGISTER RDKV WiFi HALTEST REGISTER
+ * @{
+ */
+
 /* L1 Testing Functions */
  
 extern int test_wifi_common_hal_register_pre_init_tests (void);
@@ -38,3 +64,8 @@ int register_hal_l1_tests( void )
  
     return registerFailed;
 }
+
+/** @} */ // End of RDKV_WIFI_HALTEST_REGISTER
+/** @} */ // End of RDKV_WIFI_HALTEST
+/** @} */ // End of RDKV_WIFI
+/** @} */ // End of HPK

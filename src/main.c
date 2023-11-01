@@ -16,6 +16,31 @@
 * limitations under the License.
 */
  
+/**
+ * @addtogroup HPK Hardware Porting Kit
+ * @{
+ * @par The Hardware Porting Kit
+ * HPK is the next evolution of the well-defined Hardware Abstraction Layer
+ * (HAL), but augmented with more comprehensive documentation and test suites
+ * that OEM or SOC vendors can use to self-certify their ports before taking
+ * them to RDKM for validation or to an operator for final integration and
+ * deployment. The Hardware Porting Kit effectively enables an OEM and/or SOC
+ * vendor to self-certify their own Video Accelerator devices, with minimal RDKM
+ * assistance.
+ *
+ */
+/**
+ * @addtogroup RDKV_WIFI RDK-V WiFi
+ * @{
+ */
+/**
+ * @defgroup RDKV_WIFI_HALTEST RDK-V WiFi HAL Tests
+ * @{
+ */
+/**
+ * @defgroup RDKV_WIFI_HALTEST_MAIN RDKV WiFi HALTEST MAIN
+ * @{
+ */
 
 #include <ut.h>
 #include <ut_log.h>
@@ -40,27 +65,21 @@ int WiFi_InitPreReq(){
     return -1;
 }
 
-int WiFi_InitWithConfigPreReq(){
+int WiFi_InitWithConfigPreReq()
+{
     int ret = 0;
-    wifi_halConfig_t *conf = (wifi_halConfig_t*)malloc(sizeof(wifi_halConfig_t));
-    if(conf != NULL){
-	strcpy(conf->wlan_Interface,"wlan0");
-        ret = wifi_initWithConfig(conf);
-        if (ret == 0)
-        {
-            UT_LOG("WiFi init with config returned success");
-            return 0;
-        }
-        else
-        {
-           UT_LOG("WiFi init with config returned failure");
-           UT_FAIL_FATAL("WiFi initialization with config pre-requisite failed");
-        }
+    wifi_halConfig_t conf;
+    strcpy(conf.wlan_Interface,"wlan1");
+    ret = wifi_initWithConfig(&conf);
+    if (ret == 0)
+    {
+        UT_LOG("WiFi init with config returned success");
+        return 0;
     }
     else
     {
-        UT_LOG("Malloc operation failed");
-        UT_FAIL_FATAL("Memory allocation with malloc failed");
+        UT_LOG("WiFi init with config returned failure");
+        UT_FAIL_FATAL("WiFi initialization with config pre-requisite failed");
     }
     return -1;
 }
@@ -105,3 +124,7 @@ int main(int argc, char** argv)
     return 0;
 }
 
+/** @} */ // End of RDKV_WIFI_HALTEST_MAIN
+/** @} */ // End of RDKV_WIFI_HALTEST
+/** @} */ // End of RDKV_WIFI
+/** @} */ // End of HPK
