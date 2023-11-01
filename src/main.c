@@ -69,7 +69,7 @@ int WiFi_InitWithConfigPreReq()
 {
     int ret = 0;
     wifi_halConfig_t conf;
-    strcpy(conf.wlan_Interface,"wlan1");
+    strcpy(conf.wlan_Interface,"wlan0");
     ret = wifi_initWithConfig(&conf);
     if (ret == 0)
     {
