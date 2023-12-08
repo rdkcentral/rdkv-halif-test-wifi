@@ -69,6 +69,7 @@
 extern int WiFi_InitPreReq(void);
 extern int WiFi_InitWithConfigPreReq(void);
 extern int WiFi_UnInitPosReq(void);
+extern BOOL read_Config(char *test_case, char *ap, char *psk, char *passphrase, char *eapIdentity, char *carootcert, char *clientcert, char *privatekey, char *wepkey);
 
 extern const int SSID_INDEX;
 
@@ -1044,22 +1045,24 @@ void test_l1_wifi_client_hal_negative2_wifi_setCliWpsButtonPush (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_connectEndpoint() with valid input values | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = VALID_MODE, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass|
+* | 01 | Invoke wifi_connectEndpoint() with valid input values | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = VALID_MODE, AP_security_PreSharedKey = "ExamplePreSharedKey", saveSSID = 1| RETURN_OK | Should Pass|
 */
 void test_l1_wifi_client_hal_positive1_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_connectEndpoint...\n");
-    CHAR AP_SSID[] = "ValidSSID";                                  /*Need to replace with valid value*/
+    CHAR AP_SSID[64];
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;
-    CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
-    CHAR AP_security_PreSharedKey[] = "ExamplePreSharedKey";       /*Need to replace with valid value*/
-    CHAR AP_security_KeyPassphrase[] = "ExamplePassphrase";        /*Need to replace with valid value*/
-    INT saveSSID = 1;                   
-    CHAR eapIdentity[] = "ValidIdentity";                          /*Need to replace with valid value*/
-    CHAR carootcert[] = "ValidCARootCertFilePath";                 /*Need to replace with valid value*/
-    CHAR clientcert[] = "ValidClientCertFilePath";                 /*Need to replace with valid value*/
-    CHAR privatekey[] = "ValidPrivateKeyFilePath";                 /*Need to replace with valid value*/
+    INT saveSSID = 1;
+    CHAR *AP_security_WEPKey = NULL;
+    CHAR AP_security_PreSharedKey[64];
+    CHAR *AP_security_KeyPassphrase = NULL;
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
 
+    if (0 == read_Config("l1_positive1_wifi_connectEndpoint", AP_SSID, AP_security_PreSharedKey, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
@@ -1084,25 +1087,37 @@ void test_l1_wifi_client_hal_positive1_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_connectEndpoint() with valid input values | ssidIndex = 1, AP_SSID = "", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_connectEndpoint() with valid input values | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WPA_ENTERPRISE_AES, saveSSID = 1, eapIdentity = "ValidIdentity" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive2_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_connectEndpoint...\n");
-    CHAR AP_SSID[] = "";                                  
-    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
-    CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
-    CHAR AP_security_PreSharedKey[] = "ExamplePreSharedKey";       /*Need to replace with valid value*/
-    CHAR AP_security_KeyPassphrase[] = "ExamplePassphrase";        /*Need to replace with valid value*/
-    INT saveSSID = 1;                   
-    CHAR eapIdentity[] = "ValidIdentity";                          /*Need to replace with valid value*/
-    CHAR carootcert[] = "ValidCARootCertFilePath";                 /*Need to replace with valid value*/
-    CHAR clientcert[] = "ValidClientCertFilePath";                 /*Need to replace with valid value*/
-    CHAR privatekey[] = "ValidPrivateKeyFilePath";                 /*Need to replace with valid value*/
+    CHAR AP_SSID[64];                                  
+    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WPA_ENTERPRISE_AES;
+    INT saveSSID = 1;   
+    CHAR *AP_security_WEPKey = NULL;
+    CHAR *AP_security_PreSharedKey = NULL;
+    CHAR *AP_security_KeyPassphrase = NULL;
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
+
+    eapIdentity = (CHAR *)malloc(256 * sizeof(CHAR));
+    carootcert = (CHAR *)malloc(256 * sizeof(CHAR));
+    clientcert = (CHAR *)malloc(256 * sizeof(CHAR));
+    if (eapIdentity == NULL || carootcert == NULL || clientcert == NULL)
+        UT_FAIL("memory allocation failed");
+
+    if (0 == read_Config("l1_positive2_wifi_connectEndpoint", AP_SSID, NULL, NULL, eapIdentity, carootcert, clientcert, NULL, NULL))
+        UT_LOG("failed to read\n");
 
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
+    free(eapIdentity);
+    free(carootcert);
+    free(clientcert);
     UT_ASSERT_EQUAL(result, RETURN_OK);
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_connectEndpoint...\n");
@@ -1125,22 +1140,23 @@ void test_l1_wifi_client_hal_positive2_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_connectEndpoint() with valid input values | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 0, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_connectEndpoint() with valid input values | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WPA2_PSK_AES, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 0, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_positive3_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive3_validInputs...\n");
-    CHAR AP_SSID[] = "ValidSSID";                                  /*Need to replace with valid value*/
-    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
-    CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
-    CHAR AP_security_PreSharedKey[] = "ExamplePreSharedKey";       /*Need to replace with valid value*/
-    CHAR AP_security_KeyPassphrase[] = "ExamplePassphrase";        /*Need to replace with valid value*/
+    CHAR AP_SSID[64];
+    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WPA2_PSK_AES;    
+    CHAR *AP_security_WEPKey = NULL;
+    CHAR AP_security_PreSharedKey[64];
+    CHAR *AP_security_KeyPassphrase = NULL;
     INT saveSSID = 0;                   
-    CHAR eapIdentity[] = "ValidIdentity";                          /*Need to replace with valid value*/
-    CHAR carootcert[] = "ValidCARootCertFilePath";                 /*Need to replace with valid value*/
-    CHAR clientcert[] = "ValidClientCertFilePath";                 /*Need to replace with valid value*/
-    CHAR privatekey[] = "ValidPrivateKeyFilePath";                 /*Need to replace with valid value*/
-
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
+    if (0 == read_Config("l1_positive3_wifi_connectEndpoint", AP_SSID, AP_security_PreSharedKey, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
@@ -1172,20 +1188,26 @@ void test_l1_wifi_client_hal_positive4_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive4_wifi_connectEndpoint...\n");
     INT result;
-    CHAR AP_SSID[] = "ValidSSID";                                  /*Need to replace with valid value*/
+    CHAR AP_SSID[64];
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
-    CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
-    CHAR AP_security_PreSharedKey[] = "ExamplePreSharedKey";       /*Need to replace with valid value*/
-    CHAR AP_security_KeyPassphrase[] = "ExamplePassphrase";        /*Need to replace with valid value*/
-    INT saveSSID = 0;                   
-    CHAR eapIdentity[] = "ValidIdentity";                          /*Need to replace with valid value*/
-    CHAR carootcert[] = "ValidCARootCertFilePath";                 /*Need to replace with valid value*/
-    CHAR clientcert[] = "ValidClientCertFilePath";                 /*Need to replace with valid value*/
-    CHAR privatekey[] = "ValidPrivateKeyFilePath";                 /*Need to replace with valid value*/
+    CHAR *AP_security_WEPKey = NULL;
+    CHAR *AP_security_PreSharedKey = NULL;
+    CHAR AP_security_KeyPassphrase[64];
+    INT saveSSID = 0;
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
 
+    privatekey = (CHAR *)malloc(256 * sizeof(CHAR));
+    if (privatekey == NULL)
+        UT_FAIL("memory allocation failed");
+    if (0 == read_Config("l1_positive4_wifi_connectEndpoint", AP_SSID, NULL, AP_security_KeyPassphrase, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
+    free(privatekey);
     UT_ASSERT_EQUAL(result, RETURN_OK);
 
     UT_LOG("Exiting test_l1_wifi_client_hal_positive4_wifi_connectEndpoint...\n");
@@ -1253,17 +1275,19 @@ void test_l1_wifi_client_hal_negative1_wifi_connectEndpoint (void)
 void test_l1_wifi_client_hal_negative2_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_connectEndpoint...\n");
-    CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
+    CHAR AP_SSID[64];
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_NOT_SUPPORTED + 1;    
-    CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
-    CHAR AP_security_PreSharedKey[] = "ExamplePreSharedKey";                /*Need to replace with valid value*/
-    CHAR AP_security_KeyPassphrase[] = "ExamplePassphrase";                 /*Need to replace with valid value*/
+    CHAR *AP_security_WEPKey = NULL;
+    CHAR AP_security_PreSharedKey[64];
+    CHAR *AP_security_KeyPassphrase = NULL;
     INT saveSSID = 1;                   
-    CHAR eapIdentity[] = "ValidIdentity";                                   /*Need to replace with valid value*/
-    CHAR carootcert[] = "ValidCARootCertFilePath";                          /*Need to replace with valid value*/
-    CHAR clientcert[] = "ValidClientCertFilePath";                          /*Need to replace with valid value*/
-    CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
 
+    if (0 == read_Config("l1_negative2_wifi_connectEndpoint", AP_SSID, AP_security_PreSharedKey, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid AP_security_mode\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
@@ -1293,16 +1317,19 @@ void test_l1_wifi_client_hal_negative2_wifi_connectEndpoint (void)
 void test_l1_wifi_client_hal_negative3_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_connectEndpoint...\n");
-    CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
-    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
-    CHAR *AP_security_WEPKey = NULL;                           
-    CHAR AP_security_PreSharedKey[] = "ExamplePreSharedKey";                /*Need to replace with valid value*/
-    CHAR AP_security_KeyPassphrase[] = "ExamplePassphrase";                 /*Need to replace with valid value*/
-    INT saveSSID = 1;                   
-    CHAR eapIdentity[] = "ValidIdentity";                                   /*Need to replace with valid value*/
-    CHAR carootcert[] = "ValidCARootCertFilePath";                          /*Need to replace with valid value*/
-    CHAR clientcert[] = "ValidClientCertFilePath";                          /*Need to replace with valid value*/
-    CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
+    CHAR AP_SSID[64];
+    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
+    CHAR AP_security_WEPKey[64];
+    CHAR *AP_security_PreSharedKey = NULL;
+    CHAR *AP_security_KeyPassphrase = NULL;
+    INT saveSSID = 0;
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
+
+    if (0 == read_Config("l1_negative3_wifi_connectEndpoint", AP_SSID, NULL, NULL, NULL, NULL, NULL, NULL, AP_security_WEPKey))
+        UT_LOG("failed to read\n");
 
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid AP_security_WEPKey\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
@@ -1329,23 +1356,25 @@ void test_l1_wifi_client_hal_negative3_wifi_connectEndpoint (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data | Expected Result | Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoke wifi_connectEndpoint() with invalid AP_security_PreSharedKey | ssidIndex = 1, AP_SSID = ValidSSID, AP_security_mode = VALID_MODE, AP_security_WEPKey = ExampleWEPKey, AP_security_PreSharedKey = NULL, AP_security_KeyPassphrase = ExamplePassphrase, saveSSID = 1, eapIdentity = ValidIdentity, carootcert = ValidCARootCertFilePath, clientcert = ValidClientCertFilePath, privatekey = ValidPrivateKeyFilePath | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_connectEndpoint() with invalid AP_security_PreSharedKey | ssidIndex = 1, AP_SSID = ValidSSID, AP_security_mode = WIFI_SECURITY_WEP_128, AP_security_WEPKey = ExampleWEPKey, AP_security_PreSharedKey = NULL, AP_security_KeyPassphrase = ExamplePassphrase, saveSSID = 1, eapIdentity = ValidIdentity, carootcert = ValidCARootCertFilePath, clientcert = ValidClientCertFilePath, privatekey = ValidPrivateKeyFilePath | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative4_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative4_wifi_connectEndpoint...\n");
 
-    CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
-    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
-    CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
-    CHAR *AP_security_PreSharedKey = NULL;                
-    CHAR AP_security_KeyPassphrase[] = "ExamplePassphrase";                 /*Need to replace with valid value*/
-    INT saveSSID = 1;                   
-    CHAR eapIdentity[] = "ValidIdentity";                                   /*Need to replace with valid value*/
-    CHAR carootcert[] = "ValidCARootCertFilePath";                          /*Need to replace with valid value*/
-    CHAR clientcert[] = "ValidClientCertFilePath";                          /*Need to replace with valid value*/
-    CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
+    CHAR AP_SSID[64];
+    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_128 ;    
+    CHAR *AP_security_WEPKey = NULL;
+    CHAR AP_security_PreSharedKey[64];                
+    CHAR *AP_security_KeyPassphrase = NULL;
+    INT saveSSID = 1;                
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
 
+    if (0 == read_Config("l1_negative4_wifi_connectEndpoint", AP_SSID, AP_security_PreSharedKey, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid AP_security_PreSharedKey\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
@@ -1370,25 +1399,31 @@ void test_l1_wifi_client_hal_negative4_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_connectEndpoint() with invalid AP_security_KeyPassphrase | ssidIndex=1, AP_SSID="ValidSSID", AP_security_mode=WIFI_SECURITY_WEP_64, AP_security_WEPKey="ExampleWEPKey", AP_security_PreSharedKey="ExamplePreSharedKey", AP_security_KeyPassphrase=NULL, saveSSID=1, eapIdentity="ValidIdentity", carootcert="ValidCARootCertFilePath", clientcert="ValidClientCertFilePath", privatekey="ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_connectEndpoint() with invalid AP_security_KeyPassphrase | ssidIndex=1, AP_SSID="ValidSSID", AP_security_mode=WIFI_SECURITY_WPA_PSK_TKIP, AP_security_WEPKey="ExampleWEPKey", AP_security_PreSharedKey="ExamplePreSharedKey", AP_security_KeyPassphrase=NULL, saveSSID=1, eapIdentity="ValidIdentity", carootcert="ValidCARootCertFilePath", clientcert="ValidClientCertFilePath", privatekey="ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative5_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative5_wifi_connectEndpoint...\n");
-    CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
-    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
-    CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
-    CHAR AP_security_PreSharedKey[] = "ExamplePreSharedKey";                /*Need to replace with valid value*/
-    CHAR *AP_security_KeyPassphrase = NULL;
-    INT saveSSID = 1;                   
-    CHAR eapIdentity[] = "ValidIdentity";                                   /*Need to replace with valid value*/
-    CHAR carootcert[] = "ValidCARootCertFilePath";                          /*Need to replace with valid value*/
-    CHAR clientcert[] = "ValidClientCertFilePath";                          /*Need to replace with valid value*/
-    CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
+    CHAR AP_SSID[64];
+    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WPA_PSK_TKIP ;    
+    CHAR *AP_security_WEPKey = NULL;
+    CHAR *AP_security_PreSharedKey = NULL;                
+    CHAR AP_security_KeyPassphrase[64];
+    INT saveSSID = 1;              
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
 
+    privatekey = (CHAR *)malloc(256 * sizeof(CHAR));
+    if (privatekey == NULL)
+        UT_FAIL("memory allocation failed");
+    if (0 == read_Config("l1_negative5_wifi_connectEndpoint", AP_SSID, NULL, AP_security_KeyPassphrase, NULL, NULL, NULL, privatekey, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid AP_security_KeyPassphrase\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
+    free(privatekey);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative5_wifi_connectEndpoint...\n");
@@ -1409,22 +1444,24 @@ void test_l1_wifi_client_hal_negative5_wifi_connectEndpoint (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data | Expected Result | Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoke wifi_connectEndpoint() with invalid saveSSID value | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 2, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_connectEndpoint() with invalid saveSSID value | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WPA3_SAE, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 0, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative6_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative6_wifi_connectEndpoint...\n");
-    CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
-    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
-    CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
-    CHAR AP_security_PreSharedKey[] = "ExamplePreSharedKey";                /*Need to replace with valid value*/
-    CHAR AP_security_KeyPassphrase[] = "ExamplePassphrase";                  /*Need to replace with valid value*/
-    INT saveSSID = 2;                   
-    CHAR eapIdentity[] = "ValidIdentity";                                   /*Need to replace with valid value*/
-    CHAR carootcert[] = "ValidCARootCertFilePath";                          /*Need to replace with valid value*/
-    CHAR clientcert[] = "ValidClientCertFilePath";                          /*Need to replace with valid value*/
-    CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
+    CHAR AP_SSID[64];
+    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WPA3_SAE ;    
+    CHAR *AP_security_WEPKey = NULL;
+    CHAR AP_security_PreSharedKey[64];                
+    CHAR *AP_security_KeyPassphrase = NULL;
+    INT saveSSID = 2;              
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
 
+    if (0 == read_Config("l1_negative6_wifi_connectEndpoint", AP_SSID, AP_security_PreSharedKey, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid saveSSID\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
@@ -1449,25 +1486,36 @@ void test_l1_wifi_client_hal_negative6_wifi_connectEndpoint (void)
  * **Test Procedure:** @n
  * | Variation / Step | Description | Test Data | Expected Result | Notes |
  * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoke wifi_connectEndpoint() with invalid eapIdentity value | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = NULL, carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_connectEndpoint() with invalid eapIdentity value | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WPA2_ENTERPRISE_AES, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = NULL, carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative7_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative7_wifi_connectEndpoint...\n");
-    CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
-    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
-    CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
-    CHAR AP_security_PreSharedKey[] = "ExamplePreSharedKey";                /*Need to replace with valid value*/
-    CHAR AP_security_KeyPassphrase[] = "ExamplePassphrase";                  /*Need to replace with valid value*/
-    INT saveSSID = 1;                   
-    CHAR *eapIdentity = NULL; 
-    CHAR carootcert[] = "ValidCARootCertFilePath";                          /*Need to replace with valid value*/
-    CHAR clientcert[] = "ValidClientCertFilePath";                          /*Need to replace with valid value*/
-    CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
+    CHAR AP_SSID[64];                                  
+    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WPA2_ENTERPRISE_AES;
+    INT saveSSID = 1;   
+    CHAR *AP_security_WEPKey = NULL;
+    CHAR *AP_security_PreSharedKey = NULL;
+    CHAR *AP_security_KeyPassphrase = NULL;
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
 
+    eapIdentity = (CHAR *)malloc(256 * sizeof(CHAR));
+    carootcert = (CHAR *)malloc(256 * sizeof(CHAR));
+    clientcert = (CHAR *)malloc(256 * sizeof(CHAR));
+    if (eapIdentity == NULL || carootcert == NULL || clientcert == NULL)
+        UT_FAIL("memory allocation failed");
+    
+    if (0 == read_Config("l1_negative7_wifi_connectEndpoint", AP_SSID, NULL, NULL, eapIdentity, carootcert, clientcert, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid eapIdentity\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
+    free(eapIdentity);
+    free(carootcert);
+    free(clientcert);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative7_wifi_connectEndpoint...\n");
@@ -1490,25 +1538,36 @@ void test_l1_wifi_client_hal_negative7_wifi_connectEndpoint (void)
  *
  * | Variation / Step | Description | Test Data | Expected Result | Notes |
  * | :----: | --------- | ---------- | --------------- | ----- |
- * | 01 | Invoke wifi_connectEndpoint() with invalid carootcert | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = NULL, clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
+ * | 01 | Invoke wifi_connectEndpoint() with invalid carootcert | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WPA_WPA2_ENTERPRISE, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = NULL, clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
  */
 void test_l1_wifi_client_hal_negative8_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative8_wifi_connectEndpoint...\n");
-    CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
-    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64 ;    
-    CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
-    CHAR AP_security_PreSharedKey[] = "ExamplePreSharedKey";                /*Need to replace with valid value*/
-    CHAR AP_security_KeyPassphrase[] = "ExamplePassphrase";                 /*Need to replace with valid value*/
-    INT saveSSID = 1;                                                       
-    CHAR eapIdentity[] = "ValidIdentity";                                    /*Need to replace with valid value*/
-    CHAR *carootcert = NULL;                          
-    CHAR clientcert[] = "ValidClientCertFilePath";                          /*Need to replace with valid value*/
-    CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
+    CHAR AP_SSID[64];                                  
+    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WPA_WPA2_ENTERPRISE;
+    INT saveSSID = 1;   
+    CHAR *AP_security_WEPKey = NULL;
+    CHAR *AP_security_PreSharedKey = NULL;
+    CHAR *AP_security_KeyPassphrase = NULL;
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
 
+    eapIdentity = (CHAR *)malloc(256 * sizeof(CHAR));
+    carootcert = (CHAR *)malloc(256 * sizeof(CHAR));
+    clientcert = (CHAR *)malloc(256 * sizeof(CHAR));
+    if (eapIdentity == NULL || carootcert == NULL || clientcert == NULL)
+        UT_FAIL("memory allocation failed");
+    
+    if (0 == read_Config("l1_negative8_wifi_connectEndpoint", AP_SSID, NULL, NULL, eapIdentity, carootcert, clientcert, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid carootcert\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
+    free(eapIdentity);
+    free(carootcert);
+    free(clientcert);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative8_wifi_connectEndpoint...\n");
@@ -1530,25 +1589,36 @@ void test_l1_wifi_client_hal_negative8_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- | -------------- | ----- |
-* | 01 | Invoke wifi_connectEndpoint() with an invalid clientcert | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = NULL, privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_connectEndpoint() with an invalid clientcert | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WPA2_ENTERPRISE_TKIP, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = NULL, privatekey = "ValidPrivateKeyFilePath" | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative9_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative9_wifi_connectEndpoint...\n");
-    CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
-    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
-    CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
-    CHAR AP_security_PreSharedKey[] = "ExamplePreSharedKey";                /*Need to replace with valid value*/
-    CHAR AP_security_KeyPassphrase[] = "ExamplePassphrase";                 /*Need to replace with valid value*/
-    INT saveSSID = 1;                                                       
-    CHAR eapIdentity[] = "ValidIdentity";                                   /*Need to replace with valid value*/
-    CHAR carootcert[] = "ValidCARootCertFilePath";;                          /*Need to replace with valid value*/
-    CHAR *clientcert = NULL;                                                
-    CHAR privatekey[] = "ValidPrivateKeyFilePath";                          /*Need to replace with valid value*/
+    CHAR AP_SSID[64];                                  
+    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WPA2_ENTERPRISE_TKIP;
+    INT saveSSID = 1;   
+    CHAR *AP_security_WEPKey = NULL;
+    CHAR *AP_security_PreSharedKey = NULL;
+    CHAR *AP_security_KeyPassphrase = NULL;
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
 
+    eapIdentity = (CHAR *)malloc(256 * sizeof(CHAR));
+    carootcert = (CHAR *)malloc(256 * sizeof(CHAR));
+    clientcert = (CHAR *)malloc(256 * sizeof(CHAR));
+    if (eapIdentity == NULL || carootcert == NULL || clientcert == NULL)
+        UT_FAIL("memory allocation failed");
+    
+    if (0 == read_Config("l1_negative9_wifi_connectEndpoint", AP_SSID, NULL, NULL, eapIdentity, carootcert, clientcert, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid clientcert\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
+    free(eapIdentity);
+    free(carootcert);
+    free(clientcert);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative9_wifi_connectEndpoint...\n");
@@ -1570,25 +1640,32 @@ void test_l1_wifi_client_hal_negative9_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- | -------------- | ----- |
-* | 01 | Invoke wifi_connectEndpoint() with an invalid privatekey | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = NULL | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_connectEndpoint() with an invalid privatekey | ssidIndex = 1, AP_SSID = "ValidSSID", AP_security_mode = WIFI_SECURITY_WPA3_PSK_AES, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = NULL | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative10_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative10_wifi_connectEndpoint...\n");
-    CHAR AP_SSID[] = "ValidSSID";                                           /*Need to replace with valid value*/
-    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
-    CHAR AP_security_WEPKey[] = "ExampleWEPKey";                            /*Need to replace with valid value*/
-    CHAR AP_security_PreSharedKey[] = "ExamplePreSharedKey";                /*Need to replace with valid value*/
-    CHAR AP_security_KeyPassphrase[] = "ExamplePassphrase";                 /*Need to replace with valid value*/
-    INT saveSSID = 1;                                                       
-    CHAR eapIdentity[] = "ValidIdentity";                                   /*Need to replace with valid value*/
-    CHAR carootcert[] = "ValidCARootCertFilePath";;                         /*Need to replace with valid value*/
-    CHAR clientcert[] = "ValidClientCertFilePath";                          /*Need to replace with valid value*/                      
-    CHAR *privatekey = NULL;                                                 
+    CHAR AP_SSID[64];
+    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WPA3_PSK_AES ;    
+    CHAR *AP_security_WEPKey = NULL;
+    CHAR *AP_security_PreSharedKey = NULL;                
+    CHAR AP_security_KeyPassphrase[64];
+    INT saveSSID = 1;              
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
 
+    privatekey = (CHAR *)malloc(256 * sizeof(CHAR));
+    if (privatekey == NULL)
+        UT_FAIL("memory allocation failed");
+
+    if (0 == read_Config("l1_negative10_wifi_connectEndpoint", AP_SSID, NULL, AP_security_KeyPassphrase, NULL, NULL, NULL, privatekey, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking the API wifi_connectEndpoint with an invalid privatekey\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
+    free(privatekey);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
     UT_LOG("Exiting ttest_l1_wifi_client_hal_negative10_wifi_connectEndpoint...\n");
@@ -1610,22 +1687,24 @@ void test_l1_wifi_client_hal_negative10_wifi_connectEndpoint (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data | Expected Result | Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_connectEndpoint() without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, AP_SSID = "", AP_security_mode = WIFI_SECURITY_WEP_64, AP_security_WEPKey = "ExampleWEPKey", AP_security_PreSharedKey = "ExamplePreSharedKey", AP_security_KeyPassphrase = "ExamplePassphrase", saveSSID = 1, eapIdentity = "ValidIdentity", carootcert = "ValidCARootCertFilePath", clientcert = "ValidClientCertFilePath", privatekey = "ValidPrivateKeyFilePath" | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_connectEndpoint() without calling wifi_init() or wifi_initWithConfig() | ssidIndex = 1, AP_SSID = "", AP_security_mode = WIFI_SECURITY_WPA3_PSK_AES, AP_security_PreSharedKey = "ExamplePreSharedKey"| RETURN_OK | Should Pass |
 */
 void test_l1_wifi_client_hal_negative11_wifi_connectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative11_wifi_connectEndpoint...\n");
-    CHAR AP_SSID[] = "";                                  
-    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WEP_64;    
-    CHAR AP_security_WEPKey[] = "ExampleWEPKey";                   /*Need to replace with valid value*/
-    CHAR AP_security_PreSharedKey[] = "ExamplePreSharedKey";       /*Need to replace with valid value*/
-    CHAR AP_security_KeyPassphrase[] = "ExamplePassphrase";        /*Need to replace with valid value*/
-    INT saveSSID = 1;                   
-    CHAR eapIdentity[] = "ValidIdentity";                          /*Need to replace with valid value*/
-    CHAR carootcert[] = "ValidCARootCertFilePath";                 /*Need to replace with valid value*/
-    CHAR clientcert[] = "ValidClientCertFilePath";                 /*Need to replace with valid value*/
-    CHAR privatekey[] = "ValidPrivateKeyFilePath";                 /*Need to replace with valid value*/
+    CHAR AP_SSID[64];
+    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WPA3_PSK_AES ;    
+    CHAR *AP_security_WEPKey = NULL;
+    CHAR AP_security_PreSharedKey[64];                
+    CHAR *AP_security_KeyPassphrase = NULL;
+    INT saveSSID = 1;              
+    CHAR *eapIdentity = NULL;
+    CHAR *carootcert = NULL;
+    CHAR *clientcert = NULL;
+    CHAR *privatekey = NULL;
 
+    if (0 == read_Config("l1_negative11_wifi_connectEndpoint", AP_SSID, AP_security_PreSharedKey, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking wifi_connectEndpoint() API without calling wifi_init() or wifi_initWithConfig()\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, AP_SSID, AP_security_mode, AP_security_WEPKey, AP_security_PreSharedKey, AP_security_KeyPassphrase, saveSSID, eapIdentity, carootcert, clientcert, privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
@@ -1657,8 +1736,10 @@ void test_l1_wifi_client_hal_negative11_wifi_connectEndpoint (void)
 void test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint...\n");
-    CHAR AP_SSID[] = "valid_value";     /*Need to replace with valid value*/
+    CHAR AP_SSID[64];
 
+    if (0 == read_Config("l1_positive1_wifi_disconnectEndpoint", AP_SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 1 and AP_SSID = \"valid_value\"\n");
     INT status = wifi_disconnectEndpoint(SSID_INDEX, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
@@ -1690,9 +1771,11 @@ void test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint (void)
 void test_l1_wifi_client_hal_positive2_wifi_disconnectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_disconnectEndpoint...\n");
-    CHAR AP_SSID[] = "valid_value";  /*Need to replace with valid value*/
+    CHAR AP_SSID[64];
     INT status;
 
+    if (0 == read_Config("l1_positive2_wifi_disconnectEndpoint", AP_SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 1 and AP_SSID = \"valid_value\"\n");
     status = wifi_disconnectEndpoint(SSID_INDEX, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
@@ -1723,8 +1806,10 @@ void test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint...\n");
     INT ssidIndex = 0;
-    CHAR AP_SSID[] = "valid_value";  /*Need to replace with valid value*/
+    CHAR AP_SSID[64];
 
+    if (0 == read_Config("l1_negative1_wifi_disconnectEndpoint", AP_SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 0 and AP_SSID = \"valid_value\"\n");
     INT status = wifi_disconnectEndpoint(ssidIndex, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
@@ -1754,8 +1839,10 @@ void test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint (void)
 void test_l1_wifi_client_hal_negative2_wifi_disconnectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_disconnectEndpoint...\n");
-    CHAR AP_SSID[] = "Invalid_value"; /*Need to replace with proper invalid value*/
+    CHAR AP_SSID[64];
 
+    if (0 == read_Config("l1_negative2_wifi_disconnectEndpoint", AP_SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 0 and AP_SSID = \"Invalid_value\"\n");
     INT status = wifi_disconnectEndpoint(SSID_INDEX, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
@@ -1787,6 +1874,8 @@ void test_l1_wifi_client_hal_negative3_wifi_disconnectEndpoint (void)
     UT_LOG("Entering test_l1_wifi_client_hal_negative3_wifi_disconnectEndpoint...\n");
     CHAR *AP_SSID = NULL;
 
+    if (0 == read_Config("l1_negative3_wifi_disconnectEndpoint", AP_SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 0 and AP_SSID = \"Invalid_value\"\n");
     INT status = wifi_disconnectEndpoint(SSID_INDEX, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
@@ -1817,8 +1906,10 @@ void test_l1_wifi_client_hal_negative3_wifi_disconnectEndpoint (void)
 void test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint...\n");
-    CHAR AP_SSID[] = "valid_value";  /*Need to replace with valid value*/
+    CHAR AP_SSID[64];
 
+    if (0 == read_Config("l1_negative4_wifi_disconnectEndpoint", AP_SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking wifi_disconnectEndpoint API without initializing wifi_init() and with ssidIndex = 1 and AP_SSID = \"valid_value\"\n");
     INT status = wifi_disconnectEndpoint(SSID_INDEX, AP_SSID);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
@@ -3047,7 +3138,7 @@ int test_wifi_client_hal_register_pre_init_tests (void)
  *
  * @return int - 0 on success, otherwise failure
  */
-int test_wifi_client_hal_register_pre_init_with_config_tests (void)
+int test_wifi_client_hal_register_post_init_with_config_tests (void)
 {
     pSuite_with_wifi_init_with_config = UT_add_suite("[L1 wifi_client_hal pre-init with config tests]", WiFi_InitWithConfigPreReq, WiFi_UnInitPosReq);
     if (pSuite_with_wifi_init_with_config == NULL) {

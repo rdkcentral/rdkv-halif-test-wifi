@@ -75,6 +75,8 @@ extern int WiFi_UnInitPosReq(void);
 const int RADIO_INDEX = 1;
 const int SSID_INDEX = 1;
 
+extern BOOL read_Config(char *test_case, char *ap, char *psk, char *passphrase, char *eapIdentity, char *carootcert, char *clientcert, char *privatekey, char *webkey);
+
 /**
  * @brief Checks the #target is present in #list or not
  * 
@@ -6177,19 +6179,30 @@ void test_l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult (
 void test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo...\n");
-    const char *SSID = "valid_ssid";                          /*Need to replace with valid value*/
+    char SSID[64] = {'\0'};
     WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
     UINT output_array_size = 0;
     wifi_neighbor_ap_t *neighbor_ap_array;
     INT ret;
 
-    UT_LOG("Invoking wifi_getSpecificSSIDInfo with valid SSID and frequency band\n");
-    ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
+    if (0 == read_Config("l1_positive1_wifi_getSpecificSSIDInfo", SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
+    UT_LOG("\nInvoking wifi_getSpecificSSIDInfo with valid SSID and frequency band\n");
+    ret = wifi_getSpecificSSIDInfo((const char*)SSID, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
     UT_ASSERT_EQUAL(ret, RETURN_OK);
-    UT_LOG("Array of neighboring access points contains the values: ap_SSID = %s, ap_BSSID = %s, ap_Mode = %s, ap_Channel = %d, ap_SignalStrength = %d, ap_SecurityModeEnabled =%s, ap_EncryptionMode = %s, ap_OperatingFrequencyBand = %s, ap_SupportedStandards = %s, ap_OperatingStandards = %s, ap_OperatingChannelBandwidth = %s, ap_BeaconPeriod = %d, ap_Noise = %d, ap_BasicDataTransferRates = %s, ap_SupportedDataTransferRates = %s, ap_DTIMPeriod = %d, ap_ChannelUtilization = %d\n", neighbor_ap_array->ap_SSID, neighbor_ap_array->ap_BSSID, neighbor_ap_array->ap_Mode, neighbor_ap_array->ap_Channel, neighbor_ap_array->ap_SignalStrength, neighbor_ap_array->ap_SecurityModeEnabled, neighbor_ap_array->ap_EncryptionMode, neighbor_ap_array->ap_OperatingFrequencyBand, neighbor_ap_array->ap_SupportedStandards, neighbor_ap_array->ap_OperatingStandards, neighbor_ap_array->ap_OperatingChannelBandwidth, neighbor_ap_array->ap_BeaconPeriod, neighbor_ap_array->ap_Noise, neighbor_ap_array->ap_BasicDataTransferRates, neighbor_ap_array->ap_SupportedDataTransferRates, neighbor_ap_array->ap_DTIMPeriod, neighbor_ap_array->ap_ChannelUtilization);
+    UT_LOG("Array of neighboring access points contains the values: ap_SSID = %s, ap_BSSID = %s, ap_Mode = %s, ap_Channel = %d, "
+        "ap_SignalStrength = %d, ap_SecurityModeEnabled =%s, ap_EncryptionMode = %s, ap_OperatingFrequencyBand = %s, "
+        "ap_SupportedStandards = %s, ap_OperatingStandards = %s, ap_OperatingChannelBandwidth = %s, ap_BeaconPeriod = %d, "
+        "ap_Noise = %d, ap_BasicDataTransferRates = %s, ap_SupportedDataTransferRates = %s, ap_DTIMPeriod = %d, "
+        "ap_ChannelUtilization = %d\n", neighbor_ap_array->ap_SSID, neighbor_ap_array->ap_BSSID, neighbor_ap_array->ap_Mode, 
+        neighbor_ap_array->ap_Channel, neighbor_ap_array->ap_SignalStrength, neighbor_ap_array->ap_SecurityModeEnabled, 
+        neighbor_ap_array->ap_EncryptionMode, neighbor_ap_array->ap_OperatingFrequencyBand, neighbor_ap_array->ap_SupportedStandards, 
+        neighbor_ap_array->ap_OperatingStandards, neighbor_ap_array->ap_OperatingChannelBandwidth, neighbor_ap_array->ap_BeaconPeriod, 
+        neighbor_ap_array->ap_Noise, neighbor_ap_array->ap_BasicDataTransferRates, neighbor_ap_array->ap_SupportedDataTransferRates, 
+        neighbor_ap_array->ap_DTIMPeriod, neighbor_ap_array->ap_ChannelUtilization);
     UT_LOG("output_array_size = %d\n", output_array_size);
-    if(!strcmp(neighbor_ap_array->ap_SSID,"") || !strcmp(neighbor_ap_array->ap_SSID,"valid_value"))   /*TODO need to replace with to valid value*/
+    if(!strcmp(neighbor_ap_array->ap_SSID,"") || !strcmp(neighbor_ap_array->ap_SSID,SSID))
     {
         UT_LOG("ap_SSID %s which is an valid value\n", neighbor_ap_array->ap_SSID);
         UT_PASS("ap_SSID validation success\n");
@@ -6432,13 +6445,15 @@ void test_l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo (void)
 void test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo...\n");
-    const char *SSID = "valid_ssid";        /*Need to replace with valid value*/
+    char SSID[64] = {'\0'};
     WIFI_HAL_FREQ_BAND band = 5;
     UINT output_array_size = 0;
     wifi_neighbor_ap_t *neighbor_ap_array = NULL;
 
+    if (0 == read_Config("l1_negative2_wifi_getSpecificSSIDInfo", SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking wifi_getSpecificSSIDInfo with invalid frequency band\n");
-    INT ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
+    INT ret = wifi_getSpecificSSIDInfo((const char*)SSID, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
     if (neighbor_ap_array != NULL)
        free(neighbor_ap_array);
@@ -6468,14 +6483,16 @@ void test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo (void)
 void test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo...\n");
-    const char *SSID = "valid_ssid";                      /*Need to replace with valid calue*/
+    char SSID[64];
     WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
     UINT output_array_size = 0;
     wifi_neighbor_ap_t *neighbor_ap_array = NULL;
     INT ret;
 
+    if (0 == read_Config("l1_negative3_wifi_getSpecificSSIDInfo", SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking wifi_getSpecificSSIDInfo with invalid ap_array \n");
-    ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
+    ret = wifi_getSpecificSSIDInfo((const char*)SSID, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
     if (neighbor_ap_array != NULL)
         free(neighbor_ap_array);
@@ -6505,14 +6522,16 @@ void test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo (void)
 void test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo...\n");
-    const char *SSID = "valid_ssid";                               /*Need to replace with valid calue*/
+    char SSID[64] = {'\0'};
     WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
     UINT output_array_size = 0;
     wifi_neighbor_ap_t *neighbor_ap_array = NULL;
     INT ret;
 
+    if (0 == read_Config("l1_negative4_wifi_getSpecificSSIDInfo", SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
+        UT_LOG("failed to read\n");
     UT_LOG("Invoking wifi_getSpecificSSIDInfo before wifi_init() or wifi_initWithConfig()\n");
-    ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
+    ret = wifi_getSpecificSSIDInfo((const char*)SSID, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
     if (neighbor_ap_array != NULL)
         free(neighbor_ap_array);
@@ -6940,7 +6959,7 @@ int test_wifi_common_hal_register_init_uninit_tests (void)
  *
  * @return int - 0 on success, otherwise failure
  */
-int test_wifi_common_hal_register_pre_init_with_config_tests (void)
+int test_wifi_common_hal_register_post_init_with_config_tests (void)
 {
     pSuite_with_wifi_init_with_config = UT_add_suite("[L1 wifi_common_hal pre-init with config tests]", WiFi_InitWithConfigPreReq, WiFi_UnInitPosReq);
     if (pSuite_with_wifi_init_with_config == NULL) {

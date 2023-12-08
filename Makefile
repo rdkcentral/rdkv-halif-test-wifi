@@ -23,7 +23,8 @@ TOP_DIR := $(ROOT_DIR)
 
 SRC_DIRS = $(ROOT_DIR)/src
 INC_DIRS := $(ROOT_DIR)/../include
-
+GLIB_CFLAGS = $(shell pkg-config --cflags glib-2.0)
+INC_DIRS += $(patsubst -I%,%,$(GLIB_CFLAGS))
 ifeq ($(TARGET),)
 $(info TARGET NOT SET )
 $(info TARGET FORCED TO Linux)
@@ -35,7 +36,7 @@ $(info TARGET [$(TARGET)])
 
 ifeq ($(TARGET),arm)
 HAL_LIB_DIR := $(ROOT_DIR)/libs
-YLDFLAGS = -Wl,-rpath,$(HAL_LIB_DIR) -L$(HAL_LIB_DIR) -lwifihal
+YLDFLAGS = -Wl,-rpath,$(HAL_LIB_DIR) -L$(HAL_LIB_DIR) -lwifihal -lglib-2.0
 endif
 
 .PHONY: clean list all
