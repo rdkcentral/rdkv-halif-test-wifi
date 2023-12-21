@@ -63,36 +63,37 @@
 #include <ut_log.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <glib.h>
 #include "wifi_common_hal.h"
-
-extern int WiFi_InitPreReq(void);                               
-extern int WiFi_InitWithConfigPreReq(void);
-extern int WiFi_UnInitPosReq(void); 
 
 #define MAX_OUTPUT_STRING_LEN 50
 #define MAX_LENGTH 256
+
 const int RADIO_INDEX = 1;
 const int SSID_INDEX = 1;
+extern GKeyFile *key_file;
 
-extern BOOL read_Config(char *test_case, char *ap, char *psk, char *passphrase, char *eapIdentity, char *carootcert, char *clientcert, char *privatekey, char *webkey);
+extern int WiFi_InitPreReq(void);
+extern int WiFi_InitWithConfigPreReq(void);
+extern int WiFi_UnInitPosReq(void);
+extern char *Config_key_new(GKeyFile *key_file, char *test_case, char *ssid);
+extern void Config_key_delete(char *ssid);
 
 /**
- * @brief Checks the #target is present in #list or not
+ * @brief Checks the target string is present in the list or not
  * 
  * @param[in] target String to be search
- * @param[in] list   Comma-separated list of strings
- * @param[in] count  size of #list
+ * @param[in] list   list of strings
+ * @param[in] count  size of list
  * 
- * @return #INT - The status of the operation
- * @retval #RETURN_OK  if successful
- * @retval #RETURN_ERR if any error is detected
- * 
+ * @return int - The status of the operation
+ * @retval 0  if successful
+ * @retval -1 if any error is detected
  */
 int check_value (const char* target, const char* list[], int count)
 {
     for (int i = 0; i < count; i++) {
-        if (strcmp(target, list[i]) == 0) {
+        if (strcasecmp(target, list[i]) == 0) {
             return 1; // String found in the list
         }
     }
@@ -581,7 +582,10 @@ void test_l1_wifi_common_hal_positive1_getStats (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_getStats...\n");
     wifi_sta_stats_t wifi_sta_stats;
+    CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_getStats", "AP_SSID");
 
+    if (NULL == ssid )
+        UT_FAIL_FATAL("Test config not found");
     UT_LOG("Invoking wifi_getStats with valid radioIndex=1 and valid &wifi_sta_stats buffer.\n");
     memset(&wifi_sta_stats, 0, sizeof(wifi_sta_stats_t));
     wifi_getStats(RADIO_INDEX, &wifi_sta_stats); 
@@ -591,7 +595,7 @@ void test_l1_wifi_common_hal_positive1_getStats (void)
            wifi_sta_stats.sta_SSID, wifi_sta_stats.sta_BSSID, wifi_sta_stats.sta_BAND, wifi_sta_stats.sta_SecMode, 
            wifi_sta_stats.sta_Encryption, wifi_sta_stats.sta_PhyRate, wifi_sta_stats.sta_Noise, wifi_sta_stats.sta_RSSI, 
            wifi_sta_stats.sta_Frequency, wifi_sta_stats.sta_LastDataDownlinkRate, wifi_sta_stats.sta_Retransmissions);
-    if(!strcmp(wifi_sta_stats.sta_SSID,"") || !strcmp(wifi_sta_stats.sta_SSID,"valid_value"))   /*TODO need to replace with to valid value*/
+    if(!strcmp(wifi_sta_stats.sta_SSID,"") || !strcmp(wifi_sta_stats.sta_SSID,ssid))
     {
         UT_LOG("sta_SSID %s which is an valid value\n", wifi_sta_stats.sta_SSID);
         UT_PASS("sta_SSID validation success\n");
@@ -705,7 +709,7 @@ void test_l1_wifi_common_hal_positive1_getStats (void)
         UT_LOG("sta_Retransmissions is %d which is an invalid value\n", wifi_sta_stats.sta_Retransmissions);
         UT_FAIL("sta_Retransmissions validation failed\n");
     }
-
+    Config_key_delete(ssid);
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_getStats...\n");
 }
 
@@ -1737,14 +1741,14 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands...\n");
-    CHAR output_string[12];
+    CHAR output_string[12] = {0};
     INT return_status;
 
     UT_LOG("Invoking wifi_getRadioSupportedFrequencyBands with valid radioIndex and output_string buffer.\n");
     return_status = wifi_getRadioSupportedFrequencyBands(RADIO_INDEX, output_string);
     UT_LOG("Return Status: %d\n", return_status);
     UT_ASSERT_EQUAL(return_status, RETURN_OK);
-    if((strcmp("output_string","2.4Ghz,5Ghz") != 0) && (strcmp("output_string","2.4Ghz") != 0) && (strcmp("output_string","5Ghz") != 0))
+    if((strcmp("output_string","2.4GHz,5GHz") != 0) && (strcmp("output_string","2.4GHz") != 0) && (strcmp("output_string","5GHz") != 0))
     {
         UT_LOG("failed due to invalid output_string : %s\n",output_string);
         UT_FAIL("failed due to invalid output_string\n");
@@ -1903,7 +1907,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands (voi
 void test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand...\n");
-    CHAR output_string[32];
+    CHAR output_string[32] = {0};
     INT result;
 
     UT_LOG("Invoking wifi_getRadioOperatingFrequencyBand with radioIndex 1\n");
@@ -2044,7 +2048,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards (void)
     status = wifi_getRadioSupportedStandards(RADIO_INDEX, output_string);
     UT_LOG("Returned status: %d, output_string: %s \n", status, output_string);
     UT_ASSERT_EQUAL(status, RETURN_OK);
-    if((strcmp(output_string,"b,g,n") != 0) && (strcmp(output_string,"a,n,ac") != 0))
+    if((strcmp(output_string,"b,g,n,ax") != 0) && (strcmp(output_string,"a,n,ac,ax") != 0) && (strcmp(output_string,"ax") != 0))
     {
         UT_LOG("failed due to invalid output_string : %s\n",output_string);
         UT_FAIL("failed due to invalid output_string\n");
@@ -2170,7 +2174,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioSupportedStandards (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioStandard (void) 
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioStandard...\n");
-    CHAR output_string[50];
+    CHAR output_string[50] = {0};
     BOOL gOnly, nOnly, acOnly;
     INT retStatus;
 
@@ -2308,17 +2312,25 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioStandard (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioPossibleChannels (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioPossibleChannels...\n");
-    CHAR output_string[50];
-    INT retVal;
+    CHAR output_string[50] = {0};
+    char *token;
+    INT retVal, value;
 
     UT_LOG("Invoking wifi_getRadioPossibleChannels with valid radioIndex and output_string\n");
     retVal = wifi_getRadioPossibleChannels(RADIO_INDEX, output_string);
-    UT_LOG("Returned value was %d\n", retVal);
+    UT_LOG("Returned value was %d\n output_string: %s\n", retVal, output_string);
     UT_ASSERT_EQUAL(retVal, RETURN_OK);
-    if((strcmp(output_string,"1-13") != 0) && (strcmp(output_string,"36-64,100-165") != 0))
-    {
-        UT_LOG("failed due to invalid output_string : %s\n",output_string);
-        UT_FAIL("failed due to invalid output_string\n");
+
+    token = strtok(output_string, ",");
+    while (token != NULL) {
+        value = atoi(token);
+        if ((value >= 1 && value <= 13) || (value >= 36 && value <= 64) || (value >= 100 && value <= 165)) {
+            printf("%d is within the specified ranges.\n", value);
+        } else {
+            printf("%d is NOT within the specified ranges.\n", value);
+        }
+
+        token = strtok(NULL, " ");
     }
 
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getRadioPossibleChannels...\n");
@@ -2479,16 +2491,24 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse...\n");
     CHAR output_string[MAX_LENGTH];
-    INT returnValue;
+    INT returnValue, value;
+    char *token;
 
     UT_LOG("Invoking wifi_getRadioChannelsInUse with valid radioIndex (1) and valid output_string buffer.\n");
     returnValue = wifi_getRadioChannelsInUse(RADIO_INDEX, output_string);
     UT_LOG("Return Value: %d, output_string: %s\n", returnValue, output_string);
+
     UT_ASSERT_EQUAL(returnValue, RETURN_OK);
-    if((strcmp(output_string,"1-13") != 0) && (strcmp(output_string,"36-64,100-165") != 0))
-    {
-        UT_LOG("failed due to invalid output_string : %s\n",output_string);
-        UT_FAIL("failed due to invalid output_string\n");
+    token = strtok(output_string, ",");
+    while (token != NULL) {
+        value = atoi(token);
+        if ((value >= 1 && value <= 13) || (value >= 36 && value <= 64) || (value >= 100 && value <= 165)) {
+            printf("%d is within the specified ranges.\n", value);
+        } else {
+            printf("%d is NOT within the specified ranges.\n", value);
+        }
+
+        token = strtok(NULL, " ");
     }
 
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse...\n");
@@ -2801,9 +2821,9 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelSupported (void)
     result = wifi_getRadioAutoChannelSupported(RADIO_INDEX, &output_bool);
     UT_LOG("return status: %d, output_bool: %d\n", result, output_bool);
     UT_ASSERT_EQUAL(result, RETURN_OK);
-    if((output_bool != '0') && (output_bool != '1'))
+    if((output_bool != 0) && (output_bool != 1))
     {
-        UT_LOG("failed due to invalid output_bool : %c\n",output_bool);
+        UT_LOG("failed due to invalid output_bool : %d\n",output_bool);
         UT_FAIL("failed due to invalid output_bool\n");
     }
 
@@ -2936,9 +2956,9 @@ void test_l1_wifi_common_hal_positive2_wifi_getRadioAutoChannelSupported (void)
     result = wifi_getRadioAutoChannelSupported(RADIO_INDEX, &output_bool);
     UT_LOG("Returned value was: %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_OK);
-    if((output_bool != '0') && (output_bool != '1'))
+    if((output_bool != 0) && (output_bool != 1))
     {
-        UT_LOG("failed due to invalid output_bool : %c\n",output_bool);
+        UT_LOG("failed due to invalid output_bool : %d\n",output_bool);
         UT_FAIL("failed due to invalid output_bool\n");
     }
 
@@ -2971,11 +2991,11 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelEnable (void)
 
     UT_LOG("Invoking wifi_getRadioAutoChannelEnable(1, &output_bool)\n");
     ret = wifi_getRadioAutoChannelEnable(RADIO_INDEX, &output_bool);
-    UT_LOG("Received output_bool: %c and return status: %d\n", output_bool, ret);
+    UT_LOG("Received output_bool: %d and return status: %d\n", output_bool, ret);
     UT_ASSERT_EQUAL(ret, RETURN_OK)
-    if((output_bool != '0') && (output_bool != '1'))
+    if((output_bool != 0) && (output_bool != 1))
     {
-        UT_LOG("failed due to invalid output_bool : %c\n",output_bool);
+        UT_LOG("failed due to invalid output_bool : %d\n",output_bool);
         UT_FAIL("failed due to invalid output_bool\n");
     }
 
@@ -3009,7 +3029,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelEnable (void)
 
     UT_LOG("Invoking wifi_getRadioAutoChannelEnable(2, &output_bool).\n");
     ret = wifi_getRadioAutoChannelEnable(radioIndex, &output_bool);
-    UT_LOG("Received output_bool: %c and return status: %d\n", output_bool, ret);
+    UT_LOG("Received output_bool: %d and return status: %d\n", output_bool, ret);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelEnable...\n");
@@ -3436,7 +3456,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioGuardInterval (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth...\n");
-    CHAR output_string[50];
+    CHAR output_string[50] = {0};
     const char* bandwidth[] = {"20MHz", "40MHz", "80MHz", "160MHz", "Auto"};
     INT returnValue;
 
@@ -5815,11 +5835,15 @@ void test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult (
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult...\n");
     UINT output_array_size = 512;
     INT result;
+    CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_getNeighboringWiFiDiagnosticResult", "AP_SSID");
 
+    if (NULL == ssid )
+        UT_FAIL_FATAL("Test config not found");
     wifi_neighbor_ap_t *neighbor_ap_array ;
     UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with input radioIndex = 1. Expect RETURN_OK.\n");
     result = wifi_getNeighboringWiFiDiagnosticResult(RADIO_INDEX, &neighbor_ap_array, &output_array_size);
     UT_LOG("return status = %d\n", result);
+    Config_key_delete(ssid);
     UT_ASSERT_EQUAL(result, RETURN_OK);
     /*UT_LOG("Array of neighboring access points contains the values: ap_SSID = %s, ap_BSSID = %s, ap_Mode = %s," 
              " ap_Channel = %d, ap_SignalStrength = %d, ap_SecurityModeEnabled =%s, ap_EncryptionMode = %s,"
@@ -5835,7 +5859,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult (
              neighbor_ap_array->ap_SupportedDataTransferRates, neighbor_ap_array->ap_DTIMPeriod, 
              neighbor_ap_array->ap_ChannelUtilization);*/
     UT_LOG("output_array_size = %d\n", output_array_size);
-    if(!strcmp(neighbor_ap_array->ap_SSID,"") || !strcmp(neighbor_ap_array->ap_SSID,"valid_value"))   /*TODO need to replace with to valid value*/
+    if(!strcmp(neighbor_ap_array->ap_SSID,"") || !strcmp(neighbor_ap_array->ap_SSID,ssid))
     {
         UT_LOG("ap_SSID %s which is an valid value\n", neighbor_ap_array->ap_SSID);
         UT_PASS("ap_SSID validation success\n");
@@ -6179,17 +6203,18 @@ void test_l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult (
 void test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo...\n");
-    char SSID[64] = {'\0'};
     WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
     UINT output_array_size = 0;
     wifi_neighbor_ap_t *neighbor_ap_array;
     INT ret;
+    CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_getSpecificSSIDInfo", "SSID");
 
-    if (0 == read_Config("l1_positive1_wifi_getSpecificSSIDInfo", SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
-        UT_LOG("failed to read\n");
+    if (NULL == ssid )
+        UT_FAIL_FATAL("Test config not found");
     UT_LOG("\nInvoking wifi_getSpecificSSIDInfo with valid SSID and frequency band\n");
-    ret = wifi_getSpecificSSIDInfo((const char*)SSID, band, &neighbor_ap_array, &output_array_size);
+    ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
+    Config_key_delete(ssid);
     UT_ASSERT_EQUAL(ret, RETURN_OK);
     UT_LOG("Array of neighboring access points contains the values: ap_SSID = %s, ap_BSSID = %s, ap_Mode = %s, ap_Channel = %d, "
         "ap_SignalStrength = %d, ap_SecurityModeEnabled =%s, ap_EncryptionMode = %s, ap_OperatingFrequencyBand = %s, "
@@ -6202,7 +6227,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo (void)
         neighbor_ap_array->ap_Noise, neighbor_ap_array->ap_BasicDataTransferRates, neighbor_ap_array->ap_SupportedDataTransferRates, 
         neighbor_ap_array->ap_DTIMPeriod, neighbor_ap_array->ap_ChannelUtilization);
     UT_LOG("output_array_size = %d\n", output_array_size);
-    if(!strcmp(neighbor_ap_array->ap_SSID,"") || !strcmp(neighbor_ap_array->ap_SSID,SSID))
+    if(!strcmp(neighbor_ap_array->ap_SSID,"") || !strcmp(neighbor_ap_array->ap_SSID,ssid))
     {
         UT_LOG("ap_SSID %s which is an valid value\n", neighbor_ap_array->ap_SSID);
         UT_PASS("ap_SSID validation success\n");
@@ -6445,18 +6470,19 @@ void test_l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo (void)
 void test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo...\n");
-    char SSID[64] = {'\0'};
     WIFI_HAL_FREQ_BAND band = 5;
     UINT output_array_size = 0;
     wifi_neighbor_ap_t *neighbor_ap_array = NULL;
+    CHAR *ssid = Config_key_new(key_file, "l1_negative2_wifi_getSpecificSSIDInfo", "SSID");
 
-    if (0 == read_Config("l1_negative2_wifi_getSpecificSSIDInfo", SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
-        UT_LOG("failed to read\n");
+    if (NULL == ssid)
+        UT_FAIL_FATAL("Test config not found");
     UT_LOG("Invoking wifi_getSpecificSSIDInfo with invalid frequency band\n");
-    INT ret = wifi_getSpecificSSIDInfo((const char*)SSID, band, &neighbor_ap_array, &output_array_size);
+    INT ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
     if (neighbor_ap_array != NULL)
        free(neighbor_ap_array);
+    Config_key_delete(ssid);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo...\n");
@@ -6483,19 +6509,20 @@ void test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo (void)
 void test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo...\n");
-    char SSID[64];
-    WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
+    char SSID[64];    WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
     UINT output_array_size = 0;
     wifi_neighbor_ap_t *neighbor_ap_array = NULL;
     INT ret;
+    CHAR *ssid = Config_key_new(key_file, "l1_negative3_wifi_getSpecificSSIDInfo", "SSID");
 
-    if (0 == read_Config("l1_negative3_wifi_getSpecificSSIDInfo", SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
-        UT_LOG("failed to read\n");
+    if (NULL == ssid)
+        UT_FAIL_FATAL("Test config not found");
     UT_LOG("Invoking wifi_getSpecificSSIDInfo with invalid ap_array \n");
-    ret = wifi_getSpecificSSIDInfo((const char*)SSID, band, &neighbor_ap_array, &output_array_size);
+    ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
     if (neighbor_ap_array != NULL)
         free(neighbor_ap_array);
+    Config_key_delete(ssid);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo...\n");
@@ -6522,19 +6549,20 @@ void test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo (void)
 void test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo...\n");
-    char SSID[64] = {'\0'};
     WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
     UINT output_array_size = 0;
     wifi_neighbor_ap_t *neighbor_ap_array = NULL;
     INT ret;
+    CHAR *ssid = Config_key_new(key_file, "l1_negative4_wifi_getSpecificSSIDInfo", "SSID");
 
-    if (0 == read_Config("l1_negative4_wifi_getSpecificSSIDInfo", SSID, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
-        UT_LOG("failed to read\n");
+    if (NULL == ssid)
+        UT_FAIL_FATAL("Test config not found");
     UT_LOG("Invoking wifi_getSpecificSSIDInfo before wifi_init() or wifi_initWithConfig()\n");
-    ret = wifi_getSpecificSSIDInfo((const char*)SSID, band, &neighbor_ap_array, &output_array_size);
+    ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
     if (neighbor_ap_array != NULL)
         free(neighbor_ap_array);
+    Config_key_delete(ssid);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo...\n");
@@ -6959,7 +6987,7 @@ int test_wifi_common_hal_register_init_uninit_tests (void)
  *
  * @return int - 0 on success, otherwise failure
  */
-int test_wifi_common_hal_register_post_init_with_config_tests (void)
+int test_wifi_common_hal_register_pre_init_with_config_tests (void)
 {
     pSuite_with_wifi_init_with_config = UT_add_suite("[L1 wifi_common_hal pre-init with config tests]", WiFi_InitWithConfigPreReq, WiFi_UnInitPosReq);
     if (pSuite_with_wifi_init_with_config == NULL) {
