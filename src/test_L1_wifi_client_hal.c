@@ -56,7 +56,7 @@
 * **Pre-Conditions:**  None @n
 * **Dependencies:** None @n
 *
-* Ref to API Definition specification documentation : [Wifi_halSpec.md](../../../docs/Wifi_halSpec.md)
+* Ref to API Definition specification documentation : [Wifi_halSpec.md](../../docs/pages/Wifi_halSpec.md)
 */
 
 #include <ut.h>
