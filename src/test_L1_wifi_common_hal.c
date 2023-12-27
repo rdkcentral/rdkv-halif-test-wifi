@@ -63,6 +63,7 @@
 #include <ut_log.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <glib.h>
 #include "wifi_common_hal.h"
 
@@ -3126,7 +3127,7 @@ void test_l1_wifi_common_hal_positive1_getRadioAutoChannelRefreshPeriod (void)
     ret = wifi_getRadioAutoChannelRefreshPeriod(RADIO_INDEX, &output);
     UT_LOG("Returned status is %d\n", ret);
     UT_ASSERT_EQUAL(ret, RETURN_OK); 
-    if((output < 0) && (output > 4294967295))
+    if((output < 0) && (output > UINT32_MAX))
     {
         UT_LOG("failed due to invalid output_ulong : %lu\n",output);
         UT_FAIL("failed due to invalid output_ulong\n");
@@ -3216,19 +3217,19 @@ void test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod (void)
 * **Test Procedure:**@n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | :---------: | :----------: | :--------------: | :-----: |
-* | 01 | Invoke wifi_getRadioAutoChannelRefreshPeriod() with the radioIndex set to 1 and the max possible value for the output pointer | radioIndex = 1, output = 4294967295 | RETURN_OK | The test should be successful |
+* | 01 | Invoke wifi_getRadioAutoChannelRefreshPeriod() with the radioIndex set to 1 and the max possible value for the output pointer | radioIndex = 1, output = UINT32_MAX | RETURN_OK | The test should be successful |
 */
 void test_l1_wifi_common_hal_positive2_getRadioAutoChannelRefreshPeriod (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive2_getRadioAutoChannelRefreshPeriod...\n");
-    ULONG output = 4294967295;
+    ULONG output = UINT32_MAX;
     INT ret;
 
     UT_LOG("Invoking wifi_getRadioAutoChannelRefreshPeriod with radioIndex = 1 and max possible value. Output pointer is valid.\n");
     ret = wifi_getRadioAutoChannelRefreshPeriod(RADIO_INDEX, &output);
     UT_LOG("Returned status is %d\n", ret);
     UT_ASSERT_EQUAL(ret, RETURN_OK); 
-    if((output < 0) && (output > 4294967295))
+    if((output < 0) && (output > UINT32_MAX))
     {
         UT_LOG("failed due to invalid output : %lu\n",output);
         UT_FAIL("failed due to invalid output\n");
@@ -4786,62 +4787,62 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats (void)
     status = wifi_getRadioTrafficStats(RADIO_INDEX, &output_struct);
     UT_LOG("Return status: %d\n", status);
     UT_ASSERT_EQUAL(status, RETURN_OK);
-    if((output_struct.radio_BytesSent < 0) || (output_struct.radio_BytesSent > 18446744073709551615))
+    if((output_struct.radio_BytesSent < 0) || (output_struct.radio_BytesSent > UINT64_MAX))
     {
         UT_LOG("Invalid RadioTrafficStats: %lu \n",output_struct.radio_BytesSent);
         UT_FAIL("Invalid RadioTrafficStats\n");
     }
-    if((output_struct.radio_BytesReceived < 0) || (output_struct.radio_BytesReceived > 18446744073709551615))
+    if((output_struct.radio_BytesReceived < 0) || (output_struct.radio_BytesReceived > UINT64_MAX))
     {
         UT_LOG("Invalid radio_BytesReceived : %lu \n",output_struct.radio_BytesReceived);
         UT_FAIL("Invalid radio_BytesReceived\n");
     }
-    if((output_struct.radio_PacketsSent < 0) || (output_struct.radio_PacketsSent > 18446744073709551615))
+    if((output_struct.radio_PacketsSent < 0) || (output_struct.radio_PacketsSent > UINT64_MAX))
     {
         UT_LOG("Invalid radio_PacketsSent : %lu \n",output_struct.radio_PacketsSent);
         UT_FAIL("Invalid radio_PacketsSent\n");
     }
-    if((output_struct.radio_PacketsReceived < 0) || (output_struct.radio_PacketsReceived > 18446744073709551615))
+    if((output_struct.radio_PacketsReceived < 0) || (output_struct.radio_PacketsReceived > UINT64_MAX))
     {
         UT_LOG("Invalid radio_PacketsReceived : %lu \n",output_struct.radio_PacketsReceived);
         UT_FAIL("Invalid radio_PacketsReceived\n");
     }
-    if((output_struct.radio_ErrorsSent < 0) || (output_struct.radio_ErrorsSent > 4294967295))
+    if((output_struct.radio_ErrorsSent < 0) || (output_struct.radio_ErrorsSent > UINT32_MAX))
     {
         UT_LOG("Invalid radio_ErrorsSent : %lu \n",output_struct.radio_ErrorsSent);
         UT_FAIL("Invalid radio_ErrorsSent\n");
     }
-    if((output_struct.radio_ErrorsReceived < 0) || (output_struct.radio_ErrorsReceived > 4294967295))
+    if((output_struct.radio_ErrorsReceived < 0) || (output_struct.radio_ErrorsReceived > UINT32_MAX))
     {
         UT_LOG("Invalid radio_ErrorsReceived : %lu\n",output_struct.radio_ErrorsReceived);
         UT_FAIL("Invalid radio_ErrorsReceived\n");
     }
-    if((output_struct.radio_DiscardPacketsSent < 0) || (output_struct.radio_DiscardPacketsSent > 4294967295))
+    if((output_struct.radio_DiscardPacketsSent < 0) || (output_struct.radio_DiscardPacketsSent > UINT32_MAX))
     {
         UT_LOG("Invalid radio_DiscardPacketsSent : %lu\n",output_struct.radio_DiscardPacketsSent);
         UT_FAIL("Invalid radio_DiscardPacketsSent\n");
     }
-    if((output_struct.radio_DiscardPacketsReceived < 0) || (output_struct.radio_DiscardPacketsReceived > 4294967295))
+    if((output_struct.radio_DiscardPacketsReceived < 0) || (output_struct.radio_DiscardPacketsReceived > UINT32_MAX))
     {
         UT_LOG("Invalid radio_DiscardPacketsReceived : %lu\n",output_struct.radio_DiscardPacketsReceived);
         UT_FAIL("Invalid radio_DiscardPacketsReceived\n");
     }
-    if((output_struct.radio_PLCPErrorCount < 0) || (output_struct.radio_PLCPErrorCount > 4294967295))
+    if((output_struct.radio_PLCPErrorCount < 0) || (output_struct.radio_PLCPErrorCount > UINT32_MAX))
     {
         UT_LOG("Invalid radio_PLCPErrorCount : %lu\n",output_struct.radio_PLCPErrorCount);
         UT_FAIL("Invalid radio_PLCPErrorCount\n");
     }
-    if((output_struct.radio_FCSErrorCount < 0) || (output_struct.radio_FCSErrorCount > 4294967295))
+    if((output_struct.radio_FCSErrorCount < 0) || (output_struct.radio_FCSErrorCount > UINT32_MAX))
     {
         UT_LOG("Invalid radio_FCSErrorCount : %lu\n",output_struct.radio_FCSErrorCount);
         UT_FAIL("Invalid radio_FCSErrorCount\n");
     }
-    if((output_struct.radio_InvalidMACCount < 0) || (output_struct.radio_InvalidMACCount > 4294967295))
+    if((output_struct.radio_InvalidMACCount < 0) || (output_struct.radio_InvalidMACCount > UINT32_MAX))
     {
         UT_LOG("Invalid radio_InvalidMACCount :%lu\n",output_struct.radio_InvalidMACCount);
         UT_FAIL("Invalid radio_InvalidMACCount\n");
     }
-    if((output_struct.radio_PacketsOtherReceived < 0) || (output_struct.radio_PacketsOtherReceived > 4294967295))
+    if((output_struct.radio_PacketsOtherReceived < 0) || (output_struct.radio_PacketsOtherReceived > UINT32_MAX))
     {
         UT_LOG("Invalid radio_PacketsOtherReceived :%lu \n",output_struct.radio_PacketsOtherReceived);
         UT_FAIL("Invalid radio_PacketsOtherReceived\n");
@@ -4886,7 +4887,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats (void)
         UT_LOG("Invalid radio_MedianNoiseFloorOnChannel : %d \n",output_struct.radio_MedianNoiseFloorOnChannel);
         UT_FAIL("Invalid radio_MedianNoiseFloorOnChannel\n");
     }
-    if((output_struct.radio_StatisticsStartTime < 0) || (output_struct.radio_StatisticsStartTime > 18446744073709551615))
+    if((output_struct.radio_StatisticsStartTime < 0) || (output_struct.radio_StatisticsStartTime > UINT64_MAX))
     {
         UT_LOG("Invalid radio_StatisticsStartTime : %lu\n",output_struct.radio_StatisticsStartTime);
         UT_FAIL("Invalid radio_StatisticsStartTime\n");
@@ -5460,7 +5461,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
            output_struct.ssid_MulticastPacketsReceived, output_struct.ssid_BroadcastPacketsSent, 
            output_struct.ssid_BroadcastPacketsRecevied, output_struct.ssid_UnknownPacketsReceived);
 
-    if (output_struct.ssid_BytesSent >= 0 && output_struct.ssid_BytesSent <= 18446744073709551615)
+    if (output_struct.ssid_BytesSent >= 0 && output_struct.ssid_BytesSent <= UINT64_MAX)
     {
         UT_LOG("ssid_BytesSent is %lu which is a valid value\n", output_struct.ssid_BytesSent);
         UT_PASS("ssid_BytesSent validation success\n");
@@ -5471,7 +5472,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_FAIL("ssid_BytesSent validation failed\n");
     }
 
-    if (output_struct.ssid_BytesReceived >= 0 && output_struct.ssid_BytesReceived <= 18446744073709551615)
+    if (output_struct.ssid_BytesReceived >= 0 && output_struct.ssid_BytesReceived <= UINT64_MAX)
     {
         UT_LOG("ssid_BytesReceived is %lu which is a valid value\n", output_struct.ssid_BytesReceived);
         UT_PASS("ssid_BytesReceived validation success\n");
@@ -5481,7 +5482,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_BytesReceived is %lu which is an invalid value\n", output_struct.ssid_BytesReceived);
         UT_FAIL("ssid_BytesReceived validation failed\n");
     }
-    if (output_struct.ssid_PacketsSent >= 0 && output_struct.ssid_PacketsSent <= 18446744073709551615)
+    if (output_struct.ssid_PacketsSent >= 0 && output_struct.ssid_PacketsSent <= UINT64_MAX)
     {
         UT_LOG("ssid_PacketsSent is %lu which is a valid value\n", output_struct.ssid_PacketsSent);
         UT_PASS("ssid_PacketsSent validation success\n");
@@ -5491,7 +5492,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_PacketsSent is %lu which is an invalid value\n", output_struct.ssid_PacketsSent);
         UT_FAIL("ssid_PacketsSent validation failed\n");
     }
-    if (output_struct.ssid_PacketsReceived >= 0 && output_struct.ssid_PacketsReceived <= 18446744073709551615)
+    if (output_struct.ssid_PacketsReceived >= 0 && output_struct.ssid_PacketsReceived <= UINT64_MAX)
     {
         UT_LOG("ssid_PacketsReceived is %lu which is a valid value\n", output_struct.ssid_PacketsReceived);
         UT_PASS("ssid_PacketsReceived validation success\n");
@@ -5501,7 +5502,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_PacketsReceived is %lu which is an invalid value\n", output_struct.ssid_PacketsReceived);
         UT_FAIL("ssid_PacketsReceived validation failed\n");
     }
-    if (output_struct.ssid_RetransCount >= 0 && output_struct.ssid_RetransCount <= 4294967295)
+    if (output_struct.ssid_RetransCount >= 0 && output_struct.ssid_RetransCount <= UINT32_MAX)
     {
         UT_LOG("ssid_RetransCount is %lu which is a valid value\n", output_struct.ssid_RetransCount);
         UT_PASS("ssid_RetransCount validation success\n");
@@ -5511,7 +5512,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_RetransCount is %lu which is an invalid value\n", output_struct.ssid_RetransCount);
         UT_FAIL("ssid_RetransCount validation failed\n");
     }
-    if (output_struct.ssid_FailedRetransCount >= 0 && output_struct.ssid_FailedRetransCount <= 4294967295)
+    if (output_struct.ssid_FailedRetransCount >= 0 && output_struct.ssid_FailedRetransCount <= UINT32_MAX)
     {
         UT_LOG("ssid_FailedRetransCount is %lu which is a valid value\n", output_struct.ssid_FailedRetransCount);
         UT_PASS("ssid_FailedRetransCount validation success\n");
@@ -5521,7 +5522,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_FailedRetransCount is %lu which is an invalid value\n", output_struct.ssid_FailedRetransCount);
         UT_FAIL("ssid_FailedRetransCount validation failed\n");
     }
-    if (output_struct.ssid_RetryCount >= 0 && output_struct.ssid_RetryCount <= 4294967295)
+    if (output_struct.ssid_RetryCount >= 0 && output_struct.ssid_RetryCount <= UINT32_MAX)
     {
         UT_LOG("ssid_RetryCount is %lu which is a valid value\n", output_struct.ssid_RetryCount);
         UT_PASS("ssid_RetryCount validation success\n");
@@ -5531,7 +5532,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_RetryCount is %lu which is an invalid value\n", output_struct.ssid_RetryCount);
         UT_FAIL("ssid_RetryCount validation failed\n");
     }
-    if (output_struct.ssid_MultipleRetryCount >= 0 && output_struct.ssid_MultipleRetryCount <= 4294967295)
+    if (output_struct.ssid_MultipleRetryCount >= 0 && output_struct.ssid_MultipleRetryCount <= UINT32_MAX)
     {
         UT_LOG("ssid_MultipleRetryCount is %lu which is a valid value\n", output_struct.ssid_MultipleRetryCount);
         UT_PASS("ssid_MultipleRetryCount validation success\n");
@@ -5541,7 +5542,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_MultipleRetryCount is %lu which is an invalid value\n", output_struct.ssid_MultipleRetryCount);
         UT_FAIL("ssid_MultipleRetryCount validation failed\n");
     }
-    if (output_struct.ssid_ACKFailureCount >= 0 && output_struct.ssid_ACKFailureCount <= 4294967295)
+    if (output_struct.ssid_ACKFailureCount >= 0 && output_struct.ssid_ACKFailureCount <= UINT32_MAX)
     {
         UT_LOG("ssid_ACKFailureCount is %lu which is a valid value\n", output_struct.ssid_ACKFailureCount);
         UT_PASS("ssid_ACKFailureCount validation success\n");
@@ -5551,7 +5552,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_ACKFailureCount is %lu which is an invalid value\n", output_struct.ssid_ACKFailureCount);
         UT_FAIL("ssid_ACKFailureCount validation failed\n");
     }
-    if (output_struct.ssid_AggregatedPacketCount >= 0 && output_struct.ssid_AggregatedPacketCount <= 4294967295)
+    if (output_struct.ssid_AggregatedPacketCount >= 0 && output_struct.ssid_AggregatedPacketCount <= UINT32_MAX)
     {
         UT_LOG("ssid_AggregatedPacketCount is %lu which is a valid value\n", output_struct.ssid_AggregatedPacketCount);
         UT_PASS("ssid_AggregatedPacketCount validation success\n");
@@ -5561,7 +5562,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_AggregatedPacketCount is %lu which is an invalid value\n", output_struct.ssid_AggregatedPacketCount);
         UT_FAIL("ssid_AggregatedPacketCount validation failed\n");
     }
-    if (output_struct.ssid_ErrorsSent >= 0 && output_struct.ssid_ErrorsSent <= 4294967295)
+    if (output_struct.ssid_ErrorsSent >= 0 && output_struct.ssid_ErrorsSent <= UINT32_MAX)
     {
         UT_LOG("ssid_ErrorsSent is %lu which is a valid value\n", output_struct.ssid_ErrorsSent);
         UT_PASS("ssid_ErrorsSent validation success\n");
@@ -5571,7 +5572,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_ErrorsSent is %lu which is an invalid value\n", output_struct.ssid_ErrorsSent);
         UT_FAIL("ssid_ErrorsSent validation failed\n");
     }
-    if (output_struct.ssid_ErrorsReceived >= 0 && output_struct.ssid_ErrorsReceived <= 4294967295)
+    if (output_struct.ssid_ErrorsReceived >= 0 && output_struct.ssid_ErrorsReceived <= UINT32_MAX)
     {
         UT_LOG("ssid_ErrorsReceived is %lu which is a valid value\n", output_struct.ssid_ErrorsReceived);
         UT_PASS("ssid_ErrorsReceived validation success\n");
@@ -5581,7 +5582,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_ErrorsReceived is %lu which is an invalid value\n", output_struct.ssid_ErrorsReceived);
         UT_FAIL("ssid_ErrorsReceived validation failed\n");
     }
-    if (output_struct.ssid_UnicastPacketsSent >= 0 && output_struct.ssid_UnicastPacketsSent <= 18446744073709551615)
+    if (output_struct.ssid_UnicastPacketsSent >= 0 && output_struct.ssid_UnicastPacketsSent <= UINT64_MAX)
     {
         UT_LOG("ssid_UnicastPacketsSent is %lu which is a valid value\n", output_struct.ssid_UnicastPacketsSent);
         UT_PASS("ssid_UnicastPacketsSent validation success\n");
@@ -5591,7 +5592,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_UnicastPacketsSent is %lu which is an invalid value\n", output_struct.ssid_UnicastPacketsSent);
         UT_FAIL("ssid_UnicastPacketsSent validation failed\n");
     }
-    if (output_struct.ssid_UnicastPacketsReceived >= 0 && output_struct.ssid_UnicastPacketsReceived <= 18446744073709551615)
+    if (output_struct.ssid_UnicastPacketsReceived >= 0 && output_struct.ssid_UnicastPacketsReceived <= UINT64_MAX)
     {
         UT_LOG("ssid_UnicastPacketsReceived  is %lu which is a valid value\n", output_struct.ssid_UnicastPacketsReceived);
         UT_PASS("ssid_UnicastPacketsReceived validation success\n");
@@ -5601,7 +5602,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_UnicastPacketsReceived  is %lu which is an invalid value\n", output_struct.ssid_UnicastPacketsReceived);
         UT_FAIL("ssid_UnicastPacketsReceived validation failed\n");
     }
-    if (output_struct.ssid_DiscardedPacketsSent >= 0 && output_struct.ssid_DiscardedPacketsSent <= 4294967295)
+    if (output_struct.ssid_DiscardedPacketsSent >= 0 && output_struct.ssid_DiscardedPacketsSent <= UINT32_MAX)
     {
         UT_LOG("ssid_DiscardedPacketsSent  is %lu which is a valid value\n", output_struct.ssid_DiscardedPacketsSent);
         UT_PASS("ssid_DiscardedPacketsSent validation success\n");
@@ -5611,7 +5612,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_DiscardedPacketsSent  is %lu which is an invalid value\n", output_struct.ssid_DiscardedPacketsSent);
         UT_FAIL("ssid_DiscardedPacketsSent validation failed\n");
     }
-    if (output_struct.ssid_DiscardedPacketsReceived >= 0 && output_struct.ssid_DiscardedPacketsReceived <= 4294967295)
+    if (output_struct.ssid_DiscardedPacketsReceived >= 0 && output_struct.ssid_DiscardedPacketsReceived <= UINT32_MAX)
     {
         UT_LOG("ssid_DiscardedPacketsReceived  is %lu which is a valid value\n", output_struct.ssid_DiscardedPacketsReceived);
         UT_PASS("ssid_DiscardedPacketsReceived validation success\n");
@@ -5621,7 +5622,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_DiscardedPacketsReceived  is %lu which is an invalid value\n", output_struct.ssid_DiscardedPacketsReceived);
         UT_FAIL("ssid_DiscardedPacketsReceived validation failed\n");
     }
-    if (output_struct.ssid_MulticastPacketsSent >= 0 && output_struct.ssid_MulticastPacketsSent <= 18446744073709551615)
+    if (output_struct.ssid_MulticastPacketsSent >= 0 && output_struct.ssid_MulticastPacketsSent <= UINT64_MAX)
     {
         UT_LOG("ssid_MulticastPacketsSent is %lu which is a valid value\n", output_struct.ssid_MulticastPacketsSent);
         UT_PASS("ssid_MulticastPacketsSent validation success\n");
@@ -5631,7 +5632,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_MulticastPacketsSent is %lu which is an invalid value\n", output_struct.ssid_MulticastPacketsSent);
         UT_FAIL("ssid_MulticastPacketsSent validation failed\n");
     }
-    if (output_struct.ssid_MulticastPacketsReceived >= 0 && output_struct.ssid_MulticastPacketsReceived <= 18446744073709551615)
+    if (output_struct.ssid_MulticastPacketsReceived >= 0 && output_struct.ssid_MulticastPacketsReceived <= UINT64_MAX)
     {
         UT_LOG("ssid_MulticastPacketsReceived is %lu which is a valid value\n", output_struct.ssid_MulticastPacketsReceived);
         UT_PASS(" ssid_MulticastPacketsReceived validation success\n");
@@ -5641,7 +5642,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_MulticastPacketsReceived is %lu which is an invalid value\n", output_struct.ssid_MulticastPacketsReceived);
         UT_FAIL(" ssid_MulticastPacketsReceived validation failed\n");
     }
-    if (output_struct.ssid_BroadcastPacketsSent >= 0 && output_struct.ssid_BroadcastPacketsSent <= 18446744073709551615)
+    if (output_struct.ssid_BroadcastPacketsSent >= 0 && output_struct.ssid_BroadcastPacketsSent <= UINT64_MAX)
     {
         UT_LOG("ssid_BroadcastPacketsSent is %lu which is a valid value\n", output_struct.ssid_BroadcastPacketsSent);
         UT_PASS("ssid_BroadcastPacketsSent validation success\n");
@@ -5651,7 +5652,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_BroadcastPacketsSent is %lu which is an invalid value\n", output_struct.ssid_BroadcastPacketsSent);
         UT_FAIL("ssid_BroadcastPacketsSent validation failed\n");
     }
-    if (output_struct.ssid_BroadcastPacketsRecevied >= 0 && output_struct.ssid_BroadcastPacketsRecevied <= 18446744073709551615)
+    if (output_struct.ssid_BroadcastPacketsRecevied >= 0 && output_struct.ssid_BroadcastPacketsRecevied <= UINT64_MAX)
     {
         UT_LOG("ssid_BroadcastPacketsRecevied is %lu which is a valid value\n", output_struct.ssid_BroadcastPacketsRecevied);
         UT_PASS("ssid_BroadcastPacketsRecevied validation success\n");
@@ -5661,7 +5662,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
         UT_LOG("ssid_BroadcastPacketsRecevied is %lu which is an invalid value\n", output_struct.ssid_BroadcastPacketsRecevied);
         UT_FAIL("ssid_BroadcastPacketsRecevied validation failed\n");
     }
-    if (output_struct.ssid_UnknownPacketsReceived >= 0 && output_struct.ssid_UnknownPacketsReceived <= 4294967295)
+    if (output_struct.ssid_UnknownPacketsReceived >= 0 && output_struct.ssid_UnknownPacketsReceived <= UINT32_MAX)
     {
         UT_LOG("ssid_UnknownPacketsReceived is %lu which is a valid value\n", output_struct.ssid_UnknownPacketsReceived);
         UT_PASS("ssid_UnknownPacketsReceived validation success\n");
@@ -5965,7 +5966,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult (
         UT_LOG("ap_OperatingChannelBandwidth is %s which is a invalid value\n", neighbor_ap_array->ap_OperatingChannelBandwidth);
         UT_FAIL("ap_OperatingChannelBandwidth validation failed\n");
     }
-    if (neighbor_ap_array->ap_BeaconPeriod >= 0 && neighbor_ap_array->ap_BeaconPeriod <= 4294967295)
+    if (neighbor_ap_array->ap_BeaconPeriod >= 0 && neighbor_ap_array->ap_BeaconPeriod <= UINT32_MAX)
     {
         UT_LOG("ap_BeaconPeriod is %d which is a valid value\n", neighbor_ap_array->ap_BeaconPeriod);
         UT_PASS("ap_BeaconPeriod validation success\n");
@@ -6005,7 +6006,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult (
         UT_LOG("ap_SupportedDataTransferRates is %s which is a invalid value\n", neighbor_ap_array->ap_SupportedDataTransferRates);
         UT_FAIL("ap_SupportedDataTransferRates validation failed\n");
     }
-    if (neighbor_ap_array->ap_DTIMPeriod >= 0 && neighbor_ap_array->ap_DTIMPeriod <= 4294967295)
+    if (neighbor_ap_array->ap_DTIMPeriod >= 0 && neighbor_ap_array->ap_DTIMPeriod <= UINT32_MAX)
     {
         UT_LOG("ap_DTIMPeriod is %d which is a valid value\n", neighbor_ap_array->ap_DTIMPeriod);
         UT_PASS("ap_Noise validation success\n");
@@ -6334,7 +6335,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo (void)
         UT_LOG("ap_OperatingChannelBandwidth is %s which is a invalid value\n", neighbor_ap_array->ap_OperatingStandards);
         UT_FAIL("ap_OperatingChannelBandwidth validation failed\n");
     }
-    if (neighbor_ap_array->ap_BeaconPeriod >= 0 && neighbor_ap_array->ap_BeaconPeriod <= 4294967295)
+    if (neighbor_ap_array->ap_BeaconPeriod >= 0 && neighbor_ap_array->ap_BeaconPeriod <= UINT32_MAX)
     {
         UT_LOG("ap_BeaconPeriod is %d which is a valid value\n", neighbor_ap_array->ap_BeaconPeriod);
         UT_PASS("ap_BeaconPeriod validation success\n");
@@ -6374,7 +6375,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo (void)
         UT_LOG("ap_SupportedDataTransferRates is %s which is a invalid value\n", neighbor_ap_array->ap_SupportedDataTransferRates);
         UT_FAIL("ap_SupportedDataTransferRates validation failed\n");
     }
-    if (neighbor_ap_array->ap_DTIMPeriod >= 0 && neighbor_ap_array->ap_DTIMPeriod <= 4294967295)
+    if (neighbor_ap_array->ap_DTIMPeriod >= 0 && neighbor_ap_array->ap_DTIMPeriod <= UINT32_MAX)
     {
         UT_LOG("ap_DTIMPeriod is %d which is a valid value\n", neighbor_ap_array->ap_DTIMPeriod);
         UT_PASS("ap_Noise validation success\n");
@@ -6987,7 +6988,7 @@ int test_wifi_common_hal_register_init_uninit_tests (void)
  *
  * @return int - 0 on success, otherwise failure
  */
-int test_wifi_common_hal_register_pre_init_with_config_tests (void)
+int test_wifi_common_hal_register_post_init_with_config_tests (void)
 {
     pSuite_with_wifi_init_with_config = UT_add_suite("[L1 wifi_common_hal pre-init with config tests]", WiFi_InitWithConfigPreReq, WiFi_UnInitPosReq);
     if (pSuite_with_wifi_init_with_config == NULL) {
