@@ -3393,7 +3393,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioGuardInterval (void)
 void test_l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval...\n");
-    CHAR *output_string;
+    CHAR output_string[24] = {'\0'};
     INT result;
 
     UT_LOG("Invoking wifi_getRadioGuardInterval with valid radioIndex, output buffer is uninitialized.\n");
@@ -4239,11 +4239,11 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioTransmitPower (void)
 void test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower...\n");
-    INT *output_INT;
+    INT output_INT = 0;
     INT ret;
 
     UT_LOG("Invoking wifi_getRadioTransmitPower with uninitialized output_INT pointer \n");
-    ret = wifi_getRadioTransmitPower(RADIO_INDEX, output_INT);
+    ret = wifi_getRadioTransmitPower(RADIO_INDEX, &output_INT);
     UT_LOG("Return status: %d\n", ret);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
@@ -4681,7 +4681,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain (void)
 void test_l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain...\n");
-    CHAR *output_string;
+    CHAR output_string[4] = {'\0'};
     INT status;
 
     UT_LOG("Invoking wifi_getRegulatoryDomain with uninitialized output_string.\n");
