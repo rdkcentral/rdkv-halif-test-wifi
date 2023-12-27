@@ -6510,7 +6510,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo (void)
 void test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo...\n");
-    char SSID[64];    WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
+    WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
     UINT output_array_size = 0;
     wifi_neighbor_ap_t *neighbor_ap_array = NULL;
     INT ret;

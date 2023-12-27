@@ -30,13 +30,14 @@ $(info TARGET NOT SET )
 $(info TARGET FORCED TO Linux)
 TARGET=linux
 SRC_DIRS += $(ROOT_DIR)/skeletons/src
+YLDFLAGS += -lglib-2.0
 endif
 
 $(info TARGET [$(TARGET)])
 
 ifeq ($(TARGET),arm)
 HAL_LIB_DIR := $(ROOT_DIR)/libs
-YLDFLAGS = -Wl,-rpath,$(HAL_LIB_DIR) -L$(HAL_LIB_DIR) -lwifihal -lglib-2.0
+YLDFLAGS += -Wl,-rpath,$(HAL_LIB_DIR) -L$(HAL_LIB_DIR) -lwifihal -lglib-2.0
 endif
 
 .PHONY: clean list all
