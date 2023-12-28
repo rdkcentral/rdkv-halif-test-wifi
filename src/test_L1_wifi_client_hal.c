@@ -3125,7 +3125,7 @@ int test_wifi_client_hal_register_pre_init_tests (void)
  */
 int test_wifi_client_hal_register_post_init_with_config_tests (void)
 {
-    pSuite_with_wifi_init_with_config = UT_add_suite("[L1 wifi_client_hal pre-init with config tests]", WiFi_InitWithConfigPreReq, WiFi_UnInitPosReq);
+    pSuite_with_wifi_init_with_config = UT_add_suite("[L1 wifi_client_hal post-init with config tests]", WiFi_InitWithConfigPreReq, WiFi_UnInitPosReq);
     if (pSuite_with_wifi_init_with_config == NULL) {
         return -1;
     }
