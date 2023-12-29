@@ -15,7 +15,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
- 
+
 /**
  * @addtogroup HPK Hardware Porting Kit
  * @{
@@ -38,9 +38,26 @@
  * @{
  */
 /**
- * @defgroup RDKV_WIFI_HALTEST_MAIN RDKV WiFi HALTEST MAIN
+ * @defgroup RDKV_WIFI_HALTEST_MAIN RDKV WiFi HAL Test Main File
  * @{
+ * @parblock
+ *
+ * ### Tests for RDK-V WiFi HAL :
+ *
+ * This is to ensure that the API meets the operational requirements of the module across all vendors.
+ *
+ * **Pre-Conditions:**  None @n
+ * **Dependencies:** None @n
+ *
+ * Refer to API Definition specification documentation : [rdkv-wifi_halSpec.md](../../docs/pages/rdkv-wifi_halSpec.md)
+ * @endparblock
+ *
  */
+
+/**
+* @file main.c
+*
+*/
 
 #include <ut.h>
 #include <ut_log.h>
@@ -148,7 +165,7 @@ void Config_key_delete(char *key)
 {
     g_free(key);
 }
- 
+
 int main(int argc, char** argv)
 {
     int registerReturn = 0;

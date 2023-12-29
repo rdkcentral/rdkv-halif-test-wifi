@@ -40,10 +40,30 @@
 /**
  * @defgroup RDKV_WIFI_HALTEST_REGISTER RDKV WiFi HALTEST REGISTER
  * @{
+ * @parblock
+ * ### Registration of tests for RDK-V WiFi HAL :
+ *
+ * This is to ensure that the APIs meets the operational requirements of the module across all vendors.
+ *
+ * **Pre-Conditions:**  None @n
+ * **Dependencies:** None @n
+ *
+ * Refer to API Definition specification documentation : [rdkv-wifi_halSpec.md](../../docs/pages/rdkv-wifi_halSpec.md)
+ * @endparblock
+ */
+
+/**
+* @file test_register.c
+*
+*/
+
+/**
+ * @brief Register test functionality
+ *
  */
 
 /* L1 Testing Functions */
- 
+
 extern int test_wifi_common_hal_register_pre_init_tests (void);
 extern int test_wifi_client_hal_register_pre_init_tests (void);
 extern int test_wifi_common_hal_register_init_uninit_tests (void);
@@ -51,7 +71,7 @@ extern int test_wifi_common_hal_register_post_init_with_config_tests (void);
 extern int test_wifi_client_hal_register_post_init_with_config_tests (void);
 extern int test_wifi_common_hal_register_post_init_tests (void);
 extern int test_wifi_client_hal_register_post_init_tests (void);
- 
+
 int register_hal_l1_tests( void )
 {
     int registerFailed=0;
@@ -63,7 +83,7 @@ int register_hal_l1_tests( void )
     registerFailed |= test_wifi_client_hal_register_post_init_with_config_tests();
     registerFailed |= test_wifi_common_hal_register_post_init_tests();
     registerFailed |= test_wifi_client_hal_register_post_init_tests();
- 
+
     return registerFailed;
 }
 

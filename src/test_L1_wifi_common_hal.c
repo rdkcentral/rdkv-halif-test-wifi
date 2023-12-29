@@ -43,20 +43,21 @@
 /**
  * @defgroup RDKV_WIFI_COMMON_HALTEST_L1 RDK-V WiFi Common L1 Test Cases
  * @{
+ * @parblock
+ *  ### L1 Tests for RDK-V WiFi HAL :
+ *
+ * Level 1 unit test cases for all APIs of RDK-V WiFi HAL
+ *
+ * **Pre-Conditions:**  None @n
+ * **Dependencies:** None @n
+ *
+ * Refer to API Definition specification documentation : [rdkv-wifi_halSpec.md](../../docs/pages/rdkv-wifi_halSpec.md)
+ * @endparblock
  */
 
 /**
 * @file test_L1_wifi_common_hal.c
-* @page wifi_common_hal Level 1 Tests
 *
-* ## Module's Role
-* This module includes Level 1 functional tests (success and failure scenarios).
-* This is to ensure that the wifi_common_hal APIs meet the requirements across all vendors.
-*
-* **Pre-Conditions:**  None@n
-* **Dependencies:** None@n
-*
-* Ref to API Definition specification documentation : [Wifi_halSpec.md](../../docs/pages/Wifi_halSpec.md)
 */
 
 #include <ut.h>
