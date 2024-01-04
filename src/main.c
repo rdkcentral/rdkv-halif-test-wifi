@@ -15,7 +15,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
- 
+
 /**
  * @addtogroup HPK Hardware Porting Kit
  * @{
@@ -38,14 +38,34 @@
  * @{
  */
 /**
- * @defgroup RDKV_WIFI_HALTEST_MAIN RDKV WiFi HALTEST MAIN
+ * @defgroup RDKV_WIFI_HALTEST_MAIN RDKV WiFi HAL Test Main File
  * @{
+ * @parblock
+ *
+ * ### Tests for RDK-V WiFi HAL :
+ *
+ * This is to ensure that the API meets the operational requirements of the module across all vendors.
+ *
+ * **Pre-Conditions:**  None @n
+ * **Dependencies:** None @n
+ *
+ * Refer to API Definition specification documentation : [rdkv-wifi_halSpec.md](../../docs/pages/rdkv-wifi_halSpec.md)
+ * @endparblock
+ *
  */
+
+/**
+* @file main.c
+*
+*/
 
 #include <ut.h>
 #include <ut_log.h>
 #include <stdlib.h>
+#include <glib.h>
 #include "wifi_common_hal.h"
+
+GKeyFile *key_file;
 
 extern int register_hal_l1_tests( void );
 
@@ -100,7 +120,52 @@ int WiFi_UnInitPosReq(){
     return -1;
 }
 
- 
+GKeyFile *KeyFile_new(char *config_FilePath)
+{
+    GError *error = NULL;
+    GKeyFile *key_file = NULL;
+    key_file = g_key_file_new();
+
+    if(!key_file) {
+        UT_LOG("Failed to g_key_file_new()");
+        return NULL;
+    }
+
+    if(!g_key_file_load_from_file(key_file, config_FilePath, G_KEY_FILE_KEEP_COMMENTS, &error))
+    {
+        UT_LOG("Failed with \"%s\"", error->message);
+        return NULL;
+    }
+    return key_file;
+}
+
+void KeyFile_delete(GKeyFile *key_file)
+{
+    if(key_file) g_key_file_free(key_file);
+}
+
+char *Config_key_new(GKeyFile *key_file, char *test_case, char *key)
+{
+    if (!key_file || !test_case || !key)
+    {
+        UT_LOG("key_file or test_case or key is null");
+        return NULL;
+    }
+    if (!g_key_file_has_group(key_file, test_case))
+    {
+        UT_LOG("Test case not found: %s\n", test_case);
+        return NULL;
+    }
+    char *key_value = g_key_file_get_string(key_file, test_case, key, NULL);
+
+    return key_value;
+}
+
+void Config_key_delete(char *key)
+{
+    g_free(key);
+}
+
 int main(int argc, char** argv)
 {
     int registerReturn = 0;
@@ -117,10 +182,17 @@ int main(int argc, char** argv)
         printf("register_hal_l1_tests() returned failure");
         return 1;
     }
-    
+
+    key_file = KeyFile_new ("/opt/wifi_hal_l1_test_config");
+    if (!key_file) {
+        printf("Failed to read /opt/wifi_hal_l1_test_config");
+    }
+
     /* Begin test executions */
     UT_run_tests();
-	
+
+    KeyFile_delete(key_file);
+
     return 0;
 }
 
