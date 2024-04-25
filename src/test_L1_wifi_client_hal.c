@@ -67,6 +67,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <glib.h>
+#include <unistd.h>
 #include "wifi_client_hal.h"
 
 #define SSID "AP_SSID"
@@ -182,6 +183,67 @@ void test_event_d(char *marker, int value)
 {
     eventDCallbackInvoked = 1;
     UT_LOG("Event_d callback invoked with marker: %s, value: %d\n", marker, value);
+}
+int WiFi_InitAndConnect(){
+    int ret = 0;
+    ret = wifi_init();
+    if (ret == 0)
+    {
+        UT_LOG("WiFi init returned success");
+        wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WPA_PSK_AES;
+        INT saveSSID = 1;
+        wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "WIFI_INIT_WITH_CONNECT");
+
+        if (NULL == l1_config)
+        {
+            UT_FAIL_FATAL("Test config not found");
+        }
+        UT_LOG("Invoking wifi_connectEndpoint API\n");
+        INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
+                        l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
+                        l1_config->carootcert, l1_config->clientcert, l1_config->privatekey);
+        UT_LOG("wifi_connectEndpoint API returns: %d\n", result);
+        Config_delete(l1_config);
+        sleep(5); //get connected to AP
+        return 0;
+    }
+    else
+    {
+        UT_LOG("WiFi init returned failure");
+        UT_FAIL_FATAL("WiFi initialization with config pre-requisite failed");
+    }
+    return -1;
+}
+
+int WiFi_DisconnectAndUnInit(){
+    int ret = 0;
+    char *ssid = Config_key_new(key_file, "WIFI_UNINIT_WITH_DISCONNECT", SSID);
+
+    if (NULL == ssid)
+    {
+        UT_FAIL_FATAL("Test config not found");
+    }
+    UT_LOG("Invoking wifi_disconnectEndpoint API\n");
+    INT status = wifi_disconnectEndpoint(SSID_INDEX, ssid);
+    UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
+    Config_key_delete(ssid);
+    sleep(1);
+
+    if (status == 0)
+    {
+        ret = wifi_uninit();
+        if (ret == 0)
+        {
+            UT_LOG("WiFi uninit returned success");
+            return 0;
+        }
+        else
+        {
+            UT_LOG("WiFi uninit returned failure");
+            UT_FAIL_FATAL("WiFi uninit post-requisite failed");
+        }
+    }
+    return -1;
 }
 /**
 * @brief This function checks if wifi_getCliWpsConfigMethodsSupported works as expected, when invoked after calling wifi_init().

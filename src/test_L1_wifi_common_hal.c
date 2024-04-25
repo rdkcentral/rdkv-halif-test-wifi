@@ -78,6 +78,8 @@ extern GKeyFile *key_file;
 extern int WiFi_InitPreReq(void);
 extern int WiFi_InitWithConfigPreReq(void);
 extern int WiFi_UnInitPosReq(void);
+extern int WiFi_InitAndConnect(void);
+extern int WiFi_DisconnectAndUnInit(void);
 extern char *Config_key_new(GKeyFile *key_file, char *test_case, char *ssid);
 extern void Config_key_delete(char *ssid);
 
@@ -6904,6 +6906,7 @@ static UT_test_suite_t * pSuite_with_no_wifi_init = NULL;
 static UT_test_suite_t * pSuite_for_wifi_init_uninit = NULL;
 static UT_test_suite_t * pSuite_with_wifi_init = NULL;
 static UT_test_suite_t * pSuite_with_wifi_init_with_config = NULL;
+static UT_test_suite_t * pSuite_post_wifi_connect = NULL;
 
 /**
  * @brief Register the tests that require wifi_init()/wifi_initWithConfig() to not be called as a prerequisite
@@ -7014,7 +7017,6 @@ int test_wifi_common_hal_register_post_init_tests (void)
         return -1;
     }
 
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_getStats", test_l1_wifi_common_hal_positive1_getStats);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_getStats", test_l1_wifi_common_hal_negative1_getStats);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_getStats", test_l1_wifi_common_hal_negative2_getStats);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioNumberOfEntries", test_l1_wifi_common_hal_positive1_wifi_getRadioNumberOfEntries);
@@ -7076,7 +7078,6 @@ int test_wifi_common_hal_register_post_init_tests (void)
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioGuardInterval", test_l1_wifi_common_hal_negative1_wifi_getRadioGuardInterval);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioGuardInterval", test_l1_wifi_common_hal_negative2_wifi_getRadioGuardInterval);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval", test_l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth", test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioOperatingChannelBandwidth", test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingChannelBandwidth);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioOperatingChannelBandwidth", test_l1_wifi_common_hal_negative2_wifi_getRadioOperatingChannelBandwidth);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioOperatingChannelBandwidth", test_l1_wifi_common_hal_negative4_wifi_getRadioOperatingChannelBandwidth);
@@ -7084,14 +7085,12 @@ int test_wifi_common_hal_register_post_init_tests (void)
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioExtChannel", test_l1_wifi_common_hal_negative1_wifi_getRadioExtChannel);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioExtChannel", test_l1_wifi_common_hal_negative2_wifi_getRadioExtChannel);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioExtChannel", test_l1_wifi_common_hal_negative3_wifi_getRadioExtChannel);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioMCS", test_l1_wifi_common_hal_positive1_wifi_getRadioMCS);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioMCS", test_l1_wifi_common_hal_negative1_wifi_getRadioMCS);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioMCS", test_l1_wifi_common_hal_negative2_wifi_getRadioMCS);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioTransmitPowerSupported", test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPowerSupported);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioTransmitPowerSupported", test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPowerSupported);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioTransmitPowerSupported", test_l1_wifi_common_hal_negative2_wifi_getRadioTransmitPowerSupported);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioTransmitPowerSupported", test_l1_wifi_common_hal_negative3_wifi_getRadioTransmitPowerSupported);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_negative2_wifi_getRadioTransmitPower);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower);
@@ -7107,17 +7106,12 @@ int test_wifi_common_hal_register_post_init_tests (void)
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain", test_l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain", test_l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain", test_l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats", test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats", test_l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioTrafficStats", test_l1_wifi_common_hal_negative2_wifi_getRadioTrafficStats);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getSSIDName", test_l1_wifi_common_hal_positive1_wifi_getSSIDName);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getSSIDName", test_l1_wifi_common_hal_negative1_wifi_getSSIDName);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getSSIDName", test_l1_wifi_common_hal_negative2_wifi_getSSIDName);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_boundary1_wifi_getSSIDName", test_l1_wifi_common_hal_boundary1_wifi_getSSIDName);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getBaseBSSID", test_l1_wifi_common_hal_positive1_wifi_getBaseBSSID);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getBaseBSSID", test_l1_wifi_common_hal_negative1_wifi_getBaseBSSID);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getBaseBSSID", test_l1_wifi_common_hal_negative2_wifi_getBaseBSSID);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getSSIDMACAddress", test_l1_wifi_common_hal_positive1_wifi_getSSIDMACAddress);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getSSIDMACAddress", test_l1_wifi_common_hal_negative1_wifi_getSSIDMACAddress);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getSSIDMACAddress", test_l1_wifi_common_hal_negative2_wifi_getSSIDMACAddress);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats", test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats);
@@ -7146,6 +7140,32 @@ int test_wifi_common_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult", test_l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_down", test_l1_wifi_common_hal_positive1_wifi_down);
     
+    return 0;
+}
+
+/**
+ * @brief Register the tests that require wifi_init() and then wifi_connectEndpoint() to be called as a prerequisites
+ *
+ * @return int - 0 on success, otherwise failure
+ */
+int test_wifi_common_hal_register_post_connect_tests (void)
+{
+    // Create the test suite
+    pSuite_post_wifi_connect = UT_add_suite("[L1 wifi_common_hal post connect tests]", WiFi_InitAndConnect, WiFi_DisconnectAndUnInit);
+    if (pSuite_post_wifi_connect == NULL) {
+        return -1;
+    }
+    
+    UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getSSIDName", test_l1_wifi_common_hal_positive1_wifi_getSSIDName);
+    UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_boundary1_wifi_getSSIDName", test_l1_wifi_common_hal_boundary1_wifi_getSSIDName);
+    UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getBaseBSSID", test_l1_wifi_common_hal_positive1_wifi_getBaseBSSID);
+    UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getSSIDMACAddress", test_l1_wifi_common_hal_positive1_wifi_getSSIDMACAddress);
+    UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_getStats", test_l1_wifi_common_hal_positive1_getStats);
+    UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth", test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth);
+    UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getRadioMCS", test_l1_wifi_common_hal_positive1_wifi_getRadioMCS);
+    UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower);
+    UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats", test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats);
+
     return 0;
 }
 
