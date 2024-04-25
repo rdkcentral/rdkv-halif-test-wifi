@@ -80,6 +80,7 @@
 
 extern GKeyFile *key_file;
 extern const int SSID_INDEX;
+extern const int RADIO_INDEX;
 
 typedef struct _wifi_connectEndpoint_test_config
 {
@@ -128,7 +129,8 @@ wifi_connectEndpoint_test_config_t *Config_new(GKeyFile *key_file, char *test_ca
     return l1_config;
 }
 
-void Config_delete(wifi_connectEndpoint_test_config_t *l1_config) {
+void Config_delete(wifi_connectEndpoint_test_config_t *l1_config)
+{
     if (NULL == l1_config)
         return;
     g_free(l1_config->ap_SSID);
@@ -142,6 +144,45 @@ void Config_delete(wifi_connectEndpoint_test_config_t *l1_config) {
     free(l1_config);
 }
 
+int connectCallbackInvoked = 0;
+int disconnectCallbackInvoked = 0;
+int initCallbackInvoked = 0;
+int eventSCallbackInvoked = 0;
+int eventDCallbackInvoked = 0;
+
+INT test_disconnect_callback(INT ssidIndex, CHAR *AP_SSID, wifiStatusCode_t *error) 
+{
+    disconnectCallbackInvoked = 1;
+
+    printf("Disconnection status code %d\n ", *error);
+    return RETURN_OK;
+}
+
+INT test_connect_callback(INT ssidIndex, CHAR *AP_SSID, wifiStatusCode_t *error)
+{
+    connectCallbackInvoked = 1;
+
+    printf("Connection status code %d to %s\n ", *error, AP_SSID);
+    return RETURN_OK;
+}
+
+void test_init(char *name)
+{
+    initCallbackInvoked = 1;
+    UT_LOG("Init callback invoked with name: %s\n", name);
+}
+
+void test_event_s(char *marker, char *value)
+{
+    eventSCallbackInvoked = 1;
+    UT_LOG("Event_s callback invoked with marker: %s, value: %s\n", marker, value);
+}
+
+void test_event_d(char *marker, int value)
+{
+    eventDCallbackInvoked = 1;
+    UT_LOG("Event_d callback invoked with marker: %s, value: %d\n", marker, value);
+}
 /**
 * @brief This function checks if wifi_getCliWpsConfigMethodsSupported works as expected, when invoked after calling wifi_init().
 *
@@ -943,7 +984,9 @@ void test_l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin (void)
     CHAR *EnrolleePin = Config_key_new(key_file, "l1_negative3_wifi_setCliWpsEnrolleePin", "ENROLLEE_PIN");
 
     if (NULL == EnrolleePin)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_setCliWpsEnrolleePin without calling wifi_init() and wifi_connectEndpoint_callback_register() \n");
     INT retVal = wifi_setCliWpsEnrolleePin(SSID_INDEX, EnrolleePin);
     UT_LOG("wifi_setCliWpsEnrolleePin API returns : %d\n",retVal);
@@ -977,7 +1020,9 @@ void test_l1_wifi_client_hal_negative4_wifi_setCliWpsEnrolleePin (void)
     CHAR *EnrolleePin = Config_key_new(key_file, "l1_negative4_wifi_setCliWpsEnrolleePin", "ENROLLEE_PIN");
 
     if (NULL == EnrolleePin)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_setCliWpsEnrolleePin with EnrolleePin containing character values\n");
     INT retVal = wifi_setCliWpsEnrolleePin(SSID_INDEX, EnrolleePin);
     UT_LOG("wifi_setCliWpsEnrolleePin API returns : %d\n",retVal);
@@ -1714,8 +1759,10 @@ void test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint (void)
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint...\n");
     char *ssid = Config_key_new(key_file, "l1_positive1_wifi_disconnectEndpoint", SSID);
 
-    if (NULL == ssid) 
+    if (NULL == ssid)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 1 and AP_SSID = \"valid_value\"\n");
     INT status = wifi_disconnectEndpoint(SSID_INDEX, ssid);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
@@ -3074,7 +3121,7 @@ void test_l1_wifi_client_hal_positive2_wifi_cancelWpsPairing (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 02 | Invoke wifi_cancelWpsPairing() without calling wifi_init() or wifi_initWithConfig() | NA | RETURN_ERR| Should Fail | 
+* | 01 | Invoke wifi_cancelWpsPairing() without calling wifi_init() or wifi_initWithConfig() | NA | RETURN_ERR| Should Fail | 
 */
 void test_l1_wifi_client_hal_negative1_wifi_cancelWpsPairing (void)
 {
@@ -3086,6 +3133,247 @@ void test_l1_wifi_client_hal_negative1_wifi_cancelWpsPairing (void)
     UT_ASSERT_EQUAL(status, RETURN_OK);
 
     UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_cancelWpsPairing...\n");
+}
+
+/**
+* @brief This test verifies the  wifi_connectEndpoint_callback_register function's behavior, when invoked with actual callback API test_connect_callback.
+*
+* **Test Group ID:** Basic: 01 @n
+* **Test Case ID:** 074 @n
+* **Priority:** High @n@n
+*
+* **Pre-Conditions:** None @n
+* **Dependencies:** None @n
+* **User Interaction:** If user chose to run the test in interactive mode, then the test case has to be selected via console. @n
+*
+* **Test Procedure:** @n
+* | Variation / Step | Description | Test Data |Expected Result |Notes |
+* | :----: | --------- | ---------- |-------------- | ----- |
+* | 01 | Invoke wifi_connectEndpoint_callback_register() | NA | RETURN_OK| Should Pass |
+* | 02 | Invoke wifi_connectEndpoint() | NA | RETURN_OK| Should Pass |
+*/
+void test_l1_wifi_client_hal_positive1_wifi_connectEndpoint_callback_register() 
+{
+    connectCallbackInvoked = 0;
+    wifi_connectEndpoint_callback_register(test_connect_callback);
+
+    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WPA_PSK_AES;
+    INT saveSSID = 1;
+    wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "POSITIVE1_WPA_PSK_AES_SECURITY_MODE");
+
+    if (NULL == l1_config)
+    {
+        UT_FAIL_FATAL("Test config not found");
+    }
+    UT_LOG("Invoking wifi_connectEndpoint API\n");
+    INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
+                    l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
+                    l1_config->carootcert, l1_config->clientcert, l1_config->privatekey);
+    UT_LOG("wifi_connectEndpoint API returns: %d\n", result);
+    Config_delete(l1_config);
+    sleep(1);
+
+    UT_ASSERT_EQUAL(connectCallbackInvoked, 1);
+}
+
+/**
+* @brief This test verifies the  wifi_connectEndpoint_callback_register function's behavior, when invoked with NULL callback.
+*
+* **Test Group ID:** Basic: 01 @n
+* **Test Case ID:** 075 @n
+* **Priority:** High @n@n
+*
+* **Pre-Conditions:** None @n
+* **Dependencies:** None @n
+* **User Interaction:** If user chose to run the test in interactive mode, then the test case has to be selected via console. @n
+*
+* **Test Procedure:** @n
+* | Variation / Step | Description | Test Data |Expected Result |Notes |
+* | :----: | --------- | ---------- |-------------- | ----- |
+* | 01 | Invoke wifi_connectEndpoint_callback_register() with NULL callback | NA | RETURN_OK| Should Pass |
+* | 02 | Invoke wifi_connectEndpoint() | NA | RETURN_OK| Should Pass |
+*/
+void test_l1_wifi_client_hal_negative1_wifi_connectEndpoint_callback_register() 
+{
+    connectCallbackInvoked = 0;
+    wifi_connectEndpoint_callback_register(NULL);
+
+    wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WPA_PSK_AES;
+    INT saveSSID = 1;
+    wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "NEGATIVE1_WPA_PSK_AES_SECURITY_MODE");
+
+    if (NULL == l1_config)
+    {
+        UT_FAIL_FATAL("Test config not found");
+    }
+    UT_LOG("Invoking wifi_connectEndpoint API\n");
+    INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
+                    l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
+                    l1_config->carootcert, l1_config->clientcert, l1_config->privatekey);
+    UT_LOG("wifi_connectEndpoint API returns: %d\n", result);
+    Config_delete(l1_config);
+
+    UT_ASSERT_EQUAL(connectCallbackInvoked, 0);
+}
+
+/**
+* @brief This test verifies the  wifi_disconnectEndpoint_callback_register function's behavior, when invoked with actual callback API test_disconnect_callback.
+*
+* **Test Group ID:** Basic: 01 @n
+* **Test Case ID:** 076 @n
+* **Priority:** High @n@n
+*
+* **Pre-Conditions:** None @n
+* **Dependencies:** None @n
+* **User Interaction:** If user chose to run the test in interactive mode, then the test case has to be selected via console. @n
+*
+* **Test Procedure:** @n
+* | Variation / Step | Description | Test Data |Expected Result |Notes |
+* | :----: | --------- | ---------- |-------------- | ----- |
+* | 01 | Invoke wifi_disconnectEndpoint_callback_register() | NA | RETURN_OK| Should Pass |
+* | 02 | Invoke wifi_disconnectEndpoint() | NA | RETURN_OK| Should Pass |
+*/
+void test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint_callback_register()
+{
+    disconnectCallbackInvoked = 0;
+    wifi_disconnectEndpoint_callback_register(test_disconnect_callback);
+    char *ssid = Config_key_new(key_file, "l1_positive1_wifi_disconnectEndpoint_callback", SSID);
+
+    if (NULL == ssid)
+    {
+        UT_FAIL_FATAL("Test config not found");
+    }
+    UT_LOG("Invoking wifi_disconnectEndpoint API\n");
+    INT status = wifi_disconnectEndpoint(SSID_INDEX, ssid);
+    UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
+    Config_key_delete(ssid);
+    sleep(1);
+
+    UT_ASSERT_EQUAL(disconnectCallbackInvoked, 1);
+}
+
+/**
+* @brief This test verifies the  wifi_disconnectEndpoint_callback_register function's behavior, 
+*
+* **Test Group ID:** Basic: 01 @n
+* **Test Case ID:** 077 @n
+* **Priority:** High @n@n
+*
+* **Pre-Conditions:** None @n
+* **Dependencies:** None @n
+* **User Interaction:** If user chose to run the test in interactive mode, then the test case has to be selected via console. @n
+*
+* **Test Procedure:** @n
+* | Variation / Step | Description | Test Data |Expected Result |Notes |
+* | :----: | --------- | ---------- |-------------- | ----- |
+* | 01 | Invoke wifi_disconnectEndpoint_callback_register() with NULL callback | NA | RETURN_OK| Should Pass |
+* | 02 | Invoke wifi_disconnectEndpoint() | NA | RETURN_OK| Should Pass |
+*/
+void test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint_callback_register()
+{
+    disconnectCallbackInvoked = 0;
+    wifi_disconnectEndpoint_callback_register(NULL);
+    char *ssid = Config_key_new(key_file, "l1_negative1_wifi_disconnectEndpoint_callback", SSID);
+
+    if (NULL == ssid)
+    {
+        UT_FAIL_FATAL("Test config not found");
+    }
+    UT_LOG("Invoking wifi_disconnectEndpoint API\n");
+    INT status = wifi_disconnectEndpoint(SSID_INDEX, ssid);
+    UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
+    Config_key_delete(ssid);
+    sleep(1);
+
+    UT_ASSERT_EQUAL(disconnectCallbackInvoked, 0);
+}
+
+/**
+* @brief This test verifies the  wifi_telemetry_callback_register function's behavior.
+*
+* **Test Group ID:** Basic: 01 @n
+* **Test Case ID:** 078 @n
+* **Priority:** High @n@n
+*
+* **Pre-Conditions:** None @n
+* **Dependencies:** None @n
+* **User Interaction:** If user chose to run the test in interactive mode, then the test case has to be selected via console. @n
+*
+* **Test Procedure:** @n
+* | Variation / Step | Description | Test Data |Expected Result |Notes |
+* | :----: | --------- | ---------- |-------------- | ----- |
+* | 02 | Invoke wifi_telemetry_callback_register() | NA | RETURN_OK| Should Pass |
+*/
+void test_l1_wifi_client_hal_positive1_wifi_telemetry_callback_register()
+{
+    eventSCallbackInvoked = 0;
+    wifi_telemetry_ops_t telemetry_ops = {
+        .init = test_init,
+        .event_s = test_event_s,
+        .event_d = test_event_d
+    };
+
+    wifi_telemetry_callback_register(&telemetry_ops);
+    wifi_sta_stats_t wifi_sta_stats;
+    CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_getStats", "AP_SSID");
+
+    if (NULL == ssid )
+    {
+        UT_FAIL_FATAL("Test config not found");
+    }
+    UT_LOG("Invoking wifi_getStats with valid radioIndex=1 and valid &wifi_sta_stats buffer.\n");
+    memset(&wifi_sta_stats, 0, sizeof(wifi_sta_stats_t));
+    wifi_getStats(RADIO_INDEX, &wifi_sta_stats);
+
+    if (eventSCallbackInvoked) {
+        UT_PASS("Callback functions were invoked successfully\n");
+    } else {
+        UT_FAIL("Callback functions were not invoked as expected\n");
+    }
+}
+
+/**
+* @brief This test verifies the  wifi_telemetry_callback_register function's behavior.
+*
+* **Test Group ID:** Basic: 01 @n
+* **Test Case ID:** 078 @n
+* **Priority:** High @n@n
+*
+* **Pre-Conditions:** None @n
+* **Dependencies:** None @n
+* **User Interaction:** If user chose to run the test in interactive mode, then the test case has to be selected via console. @n
+*
+* **Test Procedure:** @n
+* | Variation / Step | Description | Test Data |Expected Result |Notes |
+* | :----: | --------- | ---------- |-------------- | ----- |
+* | 02 | Invoke wifi_telemetry_callback_register() with structure having NULL callbacks| NA | RETURN_OK| Should Pass |
+*/
+void test_l1_wifi_client_hal_negative1_wifi_telemetry_callback_register()
+{
+    eventSCallbackInvoked = 0;
+    wifi_telemetry_ops_t telemetry_ops = {
+        .init = NULL,
+        .event_s = NULL,
+        .event_d = NULL
+    };
+
+    wifi_telemetry_callback_register(&telemetry_ops);
+    wifi_sta_stats_t wifi_sta_stats;
+    CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_getStats", "AP_SSID");
+
+    if (NULL == ssid )
+    {
+        UT_FAIL_FATAL("Test config not found");
+    }
+    UT_LOG("Invoking wifi_getStats with valid radioIndex=1 and valid &wifi_sta_stats buffer.\n");
+    memset(&wifi_sta_stats, 0, sizeof(wifi_sta_stats_t));
+    wifi_getStats(RADIO_INDEX, &wifi_sta_stats);
+
+    if (eventSCallbackInvoked) {
+        UT_PASS("Callback functions were invoked successfully\n");
+    } else {
+        UT_FAIL("Callback functions were not invoked as expected\n");
+    }
 }
 
 static UT_test_suite_t * pSuite_with_no_wifi_init = NULL;
@@ -3210,7 +3498,12 @@ int test_wifi_client_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_clearSSIDInfo", test_l1_wifi_client_hal_positive1_wifi_clearSSIDInfo);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_clearSSIDInfo", test_l1_wifi_client_hal_negative1_wifi_clearSSIDInfo);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_clearSSIDInfo", test_l1_wifi_client_hal_negative2_wifi_clearSSIDInfo);
-  
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_connectEndpoint_callback_register", test_l1_wifi_client_hal_positive1_wifi_connectEndpoint_callback_register);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_disconnectEndpoint_callback_register", test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint_callback_register);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_telemetry_callback_register", test_l1_wifi_client_hal_positive1_wifi_telemetry_callback_register);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_connectEndpoint_callback_register", test_l1_wifi_client_hal_negative1_wifi_connectEndpoint_callback_register);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_disconnectEndpoint_callback_register", test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint_callback_register);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_telemetry_callback_register", test_l1_wifi_client_hal_negative1_wifi_telemetry_callback_register);
     return 0;
 }
 
