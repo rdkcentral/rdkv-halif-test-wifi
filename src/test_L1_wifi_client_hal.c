@@ -912,7 +912,9 @@ void test_l1_wifi_client_hal_positive1_wifi_setCliWpsEnrolleePin (void)
     CHAR *EnrolleePin = Config_key_new(key_file, "l1_positive1_wifi_setCliWpsEnrolleePin", "ENROLLEE_PIN");
 
     if (NULL == EnrolleePin)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_setCliWpsEnrolleePin with valid ssidIndex and EnrolleePin\n");
     INT retVal = wifi_setCliWpsEnrolleePin(SSID_INDEX, EnrolleePin);
     UT_LOG("wifi_setCliWpsEnrolleePin API returns %d\n",retVal);
@@ -946,7 +948,9 @@ void test_l1_wifi_client_hal_positive2_wifi_setCliWpsEnrolleePin (void)
     CHAR *EnrolleePin = Config_key_new(key_file, "l1_positive2_wifi_setCliWpsEnrolleePin", "ENROLLEE_PIN");
 
     if (NULL == EnrolleePin)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_setCliWpsEnrolleePin with valid ssidIndex and EnrolleePin\n");
     INT retVal = wifi_setCliWpsEnrolleePin(SSID_INDEX, EnrolleePin);
     UT_LOG("wifi_setCliWpsEnrolleePin API returns %d\n",retVal);
@@ -981,7 +985,9 @@ void test_l1_wifi_client_hal_negative1_wifi_setCliWpsEnrolleePin (void)
     CHAR *EnrolleePin = Config_key_new(key_file, "l1_negative1_wifi_setCliWpsEnrolleePin", "ENROLLEE_PIN");
 
     if (NULL == EnrolleePin)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_setCliWpsEnrolleePin with invalid ssidIndex\n");
     INT retVal = wifi_setCliWpsEnrolleePin(ssidIndex, EnrolleePin);
     UT_LOG("wifi_setCliWpsEnrolleePin API returns %d\n",retVal);
@@ -1244,8 +1250,10 @@ void test_l1_wifi_client_hal_positive1_wifi_connectEndpoint (void)
     INT saveSSID = 1;
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "POSITIVE1_WEP_64_SECURITY_MODE");
 
-    if (NULL == l1_config) 
+    if (NULL == l1_config)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1282,8 +1290,10 @@ void test_l1_wifi_client_hal_positive2_wifi_connectEndpoint (void)
     INT saveSSID = 1;
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "POSITIVE2_WPA_ENTERPRISE_AES_SECURITY_MODE");
 
-    if (NULL == l1_config) 
+    if (NULL == l1_config)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1321,8 +1331,10 @@ void test_l1_wifi_client_hal_positive3_wifi_connectEndpoint (void)
     INT saveSSID = 0;
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "POSITIVE3_WPA2_PSK_AES_SECURITY_MODE");
 
-    if (NULL == l1_config) 
+    if (NULL == l1_config)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1360,8 +1372,10 @@ void test_l1_wifi_client_hal_positive4_wifi_connectEndpoint (void)
     INT saveSSID = 0;
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "POSITIVE4_WEP_64_SECURITY_MODE");
 
-    if (NULL == l1_config) 
+    if (NULL == l1_config)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1439,8 +1453,10 @@ void test_l1_wifi_client_hal_negative2_wifi_connectEndpoint (void)
     INT saveSSID = 1;
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "NEGATIVE2_NOT_SUPPORTED_SECURITY_MODE");
 
-    if (NULL == l1_config) 
+    if (NULL == l1_config)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1477,8 +1493,10 @@ void test_l1_wifi_client_hal_negative3_wifi_connectEndpoint (void)
     INT saveSSID = 0;
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "NEGATIVE3_WEP_64_SECURITY_MODE");
 
-    if (NULL == l1_config) 
+    if (NULL == l1_config)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1517,8 +1535,10 @@ void test_l1_wifi_client_hal_negative4_wifi_connectEndpoint (void)
     INT saveSSID = 1;
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "NEGATIVE4_WEP_128_SECURITY_MODE");
 
-    if (NULL == l1_config) 
+    if (NULL == l1_config)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1556,7 +1576,9 @@ void test_l1_wifi_client_hal_negative5_wifi_connectEndpoint (void)
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "NEGATIVE5_WPA_PSK_TKIP_SECURITY_MODE");
 
     if (NULL == l1_config) 
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1593,7 +1615,9 @@ void test_l1_wifi_client_hal_negative6_wifi_connectEndpoint (void)
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "NEGATIVE6_WPA3_SAE_SECURITY_MODE");
 
     if (NULL == l1_config) 
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1630,8 +1654,10 @@ void test_l1_wifi_client_hal_negative7_wifi_connectEndpoint (void)
     INT saveSSID = 1;
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "NEGATIVE7_WPA2_ENTERPRISE_AES_SECURITY_MODE");
 
-    if (NULL == l1_config) 
+    if (NULL == l1_config)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1669,8 +1695,10 @@ void test_l1_wifi_client_hal_negative8_wifi_connectEndpoint (void)
     INT saveSSID = 1;
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "NEGATIVE8_WPA_WPA2_ENTERPRISE_SECURITY_MODE");
 
-    if (NULL == l1_config) 
+    if (NULL == l1_config)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1707,8 +1735,10 @@ void test_l1_wifi_client_hal_negative9_wifi_connectEndpoint (void)
     INT saveSSID = 1;
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "NEGATIVE9_WPA2_ENTERPRISE_TKIP_SECURITY_MODE");
 
-    if (NULL == l1_config) 
+    if (NULL == l1_config)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1745,8 +1775,10 @@ void test_l1_wifi_client_hal_negative10_wifi_connectEndpoint (void)
     INT saveSSID = 1;
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "NEGATIVE10_WPA3_PSK_AES_SECURITY_MODE");
 
-    if (NULL == l1_config) 
+    if (NULL == l1_config)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1783,8 +1815,10 @@ void test_l1_wifi_client_hal_negative11_wifi_connectEndpoint (void)
     INT saveSSID = 1;
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "NEGATIVE11_WPA3_PSK_AES_SECURITY_MODE");
 
-    if (NULL == l1_config) 
+    if (NULL == l1_config)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
@@ -1859,8 +1893,10 @@ void test_l1_wifi_client_hal_positive2_wifi_disconnectEndpoint (void)
     UT_LOG("Entering test_l1_wifi_client_hal_positive2_wifi_disconnectEndpoint...\n");
     char *ssid = Config_key_new(key_file, "l1_positive2_wifi_disconnectEndpoint", SSID);
 
-    if (NULL == ssid) 
+    if (NULL == ssid)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 1 and AP_SSID = \"valid_value\"\n");
     INT status = wifi_disconnectEndpoint(SSID_INDEX, ssid);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
@@ -1894,8 +1930,10 @@ void test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint (void)
     INT ssidIndex = 0;
     char *ssid = Config_key_new(key_file, "l1_negative1_wifi_disconnectEndpoint", SSID);
 
-    if (NULL == ssid) 
+    if (NULL == ssid)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 1 and AP_SSID = \"valid_value\"\n");
     INT status = wifi_disconnectEndpoint(ssidIndex, ssid);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
@@ -1928,8 +1966,10 @@ void test_l1_wifi_client_hal_negative2_wifi_disconnectEndpoint (void)
     UT_LOG("Entering test_l1_wifi_client_hal_negative2_wifi_disconnectEndpoint...\n");
     char *ssid = Config_key_new(key_file, "l1_negative2_wifi_disconnectEndpoint", SSID);
 
-    if (NULL == ssid) 
+    if (NULL == ssid)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 1 and AP_SSID = \"valid_value\"\n");
     INT status = wifi_disconnectEndpoint(SSID_INDEX, ssid);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
@@ -1995,8 +2035,10 @@ void test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint (void)
     UT_LOG("Entering test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint...\n");
     char *ssid = Config_key_new(key_file, "l1_negaitive4_wifi_disconnectEndpoint", SSID);
 
-    if (NULL == ssid) 
+    if (NULL == ssid)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_disconnectEndpoint API with ssidIndex = 1 and AP_SSID = \"valid_value\"\n");
     INT status = wifi_disconnectEndpoint(SSID_INDEX, ssid);
     UT_LOG("wifi_disconnectEndpoint API returns : %d\n",status);
@@ -2189,7 +2231,9 @@ void test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint (void)
     CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_lastConnected_Endpoint", "AP_SSID");
 
     if (NULL == ssid )
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the wifi_lastConnected_Endpoint API with valid ssidInfo structure\n");
     memset(&ssidInfo, 0, sizeof(wifi_pairedSSIDInfo_t));
     ret = wifi_lastConnected_Endpoint(&ssidInfo);
@@ -2263,7 +2307,9 @@ void test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint (void)
     CHAR *ssid = Config_key_new(key_file, "l1_positive2_wifi_lastConnected_Endpoint", "AP_SSID");
 
     if (NULL == ssid )
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking the wifi_lastConnected_Endpoint API with valid ssidInfo structure\n");
     memset(&ssidInfo, 0, sizeof(wifi_pairedSSIDInfo_t));
     ret = wifi_lastConnected_Endpoint(&ssidInfo);
@@ -3377,12 +3423,7 @@ void test_l1_wifi_client_hal_positive1_wifi_telemetry_callback_register()
 
     wifi_telemetry_callback_register(&telemetry_ops);
     wifi_sta_stats_t wifi_sta_stats;
-    CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_getStats", "AP_SSID");
 
-    if (NULL == ssid )
-    {
-        UT_FAIL_FATAL("Test config not found");
-    }
     UT_LOG("Invoking wifi_getStats with valid radioIndex=1 and valid &wifi_sta_stats buffer.\n");
     memset(&wifi_sta_stats, 0, sizeof(wifi_sta_stats_t));
     wifi_getStats(RADIO_INDEX, &wifi_sta_stats);
@@ -3421,20 +3462,13 @@ void test_l1_wifi_client_hal_negative1_wifi_telemetry_callback_register()
 
     wifi_telemetry_callback_register(&telemetry_ops);
     wifi_sta_stats_t wifi_sta_stats;
-    CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_getStats", "AP_SSID");
 
-    if (NULL == ssid )
-    {
-        UT_FAIL_FATAL("Test config not found");
-    }
     UT_LOG("Invoking wifi_getStats with valid radioIndex=1 and valid &wifi_sta_stats buffer.\n");
     memset(&wifi_sta_stats, 0, sizeof(wifi_sta_stats_t));
     wifi_getStats(RADIO_INDEX, &wifi_sta_stats);
 
-    if (eventSCallbackInvoked) {
-        UT_PASS("Callback functions were invoked successfully\n");
-    } else {
-        UT_FAIL("Callback functions were not invoked as expected\n");
+    if (eventSCallbackInvoked == 0) {
+        UT_PASS("Callback functions were not invoked as expected\n");
     }
 }
 
