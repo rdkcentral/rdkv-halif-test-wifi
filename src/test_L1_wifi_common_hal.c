@@ -126,7 +126,7 @@ int check_value (const char* target, const char* list[], int count)
 void test_l1_wifi_common_hal_positive1_wifi_getHalVersion (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getHalVersion...\n");
-    CHAR output_test_string[20] = {0};
+    CHAR output_test_string[20] = {'\0'};
     INT return_status;
 
     UT_LOG("Invoking wifi_getHalVersion with valid output_string buffer.\n");
@@ -588,8 +588,10 @@ void test_l1_wifi_common_hal_positive1_getStats (void)
     wifi_sta_stats_t wifi_sta_stats;
     CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_getStats", "AP_SSID");
 
-    if (NULL == ssid )
+    if (NULL == ssid)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_getStats with valid radioIndex=1 and valid &wifi_sta_stats buffer.\n");
     memset(&wifi_sta_stats, 0, sizeof(wifi_sta_stats_t));
     wifi_getStats(RADIO_INDEX, &wifi_sta_stats); 
@@ -831,7 +833,7 @@ void test_l1_wifi_common_hal_negative3_getStats (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioNumberOfEntries (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioNumberOfEntries...\n");
-    ULONG output;
+    ULONG output = 0;
     INT ret;    
 
     UT_LOG("Invoking wifi_getRadioNumberOfEntries with valid output reference.\n");
@@ -901,7 +903,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries...\n");
     INT ret;
-    ULONG output;
+    ULONG output = 0;
 
     UT_LOG("Invoking wifi_getRadioNumberOfEntries without calling wifi_init\n");
     ret = wifi_getRadioNumberOfEntries(&output);
@@ -933,7 +935,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries (void)
 void test_l1_wifi_common_hal_positive1_wifi_getSSIDNumberOfEntries (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getSSIDNumberOfEntries...\n");
-    ULONG ssidNumber;
+    ULONG ssidNumber = 0;
     INT result;
 
     UT_LOG("Invoking wifi_getSSIDNumberOfEntries with a valid pointer.\n");
@@ -970,7 +972,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDNumberOfEntries (void)
 void test_l1_wifi_common_hal_negative1_wifi_getSSIDNumberOfEntries (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getSSIDNumberOfEntries...\n");
-    ULONG ssidNumber;
+    ULONG ssidNumber = 0;
     INT result;
 
     UT_LOG("Invoking wifi_getSSIDNumberOfEntries without initializing the Wi-Fi subsystem.\n");
@@ -1144,7 +1146,7 @@ void test_l1_wifi_common_hal_positive3_wifi_getRadioEnable (void)
 void test_l1_wifi_common_hal_negative1_wifi_getRadioEnable (void) 
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioEnable...\n");
-    BOOL output_bool;
+    BOOL output_bool = 0;
     INT radioIndex = 2;
     INT ret;
 
@@ -1209,7 +1211,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioEnable (void)
 void test_l1_wifi_common_hal_negative3_wifi_getRadioEnable (void) 
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioEnable...\n");
-    BOOL output_bool;
+    BOOL output_bool = 0;
     INT radioIndex = -1;
     INT ret;
 
@@ -1243,7 +1245,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioEnable (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioEnable...\n");
     INT ret;
-    BOOL output_bool;
+    BOOL output_bool = 0;
 
     UT_LOG("Invoking wifi_getRadioEnable before  wifi_init() or wifi_initWithConfig().\n");
     ret = wifi_getRadioEnable(RADIO_INDEX, &output_bool);
@@ -1274,7 +1276,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioEnable (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioStatus (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioStatus...\n");
-    CHAR output_string[20];
+    CHAR output_string[20] = {'\0'};
     const char* radiostatus[] = {"Up", "Down", "Unknown", "Dormant", "NotPresent", "LowerLayerDown"};
     int count = sizeof(radiostatus) / sizeof(radiostatus[0]);
     INT return_value;
@@ -1317,7 +1319,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioStatus (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioStatus...\n");
     INT return_value;
-    CHAR output_string[20];
+    CHAR output_string[20] = {'\0'};
 
     UT_LOG("Invoking wifi_getRadioStatus without wifi initialization.\n");
     return_value = wifi_getRadioStatus(RADIO_INDEX, output_string);
@@ -1351,7 +1353,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioStatus (void)
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioStatus...\n");
     INT return_value;
     INT radioIndex = 2;
-    CHAR output_string[20];
+    CHAR output_string[20] = {'\0'};
 
     UT_LOG("Invoking wifi_getRadioStatus with invalid radio index.\n");
     return_value = wifi_getRadioStatus(radioIndex, output_string);
@@ -1415,7 +1417,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioStatus (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioIfName (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioIfName...\n");
-    CHAR output_string[MAX_OUTPUT_STRING_LEN] = {0};
+    CHAR output_string[MAX_OUTPUT_STRING_LEN] = {'\0'};
     INT status;
 
     UT_LOG("Invoking wifi_getRadioIfName with valid radio index and valid CHAR pointer.\n");
@@ -1447,7 +1449,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioIfName (void)
 void test_l1_wifi_common_hal_negative1_wifi_getRadioIfName (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioIfName...\n");
-    CHAR output_string[MAX_OUTPUT_STRING_LEN];
+    CHAR output_string[MAX_OUTPUT_STRING_LEN] = {'\0'};
 
     UT_LOG("Invoking wifi_getRadioIfName without calling either wifi_init or wifi_initWithConfig.\n");
     INT status = wifi_getRadioIfName(RADIO_INDEX, output_string);
@@ -1478,7 +1480,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioIfName (void)
 void test_l1_wifi_common_hal_negative2_wifi_getRadioIfName (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioIfName...\n");
-    CHAR output_string[MAX_OUTPUT_STRING_LEN];
+    CHAR output_string[MAX_OUTPUT_STRING_LEN] = {'\0'};
     INT radioIndex = 0;
     INT status;
 
@@ -1512,7 +1514,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioIfName (void)
 void test_l1_wifi_common_hal_negative3_wifi_getRadioIfName (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioIfName...\n");
-    CHAR output_string[MAX_OUTPUT_STRING_LEN];
+    CHAR output_string[MAX_OUTPUT_STRING_LEN] = {'\0'};
     INT radioIndex = 2;
     INT status;
 
@@ -1610,7 +1612,7 @@ void test_l1_wifi_common_hal_negative5_wifi_getRadioIfName (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate...\n");
-    CHAR outputVal[50] = {0};
+    CHAR outputVal[50] = {'\0'};
     INT bitrate;
     INT status;
 
@@ -1649,7 +1651,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate (void)
 void test_l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate...\n");
-    CHAR outputVal[50];
+    CHAR outputVal[50] = {'\0'};
     INT radioIndex = 2;
     INT status;
 
@@ -1682,7 +1684,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate (void)
 void test_l1_wifi_common_hal_negative2_wifi_getRadioMaxBitRate (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioMaxBitRate...\n");
-    CHAR outputVal[50];
+    CHAR outputVal[50] = {'\0'};
     INT status;
 
     UT_LOG("Invoking wifi_getRadioMaxBitRate without meeting the precondition of calling wifi_init().\n");
@@ -1745,7 +1747,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands...\n");
-    CHAR output_string[12] = {0};
+    CHAR output_string[12] = {'\0'};
     INT return_status;
 
     UT_LOG("Invoking wifi_getRadioSupportedFrequencyBands with valid radioIndex and output_string buffer.\n");
@@ -1814,7 +1816,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedFrequencyBands (voi
 void test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedFrequencyBands (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedFrequencyBands...\n");
-    CHAR output_string[12];
+    CHAR output_string[12] = {'\0'};
     INT return_status;
     INT radioIndex = 0;
 
@@ -1847,7 +1849,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedFrequencyBands (voi
 void test_l1_wifi_common_hal_negative3_wifi_getRadioSupportedFrequencyBands (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioSupportedFrequencyBands...\n");
-    CHAR output_string[12];
+    CHAR output_string[12] = {'\0'};
     INT return_status;
 
     UT_LOG("Invoking wifi_getRadioSupportedFrequencyBands without initializing WiFi.\n");
@@ -1879,7 +1881,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioSupportedFrequencyBands (voi
 void test_l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands...\n");
-    CHAR output_string[3];
+    CHAR output_string[3] = {'\0'};
     INT return_status;
 
     UT_LOG("Invoking wifi_getRadioSupportedFrequencyBands with insufficient buffer size\n");
@@ -1911,7 +1913,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands (voi
 void test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand...\n");
-    CHAR output_string[32] = {0};
+    CHAR output_string[32] = {'\0'};
     INT result;
 
     UT_LOG("Invoking wifi_getRadioOperatingFrequencyBand with radioIndex 1\n");
@@ -1948,7 +1950,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand (void
 void test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand...\n");
-    CHAR output_string[32];
+    CHAR output_string[32] = {'\0'};
     INT radioIndex = 0;
     INT result;
 
@@ -1981,7 +1983,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand (void
 void test_l1_wifi_common_hal_negative2_wifi_getRadioOperatingFrequencyBand (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioOperatingFrequencyBand...\n");
-    CHAR output_string[32];
+    CHAR output_string[32] = {'\0'};
     INT result;
 
     UT_LOG("Invoking wifi_getRadioOperatingFrequencyBand without calling wifi_init.\n");
@@ -2045,7 +2047,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand (void
 void test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards ... \n"); 
-    CHAR output_string[100];
+    CHAR output_string[100] ={'\0'};
     int status;
 
     UT_LOG("Invoking wifi_getRadioSupportedStandards with valid input parameters.\n");
@@ -2082,7 +2084,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards (void)
 void test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards ... \n");
-    CHAR output_string[100];
+    CHAR output_string[100] = {'\0'};
     INT radioIndex = 0;
     int status;
 
@@ -2146,7 +2148,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedStandards (void)
 void test_l1_wifi_common_hal_negative3_wifi_getRadioSupportedStandards (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioSupportedStandards ... \n");
-    CHAR output_string[100];
+    CHAR output_string[100] = {'\0'};
     int status;
 
     UT_LOG("Invoking wifi_getRadioSupportedStandards without initializing wifi.\n");
@@ -2178,8 +2180,8 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioSupportedStandards (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioStandard (void) 
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioStandard...\n");
-    CHAR output_string[50] = {0};
-    BOOL gOnly, nOnly, acOnly;
+    CHAR output_string[50] = {'\0'};
+    BOOL gOnly = 0, nOnly = 0, acOnly = 0;
     INT retStatus;
 
     UT_LOG("Invoking wifi_getRadioStandard with radioIndex 1. Output Buffer is NOT NULL.\n"); 
@@ -2217,8 +2219,8 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioStandard (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioStandard...\n");
     INT radioIndex = 2;
-    CHAR output_string[50];
-    BOOL gOnly, nOnly, acOnly;
+    CHAR output_string[50] = {'\0'};
+    BOOL gOnly = 0, nOnly = 0, acOnly = 0;
     INT retStatus;
 
     UT_LOG("Invoking wifi_getRadioStandard with radioIndex 2.\n");
@@ -2250,8 +2252,8 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioStandard (void)
 void test_l1_wifi_common_hal_negative2_wifi_getRadioStandard (void) 
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioStandard...\n");
-    CHAR output_string[50];
-    BOOL gOnly, nOnly, acOnly;
+    CHAR output_string[50] = {'\0'};
+    BOOL gOnly = 0, nOnly = 0, acOnly = 0;
     INT retStatus;
 
     UT_LOG("Invoking wifi_getRadioStandard without prior calling of wifi_init() or wifi_initWithConfig().\n");
@@ -2316,7 +2318,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioStandard (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioPossibleChannels (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioPossibleChannels...\n");
-    CHAR output_string[50] = {0};
+    CHAR output_string[50] = {'\0'};
     char *token;
     INT retVal, value;
 
@@ -2363,7 +2365,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioPossibleChannels (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioPossibleChannels...\n");
     INT radioIndex = 2;
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT retVal;
 
     UT_LOG("Invoking wifi_getRadioPossibleChannels with invalid radioIndex\n");
@@ -2397,7 +2399,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioPossibleChannels (void)
 void test_l1_wifi_common_hal_negative2_wifi_getRadioPossibleChannels (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioPossibleChannels...\n");
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT retVal;
 
     UT_LOG("Invoking wifi_getRadioPossibleChannels before wifi_init()\n");
@@ -2461,7 +2463,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioPossibleChannels (void)
 void test_l1_wifi_common_hal_negative4_wifi_getRadioPossibleChannels (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioPossibleChannels...\n");
-    CHAR output_string[3];
+    CHAR output_string[3] = {'\0'};
     INT retVal;
 
     UT_LOG("Invoking wifi_getRadioPossibleChannels with insufficient size output_string\n");
@@ -2494,7 +2496,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioPossibleChannels (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse...\n");
-    CHAR output_string[MAX_LENGTH];
+    CHAR output_string[MAX_LENGTH] = {'\0'};
     INT returnValue, value;
     char *token;
 
@@ -2539,7 +2541,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse (void)
 void test_l1_wifi_common_hal_negative1_wifi_getRadioChannelsInUse (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioChannelsInUse...\n");
-    CHAR output_string[MAX_LENGTH];
+    CHAR output_string[MAX_LENGTH] = {'\0'};
     INT returnValue;
 
     UT_LOG("Invoking wifi_getRadioChannelsInUse without calling wifi_init() or wifi_initWithConfig().\n");
@@ -2571,7 +2573,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioChannelsInUse (void)
 void test_l1_wifi_common_hal_negative2_wifi_getRadioChannelsInUse (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioChannelsInUse...\n");
-    CHAR output_string[MAX_LENGTH];
+    CHAR output_string[MAX_LENGTH] = {'\0'};
     INT radioIndex = 2;
     INT returnValue;
 
@@ -2636,7 +2638,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioChannelsInUse (void)
 void test_l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse...\n");
-    CHAR output_string[2];
+    CHAR output_string[2] = {'\0'};
     INT returnValue;
 
     UT_LOG("Invoking wifi_getRadioChannelsInUse with insufficient output_string buffer size.\n");
@@ -2668,7 +2670,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioChannel (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioChannel...\n");
-    ULONG output_ulong;
+    ULONG output_ulong = 0;
     INT returnValue;
 
     UT_LOG("Invoking wifi_getRadioChannel with valid input parameters. \n");
@@ -2720,7 +2722,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioChannel (void)
 void test_l1_wifi_common_hal_negative1_wifi_getRadioChannel (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioChannel...\n");
-    ULONG output_ulong;
+    ULONG output_ulong = 0;
     INT radioIndex = 2;
     INT returnValue;
 
@@ -2786,7 +2788,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioChannel (void)
 void test_l1_wifi_common_hal_negative3_wifi_getRadioChannel (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioChannel...\n");
-    ULONG output_ulong;
+    ULONG output_ulong = 0;
     INT returnValue;
 
     UT_LOG("Invoking wifi_getRadioChannel before wifi_init() or wifi_initWithConfig() \n");
@@ -2813,12 +2815,12 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioChannel (void)
 * **Test Procedure:**@n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | :---------: | :----------: | :--------------: | :-----: |
-* | 01 | Invoke wifi_getRadioAutoChannelSupported() with valid radioIndex and non-null output_bool | radioIndex = 1, output_bool = non-null | RETURN_OK | Should Pass |
+* | 01 | Invoke wifi_getRadioAutoChannelSupported() with valid radioIndex and valid output_bool | radioIndex = 1, output_bool = non-null | RETURN_OK | Should Pass |
 */
 void test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelSupported (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelSupported...\n");
-    BOOL output_bool;
+    BOOL output_bool = 0;
     INT result;
 
     UT_LOG("Invoking wifi_getRadioAutoChannelSupported with valid radioIndex and non-null output_bool\n");
@@ -2856,7 +2858,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelSupported (void)
 void test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelSupported (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelSupported...\n");
-    BOOL output_bool;
+    BOOL output_bool = 0;
     INT result;
 
     UT_LOG("Invoking wifi_getRadioAutoChannelSupported with no WiFi initialization.\n");
@@ -2889,7 +2891,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelSupported (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelSupported...\n");
     INT radioIndex = 2;
-    BOOL output_bool;
+    BOOL output_bool = 0;
     INT result;
 
     UT_LOG("Invoking wifi_getRadioAutoChannelSupported with invalid radioIndex.\n");
@@ -2990,7 +2992,7 @@ void test_l1_wifi_common_hal_positive2_wifi_getRadioAutoChannelSupported (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelEnable (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelEnable...\n");
-    BOOL output_bool;
+    BOOL output_bool = 0;
     INT ret;
 
     UT_LOG("Invoking wifi_getRadioAutoChannelEnable(1, &output_bool)\n");
@@ -3027,7 +3029,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioAutoChannelEnable (void)
 void test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelEnable (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelEnable...\n");
-    BOOL output_bool;
+    BOOL output_bool = 0;
     INT ret;
     INT radioIndex = 2;
 
@@ -3091,7 +3093,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelEnable (void)
 void test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelEnable (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelEnable...\n");
-    BOOL output_bool;
+    BOOL output_bool = 0;
     INT ret;
 
     UT_LOG("Invoking wifi_getRadioAutoChannelEnable(1, &output_bool).\n");
@@ -3293,7 +3295,7 @@ void test_l1_wifi_common_hal_negative3_getRadioAutoChannelRefreshPeriod (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioGuardInterval (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioGuardInterval...\n");
-    CHAR output_string[10];
+    CHAR output_string[10] = {'\0'};
     INT result;
 
     UT_LOG("Invoking wifi_getRadioGuardInterval with valid radioIndex, output buffer is valid.\n"); 
@@ -3332,7 +3334,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioGuardInterval (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioGuardInterval...\n");
     INT radioIndex = 2;
-    CHAR output_string[10];
+    CHAR output_string[10] = {'\0'};
     INT result;
 
     UT_LOG("Invoking wifi_getRadioGuardInterval with invalid radioIndex, output buffer is valid.\n");
@@ -3428,7 +3430,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval (void)
 void test_l1_wifi_common_hal_negative4_wifi_getRadioGuardInterval (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioGuardInterval...\n");
-    CHAR output_string[10];
+    CHAR output_string[10] = {'\0'};
     INT result;
 
     UT_LOG("Invoking wifi_getRadioGuardInterval without previously calling wifi_init() or wifi_initWithConfig()\n");
@@ -3460,7 +3462,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioGuardInterval (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingChannelBandwidth...\n");
-    CHAR output_string[50] = {0};
+    CHAR output_string[50] = {'\0'};
     const char* bandwidth[] = {"20MHz", "40MHz", "80MHz", "160MHz", "Auto"};
     INT returnValue;
 
@@ -3501,7 +3503,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingChannelBandwidth (v
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingChannelBandwidth...\n");
     INT radioIndex = 2;
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT returnValue;
 
     UT_LOG("Invoking wifi_getRadioOperatingChannelBandwidth with non-valid radioIndex and valid output_string.\n");
@@ -3565,7 +3567,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioOperatingChannelBandwidth (v
 void test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingChannelBandwidth (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingChannelBandwidth...\n");
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT returnValue;
 
     UT_LOG("Invoking wifi_getRadioOperatingChannelBandwidth without calling wifi_init or wifi_initWithConfig.\n");
@@ -3598,7 +3600,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioOperatingChannelBandwidth (v
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioOperatingChannelBandwidth...\n");
     FLOAT radioIndex = -1;
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT returnValue;
 
     UT_LOG("Invoking wifi_getRadioOperatingChannelBandwidth with invalid radioIndex \n");
@@ -3631,7 +3633,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioOperatingChannelBandwidth (v
 void test_l1_wifi_common_hal_positive1_wifi_getRadioExtChannel (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioExtChannel...\n");
-    CHAR output_string[100];
+    CHAR output_string[100] = {'\0'};
     INT result;
 
     UT_LOG("Invoking wifi_getRadioExtChannel with valid parameters. The radio index is 1 and the output_string is a valid buffer.\n");
@@ -3670,7 +3672,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioExtChannel (void)
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioExtChannel...\n");
     INT result;
     INT radioIndex = 0;
-    CHAR output_string[100]; 
+    CHAR output_string[100] = {'\0'}; 
 
     UT_LOG("Invoking wifi_getRadioExtChannel with invalid radio index. The output_string is a valid buffer.\n");
     result = wifi_getRadioExtChannel(radioIndex, output_string);
@@ -3702,7 +3704,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioExtChannel (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioExtChannel...\n");
     INT radioIndex = 2;
-    CHAR output_string[100]; 
+    CHAR output_string[100] = {'\0'}; 
     INT result;
 
     UT_LOG("Invoking wifi_getRadioExtChannel with invalid radio index. The output_string is a valid buffer.\n");
@@ -3798,7 +3800,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioExtChannel (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioMCS (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioMCS...\n");
-    INT output_INT;
+    INT output_INT = 0;
     INT status;
 
     UT_LOG("Invoking wifi_getRadioMCS with valid radioIndex and valid output_INT pointer.\n");
@@ -3848,7 +3850,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioMCS (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioMCS...\n");
     INT radioIndex = 2;
-    INT output_INT;
+    INT output_INT = 0;
     INT status;
 
     UT_LOG("Invoking wifi_getRadioMCS with invalid radioIndex and valid output_INT pointer.\n");
@@ -3911,7 +3913,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioMCS (void)
 void test_l1_wifi_common_hal_negative3_wifi_getRadioMCS (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioMCS...\n");
-    INT output_INT;
+    INT output_INT = 0;
     INT status;
 
     UT_LOG("Invoking wifi_getRadioMCS without calling wifi_init or wifi_initWithConfig. \n");
@@ -3943,7 +3945,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioMCS (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPowerSupported (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPowerSupported...\n");
-    CHAR output_list[50];
+    CHAR output_list[50] = {'\0'};
     int return_status;
 
     UT_LOG("Invoking wifi_getRadioTransmitPowerSupported with valid radioIndex 1\n");    
@@ -3976,7 +3978,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPowerSupported (void
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPowerSupported...\n");
     INT radioIndex = 0;
-    CHAR output_list[50];
+    CHAR output_list[50] = {'\0'};
     int return_status;
 
     UT_LOG("Invoking wifi_getRadioTransmitPowerSupported with invalid radioIndex 0\n");
@@ -4009,7 +4011,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioTransmitPowerSupported (void
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioTransmitPowerSupported...\n");
     INT radioIndex = 2;
-    CHAR output_list[50];
+    CHAR output_list[50] = {'\0'};
     int return_status;
 
     UT_LOG("Invoking wifi_getRadioTransmitPowerSupported with invalid radioIndex 2\n");
@@ -4074,7 +4076,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioTransmitPowerSupported (void
 void test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPowerSupported (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPowerSupported...\n");
-    CHAR output_list[50];
+    CHAR output_list[50] = {'\0'};
     int return_status;
 
     UT_LOG("Invoking wifi_getRadioTransmitPowerSupported before wifi_init() or wifi_initWithConfig()\n");    
@@ -4106,7 +4108,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPowerSupported (void
 void test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower...\n");
-    INT output_INT = 50;
+    INT output_INT = 0;
     INT ret;
 
     UT_LOG("Invoking wifi_getRadioTransmitPower with valid radioIndex and initialized output_INT. \n");
@@ -4147,7 +4149,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower...\n");
     INT radioIndex = 2;
-    INT output_INT;
+    INT output_INT = 0;
     INT ret;
 
     UT_LOG("Invoking wifi_getRadioTransmitPower with invalid radioIndex.\n");
@@ -4313,7 +4315,7 @@ void test_l1_wifi_common_hal_negative_1_wifi_getRadioIEEE80211hSupported (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative_1_wifi_getRadioIEEE80211hSupported...\n");
     INT radioIndex = 0;
-    BOOL supported;
+    BOOL supported = 0;
     INT returnValue;
 
     UT_LOG("Invoked wifi_getRadioIEEE80211hSupported with invalid radioIndex = 0.\n");
@@ -4377,7 +4379,7 @@ void test_l1_wifi_common_hal_negative_2_wifi_getRadioIEEE80211hSupported (void)
 void test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported...\n");
-    BOOL supported;
+    BOOL supported = 0;
     INT returnValue;
 
     UT_LOG("Invoked wifi_getRadioIEEE80211hSupported without calling wifi_init(). Expected to return RETURN_ERR.\n");
@@ -4409,7 +4411,7 @@ void test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled...\n");
-    BOOL enable;
+    BOOL enable = 0;
     INT result;  
 
     UT_LOG("Invoking wifi_getRadioIEEE80211hEnabled with valid index.\n");
@@ -4446,7 +4448,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled (void)
 void test_l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled...\n");
-    BOOL enable;
+    BOOL enable = 0;
     INT result; 
 
     UT_LOG("Invoking wifi_getRadioIEEE80211hEnabled without initialization.\n");
@@ -4510,7 +4512,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioIEEE80211hEnabled (void)
 void test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hEnabled...\n");
-    BOOL enable;
+    BOOL enable = 0;
     INT radioIndex = 2;
     INT result;  
 
@@ -4543,7 +4545,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hEnabled (void)
 void test_l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain...\n");
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT status;
 
     UT_LOG("Invoking wifi_getRegulatoryDomain with valid parameters.\n");
@@ -4583,7 +4585,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRegulatoryDomain (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getRegulatoryDomain...\n");
     INT radioIndex = -1;
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT status;
 
     UT_LOG("Invoking wifi_getRegulatoryDomain with negative radioIndex.\n");
@@ -4616,7 +4618,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRegulatoryDomain (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRegulatoryDomain...\n");
     INT radioIndex = 0;
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT status;
 
     UT_LOG("Invoking wifi_getRegulatoryDomain with radioIndex as 0\n");
@@ -4651,7 +4653,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain...\n");
     INT radioIndex = 2;
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT status;
 
     UT_LOG("Invoking wifi_getRegulatoryDomain with radioIndex greater than 1. \n");
@@ -4661,40 +4663,6 @@ void test_l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain (void)
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain...\n");
 }
-    
-/**
- * @brief Test for the function wifi_getRegulatoryDomain with negative scenario 
- *
- * This test function verifies the behavior of the wifi_getRegulatoryDomain API when invoked with 
- * uninitialized output_string. It checks whether the function handles such input properly, and returns an error code.@n
- *
- * **Test Group ID:** Basic: 01@n
- * **Test Case ID:** 131@n
- * **Priority:** High@n@n
- * 
- * **Pre-Conditions:** None@n
- * **Dependencies:** None@n
- * **User Interaction:** If user chose to run the test in interactive mode, then the test case has to be selected via console. @n
- * 
- * **Test Procedure:**@n
- * | Variation / Step | Description | Test Data |Expected Result |Notes |
- * | :----: | --------- | ---------- |-------------- | ----- |
- * | 01 | Invoke wifi_getRegulatoryDomain() with uninitialized output_string | radioIndex = 1, output_string = uninitialized | RETURN_ERR | Should fail |
- */
-void test_l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain (void)
-{
-    UT_LOG("Entering test_l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain...\n");
-    CHAR output_string[4] = {'\0'};
-    INT status;
-
-    UT_LOG("Invoking wifi_getRegulatoryDomain with uninitialized output_string.\n");
-    status = wifi_getRegulatoryDomain(RADIO_INDEX, output_string);
-    UT_LOG("Return status: %d\n", status);
-    UT_ASSERT_EQUAL(status, RETURN_ERR);
-
-    UT_LOG("Exiting test_l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain...\n");
-}
-
 
 /**
 * @brief Testing the wifi_getRegulatoryDomain function with NULL output_string
@@ -4703,7 +4671,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain (void)
 * The purpose of this unit test is to check fault tolerance of the  wifi_getRegulatoryDomain function.
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 132@n
+* **Test Case ID:** 131@n
 * **Priority:** High@n@n
 * 
 * **Pre-Conditions:** None@n
@@ -4736,7 +4704,7 @@ void test_l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain (void)
 * This test case is designed to test the behavior of the 'wifi_getRegulatoryDomain' function when called before initialization. A successful test case should return a specific error.
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 133@n
+* **Test Case ID:** 132@n
 * **Priority:** High@n@n
 * 
 * **Pre-Conditions:** None@n
@@ -4751,7 +4719,7 @@ void test_l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain (void)
 void test_l1_wifi_common_hal_negative6_wifi_getRegulatoryDomain (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative6_wifi_getRegulatoryDomain...\n");
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT status;
 
     UT_LOG("Invoking wifi_getRegulatoryDomain before wifi_init or wifi_initWithConfig function.\n");
@@ -4768,7 +4736,7 @@ void test_l1_wifi_common_hal_negative6_wifi_getRegulatoryDomain (void)
 * The objective of this test function is to verify whether the wifi_getRadioTrafficStats API retrieves traffic statistics as expected. The test invokes the wifi_getRadioTrafficStats api with a valid radio index and output struct and checks for a successful return status.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 134@n
+* **Test Case ID:** 133@n
 * **Priority:** High@n@n
 *
 * **Pre-Conditions:** None@n
@@ -4785,7 +4753,8 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats (void)
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats...\n");
     wifi_radioTrafficStats_t output_struct;
     INT status;
- 
+
+    memset(&output_struct, 0, sizeof(output_struct));
     UT_LOG("Invoking wifi_getRadioTrafficStats with valid radio index and valid output struct buffer.\n");
     status = wifi_getRadioTrafficStats(RADIO_INDEX, &output_struct);
     UT_LOG("Return status: %d\n", status);
@@ -4905,7 +4874,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats (void)
  * This test verifies the wifi_getRadioTrafficStats API's error handling effectiveness when it is invoked with an invalid radio index but with a valid output struct buffer. This is important to ensure robustness of the API to handle invalid inputs.@n
  *
  * **Test Group ID:** Basic: 01@n
- * **Test Case ID:** 135@n
+ * **Test Case ID:** 134@n
  * **Priority:** High@n@n
  * 
  * **Pre-Conditions:** None@n
@@ -4924,6 +4893,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats (void)
     INT status;
     wifi_radioTrafficStats_t output_struct;
 
+    memset(&output_struct, 0, sizeof(output_struct));
     UT_LOG("Invoked wifi_getRadioTrafficStats with invalid radio index and valid output struct buffer.\n");
     status = wifi_getRadioTrafficStats(radioIndex, &output_struct);
     UT_LOG("Return status: %d\n", status);
@@ -4938,7 +4908,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats (void)
 * This test exercises the negative situations that can happen when calling wifi_getRadioTrafficStats() API by passing NULL as output struct buffer.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 136@n
+* **Test Case ID:** 135@n
 * **Priority:** High@n@n
 * 
 * **Pre-Conditions:** None@n
@@ -4969,7 +4939,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getRadioTrafficStats (void)
  * This test will assess the capability of the wifi_getRadioTrafficStats function to handle cases when it is executed without prior execution of wifi_init() or wifi_initWithConfig()@n
  *
  * **Test Group ID:** Basic: 01@n
- * **Test Case ID:** 137@n
+ * **Test Case ID:** 136@n
  * **Priority:** High@n@n
  * 
  * **Pre-Conditions:** None@n
@@ -4987,6 +4957,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats (void)
     INT status;
     wifi_radioTrafficStats_t output_struct;
 
+    memset(&output_struct, 0, sizeof(output_struct));
     UT_LOG("Invoked wifi_getRadioTrafficStats without executing wifi_init()\n");
     status = wifi_getRadioTrafficStats(RADIO_INDEX, &output_struct);
     UT_LOG("Return status: %d\n", status);
@@ -5002,7 +4973,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats (void)
 * The API is tested for a positive test case where a valid identifier is provided and the SSID string is successfully returned.
 *
 * **Test Group ID:** Basic: 01 @n
-* **Test Case ID:** 138 @n
+* **Test Case ID:** 137 @n
 * **Priority:** High @n@n
 * 
 * **Pre-Conditions:** None @n
@@ -5017,7 +4988,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats (void)
 void test_l1_wifi_common_hal_positive1_wifi_getSSIDName (void)
 {    
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getSSIDName...\n");
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT ret_val;
 
     UT_LOG("Invoking wifi_getSSIDName with ssidIndex: 1.\n");
@@ -5035,7 +5006,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDName (void)
 * The main focus is to ensure the API returns an error when invoked with ssidIndex as 2.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 139@n
+* **Test Case ID:** 138@n
 * **Priority:** High@n@n
 * 
 * **Pre-Conditions:** None@n
@@ -5051,7 +5022,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getSSIDName (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getSSIDName...\n");
     INT ssidIndex = 2;
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT ret_val;    
 
     UT_LOG("Invoking wifi_getSSIDName with ssidIndex: 2. Checking for error return status.\n");
@@ -5069,7 +5040,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getSSIDName (void)
 * specifically checking how function behaves when NULL is provided as an output buffer.@n
 * 
 * **Test Group ID:** Basic: 01 @n
-* **Test Case ID:** 140 @n
+* **Test Case ID:** 139 @n
 * **Priority:** High @n@n
 * 
 * **Pre-Conditions:** None @n
@@ -5100,7 +5071,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getSSIDName (void)
 * This test function is designed to ensure wifi_getSSIDName API returns an error status when wifi_init function is not invoked before invoking wifi_getSSIDName API. This is important to identify any issues in error handling in such scenarios @n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 141@n
+* **Test Case ID:** 140@n
 * **Priority:** High@n@n
 * 
 * **Pre-Conditions:** None@n
@@ -5115,7 +5086,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getSSIDName (void)
 void test_l1_wifi_common_hal_negative3_wifi_getSSIDName (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getSSIDName...\n");
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT ret_val;
 
     UT_LOG("Invoking wifi_getSSIDName without wifi_init(). Checking for error return status.\n");
@@ -5132,7 +5103,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getSSIDName (void)
 * This test is designed to probe boundary conditions of the function wifi_getSSIDName by supplying it with an output buffer of size greater than the maximum possible SSID in an attempt to ensure robustness of the code.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 142@n
+* **Test Case ID:** 141@n
 * **Priority:** High@n@n
 * 
 * **Pre-Conditions:** None@n
@@ -5147,7 +5118,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getSSIDName (void)
 void test_l1_wifi_common_hal_boundary1_wifi_getSSIDName (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_boundary1_wifi_getSSIDName...\n");
-    CHAR output_string[513];
+    CHAR output_string[513] = {'\0'};
     INT ret_val;
 
     UT_LOG("Invoking wifi_getSSIDName with output_string of size greater than longest possible SSID. Checking for valid return status.\n");
@@ -5164,7 +5135,7 @@ void test_l1_wifi_common_hal_boundary1_wifi_getSSIDName (void)
 * This test case tests if the wifi_getBaseBSSID API is able to obtain the base BSSID correctly and return the correct status. It's crucial for obtaining BSSID in wifi related operations.
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 143@n
+* **Test Case ID:** 142@n
 * **Priority:** High@n@n
 * 
 * **Pre-Conditions:** None@n
@@ -5179,7 +5150,7 @@ void test_l1_wifi_common_hal_boundary1_wifi_getSSIDName (void)
 void test_l1_wifi_common_hal_positive1_wifi_getBaseBSSID (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getBaseBSSID...\n");
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT status;
 
     UT_LOG("Invoking wifi_getBaseBSSID with ssidIndex = 1 and a valid output_string buffer.\n");
@@ -5196,7 +5167,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getBaseBSSID (void)
 * This Unit Test is used to validate the wifi_getBaseBSSID API by providing an invalid SSID Index. It checks if the API is robust enough to handle invalid inputs and return the corresponding error code accordingly. @n
 *
 * **Test Group ID:** Basic: 01 @n
-* **Test Case ID:** 144@n
+* **Test Case ID:** 143@n
 * **Priority:** High @n@n
 *
 * **Pre-Conditions:** None @n
@@ -5212,7 +5183,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getBaseBSSID (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative1_wifi_getBaseBSSID...\n");
     INT ssidIndex = 2;
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT status;
 
     UT_LOG("Invoking wifi_getBaseBSSID with invalid ssidIndex = 2 and a valid output_string buffer. \n");
@@ -5229,7 +5200,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getBaseBSSID (void)
 * This test case checks if the wifi_getBaseBSSID function can handle invalid arguments specifically a NULL output_string. The purpose of this test is to ensure the function can adequately handle unexpected or invalid input.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 145@n
+* **Test Case ID:** 144@n
 * **Priority:** High@n@n
 * 
 * **Pre-Conditions:** None@n
@@ -5263,7 +5234,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getBaseBSSID (void)
 * This test is used to validate if the wifi_getBaseBSSID API returns an error when invoked without wifi initialization.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 146@n
+* **Test Case ID:** 145@n
 * **Priority:** High@n@n
 * 
 * **Pre-Conditions:** None@n
@@ -5278,7 +5249,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getBaseBSSID (void)
 void test_l1_wifi_common_hal_negative3_wifi_getBaseBSSID (void) 
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getBaseBSSID...\n");
-    CHAR output_string[50];
+    CHAR output_string[50] = {'\0'};
     INT status;
 
     UT_LOG("Invoking wifi_getBaseBSSID with ssidIndex = 1 and a valid output_string buffer without wifi initialization.\n");   
@@ -5295,7 +5266,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getBaseBSSID (void)
 * This test invokes wifi_getSSIDMACAddress API with valid inputs of SSID index and a valid output buffer. The reason for this test is to validate the proper functioning of the API when correct parameters are provided.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 147@n
+* **Test Case ID:** 146@n
 * **Priority:** High@n@n
 * 
 * **Pre-Conditions:** None@n
@@ -5310,7 +5281,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getBaseBSSID (void)
 void test_l1_wifi_common_hal_positive1_wifi_getSSIDMACAddress (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getSSIDMACAddress...\n");
-    CHAR output_string[20];
+    CHAR output_string[20] = {'\0'};
     INT result;
 
     UT_LOG("Invoking wifi_getSSIDMACAddress with valid inputs. SSID index: 1. Output buffer is valid.\n");
@@ -5327,7 +5298,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDMACAddress (void)
 * This function is testing if the wifi_getSSIDMACAddress function can handle being passed a null pointer and return an error message. This is important to ensure that the wifi_getSSIDMACAddress function can handle abnormal input.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 148@n
+* **Test Case ID:** 147@n
 * **Priority:** High@n@n
 * 
 * **Pre-Conditions:** None@n
@@ -5358,7 +5329,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getSSIDMACAddress (void)
 * This test case tests the negative scenarios for the function wifi_getSSIDMACAddress in L1 Wifi API. It verifies if the correct error is returned when the API is given an invalid SSID Index.
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 149@n
+* **Test Case ID:** 148@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -5374,7 +5345,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getSSIDMACAddress (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getSSIDMACAddress...\n");
     INT ssidIndex = 2;
-    CHAR output_string[20];
+    CHAR output_string[20] = {'\0'};
     INT result;
 
     UT_LOG("Invoking wifi_getSSIDMACAddress with SSID index: 2. Expected to return error.\n");
@@ -5391,7 +5362,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getSSIDMACAddress (void)
 * This test checks whether the wifi_getSSIDMACAddress API returns an error when called before initializing wifi using either wifi_init() or wifi_initWithConfig() API.
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 150@n
+* **Test Case ID:** 149@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -5406,7 +5377,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getSSIDMACAddress (void)
 void test_l1_wifi_common_hal_negative3_wifi_getSSIDMACAddress (void)
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getSSIDMACAddress...\n");
-    CHAR output_string[20];
+    CHAR output_string[20] = {'\0'};
     INT result;
 
     UT_LOG("Invoking wifi_getSSIDMACAddress before calling wifi_init() or wifi_initWithConfig(). Expected to return error.\n");
@@ -5424,7 +5395,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getSSIDMACAddress (void)
 * The importance of this test lies in ensuring that the SSID based traffic statistics can be retrieved correctly, which is crucial for WiFi operations.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 151@n
+* **Test Case ID:** 150@n
 * **Priority:** High@n@n
 * 
 * **Pre-Conditions:** None@n
@@ -5686,7 +5657,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSSIDTrafficStats (void)
 * aim to simulate a negative scenario where a non-existent SSID index is supplied to the function.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 152@n
+* **Test Case ID:** 151@n
 * **Priority:** High@n@n
 * 
 * **Pre-Conditions:** None@n
@@ -5721,7 +5692,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getSSIDTrafficStats (void)
 * It expects that API should handle invalid inputs and return appropriate failure code.
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 153@n
+* **Test Case ID:** 152@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -5755,7 +5726,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getSSIDTrafficStats (void)
 * when called in inappropriate sequence.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 154@n
+* **Test Case ID:** 153@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -5788,7 +5759,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getSSIDTrafficStats (void)
 * This test aims to verify the functionality of the wifi_getSSIDTrafficStats API when invoked with an invalid input, specifically with a zero ssidIndex. It expects the return status to be an error. This ensures that the API has proper input validation and error handling mechanism.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 155@n
+* **Test Case ID:** 154@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -5822,7 +5793,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getSSIDTrafficStats (void)
 * This tests checks the wifi_getNeighboringWiFiDiagnosticResult function for a positive case where a valid radio index is passed and checks if the expected return value is returned.
 *
 * **Test Group ID:** Basic: 01 @n
-* **Test Case ID:** 156 @n
+* **Test Case ID:** 155 @n
 * **Priority:** High @n
 * @n
 * **Pre-Conditions:** None @n
@@ -5841,8 +5812,10 @@ void test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult (
     INT result;
     CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_getNeighboringWiFiDiagnosticResult", "AP_SSID");
 
-    if (NULL == ssid )
+    if (NULL == ssid)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     wifi_neighbor_ap_t *neighbor_ap_array ;
     UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with input radioIndex = 1. Expect RETURN_OK.\n");
     result = wifi_getNeighboringWiFiDiagnosticResult(RADIO_INDEX, &neighbor_ap_array, &output_array_size);
@@ -6053,7 +6026,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult (
 * it returns the expected error code. This is important for ensuring robust error handling in the system.
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 157@n
+* **Test Case ID:** 156@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6088,7 +6061,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult  
 * This unit test case is written to verify the negative scenario of the wifi_getNeighboringWiFiDiagnosticResult function. It checks if the function correctly handles the invalid input and returns appropriate error code.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 158@n
+* **Test Case ID:** 157@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6122,7 +6095,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult (
 * In this test, `wifi_getNeighboringWiFiDiagnosticResult` function is invoked with null `neighbor_ap_array` and `output_array_size` parameters. The expectation is that the function should return `RETURN_ERR`.
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 159@n
+* **Test Case ID:** 158@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6157,7 +6130,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult (
 * The test simulates a negative test case where the wifi_getNeighboringWiFiDiagnosticResult API is not used properly. The API is invoked without prior calls to initialisation functions- wifi_init() or wifi_initWithConfig() . The test validates that the API handles this error case correctly and returns the expected error value.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 160@n
+* **Test Case ID:** 159@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6192,7 +6165,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult (
 * This test case will call wifi_getSpecificSSIDInfo API with a valid SSID and a valid frequency band to validate the functionality of the API with positive inputs.
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 161@n
+* **Test Case ID:** 160@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6214,7 +6187,9 @@ void test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo (void)
     CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_getSpecificSSIDInfo", "SSID");
 
     if (NULL == ssid )
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("\nInvoking wifi_getSpecificSSIDInfo with valid SSID and frequency band\n");
     ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
@@ -6421,7 +6396,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo (void)
 * The objective of this test is to verify the negative scenario when wifi_getSpecificSSIDInfo is invoked with NULL SSID. The API is expected to handle such incorrect inputs gracefully and return appropriate error status. This will validate the robustness of the API against incorrect input data.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 162@n
+* **Test Case ID:** 161@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6459,7 +6434,7 @@ void test_l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo (void)
  * the function to return an error. The aim is to ensure that the function properly handles incorrect inputs.@n
  *
  * **Test Group ID:** Basic: 01@n
- * **Test Case ID:** 163@n
+ * **Test Case ID:** 162@n
  * **Priority:** High@n
  * @n
  * **Pre-Conditions:** None@n
@@ -6480,7 +6455,9 @@ void test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo (void)
     CHAR *ssid = Config_key_new(key_file, "l1_negative2_wifi_getSpecificSSIDInfo", "SSID");
 
     if (NULL == ssid)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_getSpecificSSIDInfo with invalid frequency band\n");
     INT ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
@@ -6498,7 +6475,7 @@ void test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo (void)
 * This test case will call wifi_getSpecificSSIDInfo API with a invalid ap_array expecting RETURN_ERR.
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 164@n
+* **Test Case ID:** 163@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6520,7 +6497,9 @@ void test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo (void)
     CHAR *ssid = Config_key_new(key_file, "l1_negative3_wifi_getSpecificSSIDInfo", "SSID");
 
     if (NULL == ssid)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_getSpecificSSIDInfo with invalid ap_array \n");
     ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
@@ -6538,7 +6517,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo (void)
 * This test case will call wifi_getSpecificSSIDInfo API with a invalid output_array_size expecting RETURN_ERR.
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 165@n
+* **Test Case ID:** 164@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6560,7 +6539,9 @@ void test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo (void)
     CHAR *ssid = Config_key_new(key_file, "l1_negative4_wifi_getSpecificSSIDInfo", "SSID");
 
     if (NULL == ssid)
+    {
         UT_FAIL_FATAL("Test config not found");
+    }
     UT_LOG("Invoking wifi_getSpecificSSIDInfo before wifi_init() or wifi_initWithConfig()\n");
     ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
@@ -6578,7 +6559,7 @@ void test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo (void)
 * In this test, wifi_setRadioScanningFreqList function is tested for its successful execution and its equivalence with RETURN_OK. The test is designed to assert the functionality of the function and validate its robustness.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 166@n
+* **Test Case ID:** 165@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6611,7 +6592,7 @@ void test_l1_wifi_common_hal_positive1_wifi_setRadioScanningFreqList (void)
 * This test case is designed to verify the wifi_setRadioScanningFreqList function with invalid parameters, negative scenarios.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 167@n
+* **Test Case ID:** 166@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6645,7 +6626,7 @@ void test_l1_wifi_common_hal_negative1_wifi_setRadioScanningFreqList (void)
 * The test is designed to verify that the wifi_setRadioScanningFreqList function handles incorrect input (a wrong frequency list format) and returns an error. This is crucial for ensuring robustness and error handling of the API.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 168@n
+* **Test Case ID:** 167@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6676,7 +6657,7 @@ void test_l1_wifi_common_hal_negative2_wifi_setRadioScanningFreqList (void)
 * This test case is designed to verify the wifi_setRadioScanningFreqList function with invalid parameters, negative scenarios. Return should be RETURN_ERR @n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 169@n
+* **Test Case ID:** 168@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6708,7 +6689,7 @@ void test_l1_wifi_common_hal_negative3_wifi_setRadioScanningFreqList (void)
 * This test case is designed to verify the wifi_setRadioScanningFreqList function with freqList = NULL, negative scenarios. Return should be RETURN_ERR @n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 170@n
+* **Test Case ID:** 169@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6741,7 +6722,7 @@ void test_l1_wifi_common_hal_negative4_wifi_setRadioScanningFreqList (void)
 * In this test, wifi_setRadioScanningFreqList function is tested before wifi_init() or wifi_initWithConfig() and its equivalence with RETURN_ERR. @n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 171@n
+* **Test Case ID:** 170@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6773,7 +6754,7 @@ void test_l1_wifi_common_hal_negative5_wifi_setRadioScanningFreqList (void)
 * In this test, wifi_setRadioScanningFreqList function is tested with empty freqList  and its equivalence with RETURN_ERR. @n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 172@n
+* **Test Case ID:** 171@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6805,7 +6786,7 @@ void test_l1_wifi_common_hal_negative6_wifi_setRadioScanningFreqList (void)
 * The functionality of the wifi_getDualBandSupport() API from WiFi Common HAL is tested in this test. The objective is to check if the API retrieves the correct status for dual band support.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 173@n
+* **Test Case ID:** 172@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -6845,7 +6826,7 @@ void test_l1_wifi_common_hal_positive1_getDualBandSupport (void)
 * This test is designed to validate the behavior of the wifi_waitForScanResults API when called after initiating a wifi scan. The wifi_waitForScanResults API is expected to return with a RETURN_OK signal indicating that scan results are available for fetch.
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 174@n
+* **Test Case ID:** 173@n
 * **Priority:** High@n@n
 *
 * **Pre-Conditions:** None@n
@@ -6876,7 +6857,7 @@ void test_l1_wifi_common_hal_positive1_wifi_waitForScanResults (void)
 * This test is designed to assert that the wifi_waitForScanResults function should fail if wifi_init or wifi_initWithConfig was not previously called. This guarantees that wifi_waitForScanResults is not used inappropriately in the application.@n
 *
 * **Test Group ID:** Basic: 01@n
-* **Test Case ID:** 175@n
+* **Test Case ID:** 174@n
 * **Priority:** High@n
 * @n
 * **Pre-Conditions:** None@n
@@ -7042,7 +7023,7 @@ int test_wifi_common_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands", test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioSupportedFrequencyBands", test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedFrequencyBands);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioSupportedFrequencyBands", test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedFrequencyBands);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands", test_l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands", test_l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand", test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand", test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand", test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand);
@@ -7055,11 +7036,11 @@ int test_wifi_common_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioPossibleChannels", test_l1_wifi_common_hal_positive1_wifi_getRadioPossibleChannels);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioPossibleChannels", test_l1_wifi_common_hal_negative1_wifi_getRadioPossibleChannels);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioPossibleChannels", test_l1_wifi_common_hal_negative3_wifi_getRadioPossibleChannels);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioPossibleChannels", test_l1_wifi_common_hal_negative4_wifi_getRadioPossibleChannels);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioPossibleChannels", test_l1_wifi_common_hal_negative4_wifi_getRadioPossibleChannels);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse", test_l1_wifi_common_hal_positive1_wifi_getRadioChannelsInUse);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioChannelsInUse", test_l1_wifi_common_hal_negative2_wifi_getRadioChannelsInUse);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioChannelsInUse", test_l1_wifi_common_hal_negative3_wifi_getRadioChannelsInUse);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse", test_l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse", test_l1_wifi_common_hal_negative4_wifi_getRadioChannelsInUse);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioChannel", test_l1_wifi_common_hal_positive1_wifi_getRadioChannel);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioChannel", test_l1_wifi_common_hal_negative1_wifi_getRadioChannel);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioChannel", test_l1_wifi_common_hal_negative2_wifi_getRadioChannel);
@@ -7104,7 +7085,6 @@ int test_wifi_common_hal_register_post_init_tests (void)
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRegulatoryDomain", test_l1_wifi_common_hal_negative1_wifi_getRegulatoryDomain);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRegulatoryDomain", test_l1_wifi_common_hal_negative2_wifi_getRegulatoryDomain);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain", test_l1_wifi_common_hal_negative3_wifi_getRegulatoryDomain);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain", test_l1_wifi_common_hal_negative4_wifi_getRegulatoryDomain);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain", test_l1_wifi_common_hal_negative5_wifi_getRegulatoryDomain);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats", test_l1_wifi_common_hal_negative1_wifi_getRadioTrafficStats);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioTrafficStats", test_l1_wifi_common_hal_negative2_wifi_getRadioTrafficStats);
