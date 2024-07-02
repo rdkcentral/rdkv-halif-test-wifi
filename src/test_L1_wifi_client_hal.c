@@ -184,6 +184,7 @@ void test_event_d(char *marker, int value)
     eventDCallbackInvoked = 1;
     UT_LOG("Event_d callback invoked with marker: %s, value: %d\n", marker, value);
 }
+
 int WiFi_InitAndConnect(){
     int ret = 0;
     ret = wifi_init();
@@ -2229,8 +2230,10 @@ void test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint (void)
     wifi_pairedSSIDInfo_t ssidInfo;
     INT ret;
     CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_lastConnected_Endpoint", "AP_SSID");
+    CHAR *bssid1 = Config_key_new(key_file, "l1_positive2_wifi_lastConnected_Endpoint", "AP_BSSID1"); //2.4GHz BSSID
+    CHAR *bssid2 = Config_key_new(key_file, "l1_positive2_wifi_lastConnected_Endpoint", "AP_BSSID2"); //5GHz BSSID
 
-    if (NULL == ssid )
+    if (NULL == ssid || NULL == bssid1 || NULL == bssid2)
     {
         UT_FAIL_FATAL("Test config not found");
     }
@@ -2238,8 +2241,6 @@ void test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint (void)
     memset(&ssidInfo, 0, sizeof(wifi_pairedSSIDInfo_t));
     ret = wifi_lastConnected_Endpoint(&ssidInfo);
     UT_LOG("wifi_lastConnected_Endpoint API returns : %d\n",ret);
-    Config_key_delete(ssid);
-    UT_ASSERT_EQUAL(ret, RETURN_OK);
 
     UT_LOG("Values are, ap_ssid :%s, ap_bssid : %s, ap_security : %s, ap_passphrase : %s, ap_wep_key : %s\n",
            ssidInfo.ap_ssid, ssidInfo.ap_bssid,ssidInfo.ap_security,ssidInfo.ap_passphrase,ssidInfo.ap_wep_key);
@@ -2253,7 +2254,7 @@ void test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint (void)
         UT_LOG("Current service set identifier %s which is a invalid value\n", ssidInfo.ap_ssid);
         UT_FAIL("Current service set identifier validation failed\n");
     }
-    if (!strcmp(ssidInfo.ap_bssid,ssid))
+    if(!strcmp(ssidInfo.ap_bssid, "") || !strcmp(ssidInfo.ap_bssid, bssid1) || !strcmp(ssidInfo.ap_bssid, bssid2))
     {
         UT_LOG("Basic Service Set ID %s which is a valid value\n", ssidInfo.ap_bssid);
         UT_PASS("Basic Service Set ID validation success\n");
@@ -2263,19 +2264,28 @@ void test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint (void)
         UT_LOG("Basic Service Set ID %s which is an invalid value\n", ssidInfo.ap_bssid);
         UT_FAIL("Basic Service Set ID validation failed\n");
     }
-    const char *valid_security_values[] = {"NONE", "WPA-NONE", "WPA-PSK", "WPA-EAP", "IEEE8021X", "FT-PSK", "FT-EAP", "FT-EAP-SHA384", "WPA-PSK-SHA256", "WPA-EAP-SHA256", "SAE", "FT-SAE", "WPA-EAP-SUITE-B", "WPA-EAP-SUITE-B-192", "OSEN", "FILS-SHA256", "FILS-SHA384", "FT-FILS-SHA256", "FT-FILS-SHA384", "OWE", "DPP"};
+    const char *valid_security_values[] = {"NONE", "WPA-NONE", "WPA-PSK", "WPA2-PSK", "WPA-EAP", "IEEE8021X", "FT-PSK", "FT-EAP", "FT-EAP-SHA384", "WPA-PSK-SHA256", "WPA-EAP-SHA256", "SAE", "FT-SAE", "WPA-EAP-SUITE-B", "WPA-EAP-SUITE-B-192", "OSEN", "FILS-SHA256", "FILS-SHA384", "FT-FILS-SHA256", "FT-FILS-SHA384", "OWE", "DPP"};
+    BOOL is_valid_securitymode = 0;
     for (int i = 0; i < sizeof(valid_security_values) / sizeof(valid_security_values[0]); i++) {
-        if (!strcmp(ssidInfo.ap_security, valid_security_values[i])) {
-            UT_LOG("Security mode of AP is %s which is a valid value", ssidInfo.ap_security);
-            UT_PASS("Security mode of AP validation success\n");
-        }
-        else
+        if (!strcmp(ssidInfo.ap_security, valid_security_values[i])) 
         {
-            UT_LOG("Security mode of AP is %s which is a invalid value\n", ssidInfo.ap_security);
-            UT_FAIL("Security mode of AP validation failed\n");
+            is_valid_securitymode = 1;
+            break;
         }
     }
+    if (is_valid_securitymode)
+    {
+        UT_LOG("Security mode of AP is %s which is a valid value", ssidInfo.ap_security);
+        UT_PASS("Security mode of AP validation success\n");
+    }
+    else
+    {
+        UT_LOG("Security mode of AP is %s which is a invalid value\n", ssidInfo.ap_security);
+        UT_FAIL("Security mode of AP validation failed\n");
+    }
 
+    Config_key_delete(ssid);
+    UT_ASSERT_EQUAL(ret, RETURN_OK);
     UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint...\n");
 }
 
@@ -2305,8 +2315,10 @@ void test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint (void)
     INT ret;
     wifi_pairedSSIDInfo_t ssidInfo;
     CHAR *ssid = Config_key_new(key_file, "l1_positive2_wifi_lastConnected_Endpoint", "AP_SSID");
+    CHAR *bssid1 = Config_key_new(key_file, "l1_positive2_wifi_lastConnected_Endpoint", "AP_BSSID1"); //2.4GHz BSSID
+    CHAR *bssid2 = Config_key_new(key_file, "l1_positive2_wifi_lastConnected_Endpoint", "AP_BSSID2"); //5GHz BSSID
 
-    if (NULL == ssid )
+    if (NULL == ssid || NULL == bssid1 || NULL == bssid2)
     {
         UT_FAIL_FATAL("Test config not found");
     }
@@ -2314,12 +2326,10 @@ void test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint (void)
     memset(&ssidInfo, 0, sizeof(wifi_pairedSSIDInfo_t));
     ret = wifi_lastConnected_Endpoint(&ssidInfo);
     UT_LOG("wifi_lastConnected_Endpoint API returns : %d\n",ret);
-    Config_key_delete(ssid);
-    UT_ASSERT_EQUAL(ret, RETURN_OK);
 
     UT_LOG("Values are, ap_ssid :%s, ap_bssid : %s, ap_security : %s, ap_passphrase : %s, ap_wep_key : %s\n",
             ssidInfo.ap_ssid, ssidInfo.ap_bssid,ssidInfo.ap_security,ssidInfo.ap_passphrase,ssidInfo.ap_wep_key);
-    if(!strcmp(ssidInfo.ap_ssid,"") || !strcmp(ssidInfo.ap_ssid,ssid))
+    if(!strcmp(ssidInfo.ap_ssid, "") || !strcmp(ssidInfo.ap_ssid, ssid))
     {
         UT_LOG("Current service set identifier %s which is an valid value\n", ssidInfo.ap_ssid);
         UT_PASS("Current service set identifier validation success\n");
@@ -2329,7 +2339,7 @@ void test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint (void)
         UT_LOG("Current service set identifier %s which is a invalid value\n", ssidInfo.ap_ssid);
         UT_FAIL("Current service set identifier validation failed\n");
     }
-    if(!strcmp(ssidInfo.ap_bssid,""))
+    if(!strcmp(ssidInfo.ap_bssid, "") || !strcmp(ssidInfo.ap_bssid, bssid1) || !strcmp(ssidInfo.ap_bssid, bssid2))
     {
         UT_LOG("Basic Service Set ID %s which is a valid value\n", ssidInfo.ap_bssid);
         UT_PASS("Basic Service Set ID validation success\n");
@@ -2339,21 +2349,29 @@ void test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint (void)
         UT_LOG("Basic Service Set ID %s which is an invalid value\n", ssidInfo.ap_bssid);
         UT_FAIL("Basic Service Set ID validation failed\n");
     }
-    const char *valid_security_values[] = {"NONE", "WPA-NONE", "WPA-PSK", "WPA-EAP", "IEEE8021X", "FT-PSK", "FT-EAP", "FT-EAP-SHA384", "WPA-PSK-SHA256", "WPA-EAP-SHA256", "SAE", "FT-SAE", "WPA-EAP-SUITE-B", "WPA-EAP-SUITE-B-192", "OSEN", "FILS-SHA256", "FILS-SHA384", "FT-FILS-SHA256", "FT-FILS-SHA384", "OWE", "DPP"};
+    const char *valid_security_values[] = {"NONE", "WPA-NONE", "WPA-PSK", "WPA2-PSK", "WPA-EAP", "IEEE8021X", "FT-PSK", "FT-EAP", "FT-EAP-SHA384", "WPA-PSK-SHA256", "WPA-EAP-SHA256", "SAE", "FT-SAE", "WPA-EAP-SUITE-B", "WPA-EAP-SUITE-B-192", "OSEN", "FILS-SHA256", "FILS-SHA384", "FT-FILS-SHA256", "FT-FILS-SHA384", "OWE", "DPP"};
+    BOOL is_valid_securitymode = 0;
     for (int i = 0; i < sizeof(valid_security_values) / sizeof(valid_security_values[0]); i++)
     {
         if (!strcmp(ssidInfo.ap_security, valid_security_values[i]))
         {
-            UT_LOG("Security mode of AP is %s which is a valid value", ssidInfo.ap_security);
-            UT_PASS("Security mode of AP validation success\n");
-        }
-        else
-        {
-            UT_LOG("Security mode of AP is %s which is a invalid value\n", ssidInfo.ap_security);
-            UT_FAIL("Security mode of AP validation failed\n");
+            is_valid_securitymode = 1;
+            break;
         }
     }
+    if(is_valid_securitymode)
+    {
+        UT_LOG("Security mode of AP is %s which is a valid value", ssidInfo.ap_security);
+        UT_PASS("Security mode of AP validation success\n");
+    }
+    else
+    {
+        UT_LOG("Security mode of AP is %s which is a invalid value\n", ssidInfo.ap_security);
+        UT_FAIL("Security mode of AP validation failed\n");
+    }
 
+    Config_key_delete(ssid);
+    UT_ASSERT_EQUAL(ret, RETURN_OK);
     UT_LOG("Exiting test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint...\n");
 }
 
