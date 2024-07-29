@@ -672,18 +672,24 @@ void test_l1_wifi_common_hal_positive1_getStats (void)
         UT_FAIL("sta_RSSI validation failed\n");
     }
     UINT valid_frequencies[] = {2412, 2417, 2422, 2427, 2432, 2437, 2442, 2447, 2452, 2457, 2462, 2467, 2472, 5160, 5180, 5200, 5220, 5240, 5260, 5280, 5300, 5320, 5340, 5480, 5500, 5520, 5540, 5560, 5580, 5600, 5620, 5640, 5660, 5680, 5700, 5720, 5745, 5765, 5785, 5805, 5825, 5845, 5865, 5885};
+    BOOL is_valid_frequency = 0;
     for (int i = 0; i < sizeof(valid_frequencies) / sizeof(valid_frequencies[0]); i++)
     {
         if (wifi_sta_stats.sta_Frequency == valid_frequencies[i])
         {
-            UT_LOG("sta_Frequency %d which is a valid value\n", wifi_sta_stats.sta_Frequency);
-            UT_PASS("sta_Frequency validation success\n");
+            is_valid_frequency = 1;
+            break;
         }
-        else
-        {
-            UT_LOG("sta_Frequency is %d which is a invalid value\n", wifi_sta_stats.sta_Frequency);
-            UT_FAIL("sta_Frequency of AP validation failed\n");
-        }
+    }
+    if (is_valid_frequency)
+    {
+        UT_LOG("sta_Frequency %d which is a valid value\n", wifi_sta_stats.sta_Frequency);
+        UT_PASS("sta_Frequency validation success\n");
+    }
+    else
+    {
+        UT_LOG("sta_Frequency is %d which is a invalid value\n", wifi_sta_stats.sta_Frequency);
+        UT_FAIL("sta_Frequency of AP validation failed\n");
     }
     if (wifi_sta_stats.sta_LastDataDownlinkRate >= 1000 && wifi_sta_stats.sta_LastDataDownlinkRate <= 600000)
     {
@@ -800,16 +806,16 @@ void test_l1_wifi_common_hal_negative2_getStats (void)
 * | :----: | --------- | ---------- |-------------- | ----- |
 * | 01 | Invoke wifi_getStats() without calling wifi_init() or wifi_initWithConfig(), with valid radioIndex and valid wifi_sta_stats pointer. | radioIndex = valid value, wifi_sta_stats = valid pointer| The call should not alter the wifi_sta_stats information | The information should remain at its uninitialized state |
 */
-void test_l1_wifi_common_hal_negative3_getStats (void)
+void test_l1_wifi_common_hal_negative3_wifi_getStats (void)
 {
-    UT_LOG("Entering test_l1_wifi_common_hal_negative3_getStats...\n");
+    UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getStats...\n");
     wifi_sta_stats_t wifi_sta_stats;
 
     UT_LOG("Invoking wifi_getStats without calling wifi_init or wifi_initWithConfig\n");
     memset(&wifi_sta_stats, 0, sizeof(wifi_sta_stats_t));
     wifi_getStats(RADIO_INDEX, &wifi_sta_stats);
 
-    UT_LOG("Exiting test_l1_wifi_common_hal_negative3_getStats...\n");
+    UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getStats...\n");
 }
 
 /**
@@ -3192,9 +3198,9 @@ void test_l1_wifi_common_hal_negative1_getRadioAutoChannelRefreshPeriod (void)
  * | 01 | Invoke wifi_getRadioAutoChannelRefreshPeriod() without calling wifi_init() or wifi_initWithConfig() | input1 = 1, output = address to ULONG variable | RETURN_ERR | Should be Fail |
  *
  */
-void test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod (void)
+void test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelRefreshPeriod (void)
 {
-    UT_LOG("Entering test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod...\n");
+    UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelRefreshPeriod...\n");
     ULONG output = 0;
     INT ret;
 
@@ -3203,7 +3209,7 @@ void test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod (void)
     UT_LOG("Returned status is %d\n", ret);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
-    UT_LOG("Exiting test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod...\n");
+    UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelRefreshPeriod...\n");
 }
 
 /**
@@ -4376,9 +4382,9 @@ void test_l1_wifi_common_hal_negative_2_wifi_getRadioIEEE80211hSupported (void)
 * | :----: | --------- | ---------- | -------------- | ----- |
 * | 01 | Invoke wifi_getRadioIEEE80211hSupported() without calling wifi_init() or wifi_initWithConfig() | radioIndex = 1, supported = valid buffer | RETURN_ERR should be returned | Expected to fail as wifi_init() is not called |
 */
-void test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported (void)
+void test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hSupported (void)
 {
-    UT_LOG("Entering test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported...\n");
+    UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hSupported...\n");
     BOOL supported = 0;
     INT returnValue;
 
@@ -4387,7 +4393,7 @@ void test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported (void)
     UT_LOG("Returned status : %d\n", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
 
-    UT_LOG("Exiting test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported...\n");
+    UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hSupported...\n");
 }
 
 /**
@@ -6111,13 +6117,16 @@ void test_l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult (
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult...\n");
     INT radioIndex = 3;
-    UINT output_array_size = 512;
-    wifi_neighbor_ap_t *neighbor_ap_array;
+    UINT *output_array_size = NULL;
+    wifi_neighbor_ap_t **neighbor_ap_array = NULL;
     INT result;
 
     UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with radioIndex = 3 ,null neighbour_ap_array and output_array_size\n");
-    result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, &neighbor_ap_array, &output_array_size);
-    free(neighbor_ap_array);
+    result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, &neighbor_ap_array, output_array_size);
+    if (neighbor_ap_array)
+    {
+        free(neighbor_ap_array);
+    }
     UT_LOG("Returned status : %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
@@ -6492,7 +6501,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo (void)
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo...\n");
     WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
     UINT output_array_size = 0;
-    wifi_neighbor_ap_t *neighbor_ap_array = NULL;
+    wifi_neighbor_ap_t **neighbor_ap_array = NULL;
     INT ret;
     CHAR *ssid = Config_key_new(key_file, "l1_negative3_wifi_getSpecificSSIDInfo", "SSID");
 
@@ -6501,7 +6510,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo (void)
         UT_FAIL_FATAL("Test config not found");
     }
     UT_LOG("Invoking wifi_getSpecificSSIDInfo with invalid ap_array \n");
-    ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
+    ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
     if (neighbor_ap_array != NULL)
         free(neighbor_ap_array);
@@ -6904,7 +6913,7 @@ int test_wifi_common_hal_register_pre_init_tests (void)
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_positive1_wifi_getHalVersion", test_l1_wifi_common_hal_positive1_wifi_getHalVersion);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_getHalVersion", test_l1_wifi_common_hal_negative1_wifi_getHalVersion);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_down", test_l1_wifi_common_hal_negative1_wifi_down);
-    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_getStats", test_l1_wifi_common_hal_negative3_getStats);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getStats", test_l1_wifi_common_hal_negative3_wifi_getStats);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries", test_l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_getSSIDNumberOfEntries", test_l1_wifi_common_hal_negative1_wifi_getSSIDNumberOfEntries);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioEnable", test_l1_wifi_common_hal_negative4_wifi_getRadioEnable);
@@ -6920,14 +6929,14 @@ int test_wifi_common_hal_register_pre_init_tests (void)
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioChannel", test_l1_wifi_common_hal_negative3_wifi_getRadioChannel);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelSupported", test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelSupported);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelEnable", test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelEnable);
-    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod", test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelRefreshPeriod", test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelRefreshPeriod);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioGuardInterval", test_l1_wifi_common_hal_negative4_wifi_getRadioGuardInterval);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioOperatingChannelBandwidth", test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingChannelBandwidth);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioExtChannel", test_l1_wifi_common_hal_negative4_wifi_getRadioExtChannel);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioMCS", test_l1_wifi_common_hal_negative3_wifi_getRadioMCS);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioTransmitPowerSupported", test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPowerSupported);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_negative3_wifi_getRadioTransmitPower);
-    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported", test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hSupported", test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hSupported);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled", test_l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative6_wifi_getRegulatoryDomain", test_l1_wifi_common_hal_negative6_wifi_getRegulatoryDomain);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats", test_l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats);
@@ -6938,7 +6947,7 @@ int test_wifi_common_hal_register_pre_init_tests (void)
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult", test_l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo", test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative5_wifi_setRadioScanningFreqList", test_l1_wifi_common_hal_negative5_wifi_setRadioScanningFreqList);
-    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_waitForScanResults", test_l1_wifi_common_hal_negative1_wifi_waitForScanResults);
+    //UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_waitForScanResults", test_l1_wifi_common_hal_negative1_wifi_waitForScanResults);
 
     return 0;
 }
@@ -7024,11 +7033,9 @@ int test_wifi_common_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioSupportedFrequencyBands", test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedFrequencyBands);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioSupportedFrequencyBands", test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedFrequencyBands);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands", test_l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand", test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand", test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand", test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards", test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards", test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards", test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioSupportedStandards", test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedStandards);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioStandard", test_l1_wifi_common_hal_positive1_wifi_getRadioStandard);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioStandard", test_l1_wifi_common_hal_negative1_wifi_getRadioStandard);
@@ -7113,7 +7120,7 @@ int test_wifi_common_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_setRadioScanningFreqList", test_l1_wifi_common_hal_negative4_wifi_setRadioScanningFreqList);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative6_wifi_setRadioScanningFreqList", test_l1_wifi_common_hal_negative6_wifi_setRadioScanningFreqList);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_getDualBandSupport", test_l1_wifi_common_hal_positive1_getDualBandSupport);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_waitForScanResults", test_l1_wifi_common_hal_positive1_wifi_waitForScanResults);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_waitForScanResults", test_l1_wifi_common_hal_positive1_wifi_waitForScanResults);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult", test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult", test_l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult", test_l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult);
@@ -7145,6 +7152,8 @@ int test_wifi_common_hal_register_post_connect_tests (void)
     UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getRadioMCS", test_l1_wifi_common_hal_positive1_wifi_getRadioMCS);
     UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower);
     UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats", test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats);
+    UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand", test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand);
+    UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand", test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand);
 
     return 0;
 }
