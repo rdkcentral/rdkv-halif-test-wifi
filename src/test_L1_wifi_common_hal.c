@@ -4560,7 +4560,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain (void)
     UT_LOG("Return value: %s \n", output_string);
     UT_ASSERT_EQUAL(status, RETURN_OK); 
     if ((output_string[2] == ' ') || (output_string[2] == 'O') || (output_string[2] == 'I') || (output_string[2] == '\0')) {
-        UT_FAIL("Valid 3rd octet\n");
+        UT_PASS("Valid 3rd octet\n");
     } else {
         UT_LOG("Invalid 3rd octet : %c \n", output_string[2]);
         UT_FAIL("Invalid 3rd octet\n");
