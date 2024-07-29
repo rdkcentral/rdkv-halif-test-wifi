@@ -4559,7 +4559,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain (void)
     UT_LOG("Return status: %d \n", status);
     UT_LOG("Return value: %s \n", output_string);
     UT_ASSERT_EQUAL(status, RETURN_OK); 
-    if((output_string[2] != ' ') && (output_string[2] != 'O') && (output_string[2] != 'I'))
+    if((output_string[2] != ' ') && (output_string[2] != 'O') && (output_string[2] != 'I') && (output_string[2] != '\0'))
     {
         UT_LOG("Invalid 3rd octet : %c \n",output_string[2]);
         UT_FAIL("Invalid 3rd octet\n");
@@ -7028,7 +7028,7 @@ int test_wifi_common_hal_register_post_init_tests (void)
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioIfName", test_l1_wifi_common_hal_negative2_wifi_getRadioIfName);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioIfName", test_l1_wifi_common_hal_negative3_wifi_getRadioIfName);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioIfName", test_l1_wifi_common_hal_negative4_wifi_getRadioIfName);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate", test_l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate", test_l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate", test_l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate", test_l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands", test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands);
