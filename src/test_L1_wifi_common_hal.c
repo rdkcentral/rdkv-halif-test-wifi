@@ -6090,7 +6090,11 @@ void test_l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult (
     UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with invalid input radioIndex = 1,output_array_size = 512,neighbor_ap_array = NULL\n");
     result = wifi_getNeighboringWiFiDiagnosticResult(RADIO_INDEX, &neighbor_ap_array, &output_array_size);
     UT_LOG("Returned status : %d\n", result);
-    free(neighbor_ap_array);
+    if (neighbor_ap_array != NULL)
+    {
+        free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult...\n");
@@ -6124,9 +6128,15 @@ void test_l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult (
 
     UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with radioIndex = 3 ,null neighbour_ap_array and output_array_size\n");
     result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, neighbor_ap_array, output_array_size);
-    if (neighbor_ap_array)
+    INT size;
+    if (*output_array_size != 0 && neighbor_ap_array != NULL)
     {
+        for (size = 0; size < *output_array_size; size++)
+        {
+            free(neighbor_ap_array[size]);
+        }
         free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
     }
     UT_LOG("Returned status : %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
@@ -6161,8 +6171,11 @@ void test_l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult (
     UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult without calling wifi_init() or wifi_initWithConfig()\n");
     INT result = wifi_getNeighboringWiFiDiagnosticResult(RADIO_INDEX, &neighbor_ap_array, &output_array_size);
     UT_LOG("Returned status : %d\n\n", result);
-    if (neighbor_ap_array)
+    if (neighbor_ap_array != NULL)
+    {
         free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult...\n");
@@ -6397,6 +6410,7 @@ void test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo (void)
     if (neighbor_ap_array != NULL)
     {
         free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
     }
     Config_key_delete(ssid);
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo...\n");
@@ -6433,7 +6447,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo (void)
     ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n\n", ret);
     if (neighbor_ap_array != NULL)
-       free(neighbor_ap_array);
+    {
+        free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo...\n");
@@ -6474,7 +6491,10 @@ void test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo (void)
     INT ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
     if (neighbor_ap_array != NULL)
-       free(neighbor_ap_array);
+    {
+        free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
     Config_key_delete(ssid);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
@@ -6515,8 +6535,16 @@ void test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo (void)
     UT_LOG("Invoking wifi_getSpecificSSIDInfo with invalid ap_array \n");
     ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
-    if (neighbor_ap_array != NULL)
+    INT size;
+    if (output_array_size != 0 && neighbor_ap_array != NULL)
+    {
+        for (size = 0; size < output_array_size; size++)
+        {
+            free(neighbor_ap_array[size]);
+        }
         free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
     Config_key_delete(ssid);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
@@ -6558,7 +6586,10 @@ void test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo (void)
     ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
     if (neighbor_ap_array != NULL)
+    {
         free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
     Config_key_delete(ssid);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
