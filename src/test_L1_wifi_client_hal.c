@@ -3063,7 +3063,7 @@ void test_l1_wifi_client_hal_positive2_wifi_getRoamingControl (void)
         UT_LOG("Post-association self steer timeframe is  %d which is a invalid value\n", pRoamingCtrl_data.postAssnSelfSteerTimeframe);
         UT_FAIL("Post-association self steer timeframe validation failed\n");
     }
-    if ( pRoamingCtrl_data.postAssnBackOffTime >= 0 && pRoamingCtrl_data.postAssnBackOffTime <= 36000 )
+    if ( pRoamingCtrl_data.postAssnBackOffTime >= 0 && pRoamingCtrl_data.postAssnBackOffTime <= 3600 )
     {
         UT_LOG("Post-association backoff time is %d which is a valid value\n", pRoamingCtrl_data.postAssnBackOffTime);
         UT_PASS("Post-association backoff time validation success\n");
