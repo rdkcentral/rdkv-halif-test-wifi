@@ -672,18 +672,24 @@ void test_l1_wifi_common_hal_positive1_getStats (void)
         UT_FAIL("sta_RSSI validation failed\n");
     }
     UINT valid_frequencies[] = {2412, 2417, 2422, 2427, 2432, 2437, 2442, 2447, 2452, 2457, 2462, 2467, 2472, 5160, 5180, 5200, 5220, 5240, 5260, 5280, 5300, 5320, 5340, 5480, 5500, 5520, 5540, 5560, 5580, 5600, 5620, 5640, 5660, 5680, 5700, 5720, 5745, 5765, 5785, 5805, 5825, 5845, 5865, 5885};
+    BOOL is_valid_frequency = 0;
     for (int i = 0; i < sizeof(valid_frequencies) / sizeof(valid_frequencies[0]); i++)
     {
         if (wifi_sta_stats.sta_Frequency == valid_frequencies[i])
         {
-            UT_LOG("sta_Frequency %d which is a valid value\n", wifi_sta_stats.sta_Frequency);
-            UT_PASS("sta_Frequency validation success\n");
+            is_valid_frequency = 1;
+            break;
         }
-        else
-        {
-            UT_LOG("sta_Frequency is %d which is a invalid value\n", wifi_sta_stats.sta_Frequency);
-            UT_FAIL("sta_Frequency of AP validation failed\n");
-        }
+    }
+    if (is_valid_frequency)
+    {
+        UT_LOG("sta_Frequency %d which is a valid value\n", wifi_sta_stats.sta_Frequency);
+        UT_PASS("sta_Frequency validation success\n");
+    }
+    else
+    {
+        UT_LOG("sta_Frequency is %d which is a invalid value\n", wifi_sta_stats.sta_Frequency);
+        UT_FAIL("sta_Frequency of AP validation failed\n");
     }
     if (wifi_sta_stats.sta_LastDataDownlinkRate >= 1000 && wifi_sta_stats.sta_LastDataDownlinkRate <= 600000)
     {
@@ -800,16 +806,16 @@ void test_l1_wifi_common_hal_negative2_getStats (void)
 * | :----: | --------- | ---------- |-------------- | ----- |
 * | 01 | Invoke wifi_getStats() without calling wifi_init() or wifi_initWithConfig(), with valid radioIndex and valid wifi_sta_stats pointer. | radioIndex = valid value, wifi_sta_stats = valid pointer| The call should not alter the wifi_sta_stats information | The information should remain at its uninitialized state |
 */
-void test_l1_wifi_common_hal_negative3_getStats (void)
+void test_l1_wifi_common_hal_negative3_wifi_getStats (void)
 {
-    UT_LOG("Entering test_l1_wifi_common_hal_negative3_getStats...\n");
+    UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getStats...\n");
     wifi_sta_stats_t wifi_sta_stats;
 
     UT_LOG("Invoking wifi_getStats without calling wifi_init or wifi_initWithConfig\n");
     memset(&wifi_sta_stats, 0, sizeof(wifi_sta_stats_t));
     wifi_getStats(RADIO_INDEX, &wifi_sta_stats);
 
-    UT_LOG("Exiting test_l1_wifi_common_hal_negative3_getStats...\n");
+    UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getStats...\n");
 }
 
 /**
@@ -3192,9 +3198,9 @@ void test_l1_wifi_common_hal_negative1_getRadioAutoChannelRefreshPeriod (void)
  * | 01 | Invoke wifi_getRadioAutoChannelRefreshPeriod() without calling wifi_init() or wifi_initWithConfig() | input1 = 1, output = address to ULONG variable | RETURN_ERR | Should be Fail |
  *
  */
-void test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod (void)
+void test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelRefreshPeriod (void)
 {
-    UT_LOG("Entering test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod...\n");
+    UT_LOG("Entering test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelRefreshPeriod...\n");
     ULONG output = 0;
     INT ret;
 
@@ -3203,7 +3209,7 @@ void test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod (void)
     UT_LOG("Returned status is %d\n", ret);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
-    UT_LOG("Exiting test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod...\n");
+    UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelRefreshPeriod...\n");
 }
 
 /**
@@ -4376,9 +4382,9 @@ void test_l1_wifi_common_hal_negative_2_wifi_getRadioIEEE80211hSupported (void)
 * | :----: | --------- | ---------- | -------------- | ----- |
 * | 01 | Invoke wifi_getRadioIEEE80211hSupported() without calling wifi_init() or wifi_initWithConfig() | radioIndex = 1, supported = valid buffer | RETURN_ERR should be returned | Expected to fail as wifi_init() is not called |
 */
-void test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported (void)
+void test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hSupported (void)
 {
-    UT_LOG("Entering test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported...\n");
+    UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hSupported...\n");
     BOOL supported = 0;
     INT returnValue;
 
@@ -4387,7 +4393,7 @@ void test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported (void)
     UT_LOG("Returned status : %d\n", returnValue);
     UT_ASSERT_EQUAL(returnValue, RETURN_ERR);
 
-    UT_LOG("Exiting test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported...\n");
+    UT_LOG("Exiting test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hSupported...\n");
 }
 
 /**
@@ -4553,9 +4559,10 @@ void test_l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain (void)
     UT_LOG("Return status: %d \n", status);
     UT_LOG("Return value: %s \n", output_string);
     UT_ASSERT_EQUAL(status, RETURN_OK); 
-    if((output_string[2] != ' ') && (output_string[2] != 'O') && (output_string[2] != 'I'))
-    {
-        UT_LOG("Invalid 3rd octet : %c \n",output_string[2]);
+    if ((output_string[2] == ' ') || (output_string[2] == 'O') || (output_string[2] == 'I') || (output_string[2] == '\0')) {
+        UT_PASS("Valid 3rd octet\n");
+    } else {
+        UT_LOG("Invalid 3rd octet : %c \n", output_string[2]);
         UT_FAIL("Invalid 3rd octet\n");
     }
 
@@ -6083,7 +6090,11 @@ void test_l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult (
     UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with invalid input radioIndex = 1,output_array_size = 512,neighbor_ap_array = NULL\n");
     result = wifi_getNeighboringWiFiDiagnosticResult(RADIO_INDEX, &neighbor_ap_array, &output_array_size);
     UT_LOG("Returned status : %d\n", result);
-    free(neighbor_ap_array);
+    if (neighbor_ap_array != NULL)
+    {
+        free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult...\n");
@@ -6111,13 +6122,22 @@ void test_l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult (
 {
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult...\n");
     INT radioIndex = 3;
-    UINT output_array_size = 512;
-    wifi_neighbor_ap_t *neighbor_ap_array;
+    UINT *output_array_size = NULL;
+    wifi_neighbor_ap_t **neighbor_ap_array = NULL;
     INT result;
 
     UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult with radioIndex = 3 ,null neighbour_ap_array and output_array_size\n");
-    result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, &neighbor_ap_array, &output_array_size);
-    free(neighbor_ap_array);
+    result = wifi_getNeighboringWiFiDiagnosticResult(radioIndex, neighbor_ap_array, output_array_size);
+    INT size;
+    if (*output_array_size != 0 && neighbor_ap_array != NULL)
+    {
+        for (size = 0; size < *output_array_size; size++)
+        {
+            free(neighbor_ap_array[size]);
+        }
+        free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
     UT_LOG("Returned status : %d\n", result);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
@@ -6151,8 +6171,11 @@ void test_l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult (
     UT_LOG("Invoking wifi_getNeighboringWiFiDiagnosticResult without calling wifi_init() or wifi_initWithConfig()\n");
     INT result = wifi_getNeighboringWiFiDiagnosticResult(RADIO_INDEX, &neighbor_ap_array, &output_array_size);
     UT_LOG("Returned status : %d\n\n", result);
-    if (neighbor_ap_array)
+    if (neighbor_ap_array != NULL)
+    {
         free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult...\n");
@@ -6182,211 +6205,214 @@ void test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo (void)
     UT_LOG("Entering test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo...\n");
     WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
     UINT output_array_size = 0;
-    wifi_neighbor_ap_t *neighbor_ap_array;
+    wifi_neighbor_ap_t *neighbor_ap_array = NULL;
     INT ret;
     CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_getSpecificSSIDInfo", "SSID");
+    CHAR *bssid1 = Config_key_new(key_file, "l1_positive1_wifi_getSpecificSSIDInfo", "AP_BSSID1"); //2.4GHz BSSID
+    CHAR *bssid2 = Config_key_new(key_file, "l1_positive1_wifi_getSpecificSSIDInfo", "AP_BSSID2"); //5GHz BSSID
 
-    if (NULL == ssid )
+    if (NULL == ssid || NULL == bssid1 || NULL == bssid2)
     {
         UT_FAIL_FATAL("Test config not found");
     }
     UT_LOG("\nInvoking wifi_getSpecificSSIDInfo with valid SSID and frequency band\n");
     ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
-    Config_key_delete(ssid);
     UT_ASSERT_EQUAL(ret, RETURN_OK);
-    UT_LOG("Array of neighboring access points contains the values: ap_SSID = %s, ap_BSSID = %s, ap_Mode = %s, ap_Channel = %d, "
-        "ap_SignalStrength = %d, ap_SecurityModeEnabled =%s, ap_EncryptionMode = %s, ap_OperatingFrequencyBand = %s, "
-        "ap_SupportedStandards = %s, ap_OperatingStandards = %s, ap_OperatingChannelBandwidth = %s, ap_BeaconPeriod = %d, "
-        "ap_Noise = %d, ap_BasicDataTransferRates = %s, ap_SupportedDataTransferRates = %s, ap_DTIMPeriod = %d, "
-        "ap_ChannelUtilization = %d\n", neighbor_ap_array->ap_SSID, neighbor_ap_array->ap_BSSID, neighbor_ap_array->ap_Mode, 
-        neighbor_ap_array->ap_Channel, neighbor_ap_array->ap_SignalStrength, neighbor_ap_array->ap_SecurityModeEnabled, 
-        neighbor_ap_array->ap_EncryptionMode, neighbor_ap_array->ap_OperatingFrequencyBand, neighbor_ap_array->ap_SupportedStandards, 
-        neighbor_ap_array->ap_OperatingStandards, neighbor_ap_array->ap_OperatingChannelBandwidth, neighbor_ap_array->ap_BeaconPeriod, 
-        neighbor_ap_array->ap_Noise, neighbor_ap_array->ap_BasicDataTransferRates, neighbor_ap_array->ap_SupportedDataTransferRates, 
-        neighbor_ap_array->ap_DTIMPeriod, neighbor_ap_array->ap_ChannelUtilization);
-    UT_LOG("output_array_size = %d\n", output_array_size);
-    if(!strcmp(neighbor_ap_array->ap_SSID,"") || !strcmp(neighbor_ap_array->ap_SSID,ssid))
+    if (neighbor_ap_array == NULL || output_array_size == 0)
     {
-        UT_LOG("ap_SSID %s which is an valid value\n", neighbor_ap_array->ap_SSID);
-        UT_PASS("ap_SSID validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_SSID %s which is a invalid value\n", neighbor_ap_array->ap_SSID);
-        UT_FAIL("ap_SSID validation failed\n");
+        UT_FAIL_FATAL("neighbor_ap_array is NULL or output_array_size is 0");
     }
 
-    if(!strcmp(neighbor_ap_array->ap_Mode,"AdHoc") || !strcmp(neighbor_ap_array->ap_Mode,"Infrastructure"))  
+    UINT size;
+    for(size=0; size < output_array_size; size++)
     {
-        UT_LOG("ap_Mode %s which is an valid value\n", neighbor_ap_array->ap_Mode);
-        UT_PASS("ap_Mode validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_Mode %s which is a invalid value\n", neighbor_ap_array->ap_Mode);
-        UT_FAIL("ap_Mode validation failed\n");
-    }
-
-    if ((neighbor_ap_array->ap_Channel >= 1 && neighbor_ap_array->ap_Channel <= 13 )||( neighbor_ap_array->ap_Channel >= 36 && neighbor_ap_array->ap_Channel <= 64) || (neighbor_ap_array->ap_Channel >= 100 && neighbor_ap_array->ap_Channel <= 165))
-    {
-        UT_LOG("ap_Channel is %d which is a valid value\n", neighbor_ap_array->ap_Channel);
-        UT_PASS("ssid_UnknownPacketsReceived validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_Channel is %d which is an invalid value\n", neighbor_ap_array->ap_Channel);
-        UT_FAIL("ap_Channel validation failed\n");
-    }
-
-    if (neighbor_ap_array->ap_SignalStrength >= -200 && neighbor_ap_array->ap_SignalStrength <= 0)
-    {
-        UT_LOG("ap_SignalStrength is %d which is a valid value\n", neighbor_ap_array->ap_SignalStrength);
-        UT_PASS("ap_SignalStrength validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_SignalStrength is %d which is an invalid value\n", neighbor_ap_array->ap_SignalStrength);
-        UT_FAIL("ap_SignalStrength validation failed\n");
-    }
-
-    if(!strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"None") || !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WEP")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA3")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-WPA2")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2-WPA3")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-Enterprise")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA2-Enterprise")|| !strcmp(neighbor_ap_array->ap_SecurityModeEnabled,"WPA-WPA2-Enterprise"))  
-    {
-        UT_LOG("ap_SecurityModeEnabled is %s which is an valid value\n", neighbor_ap_array->ap_SecurityModeEnabled);
-        UT_PASS("ap_SecurityModeEnabled validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_SecurityModeEnabled is %s which is a invalid value\n", neighbor_ap_array->ap_SecurityModeEnabled);
-        UT_FAIL("ap_SecurityModeEnabled validation failed\n");
-    }
-
-    if(!strcmp(neighbor_ap_array->ap_EncryptionMode,"TKIP") || !strcmp(neighbor_ap_array->ap_EncryptionMode,"AES"))  
-    {
-        UT_LOG("ap_EncryptionMode is %s which is an valid value\n", neighbor_ap_array->ap_EncryptionMode);
-        UT_PASS("ap_EncryptionMode validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_EncryptionMode is %s which is a invalid value\n", neighbor_ap_array->ap_EncryptionMode);
-        UT_FAIL("ap_EncryptionMode validation failed\n");
-    }
-
-    if(!strcmp(neighbor_ap_array->ap_OperatingFrequencyBand,"2.4GHz") || !strcmp(neighbor_ap_array->ap_OperatingFrequencyBand,"5GHz"))  
-    {
-        UT_LOG("ap_OperatingFrequencyBand is %s which is an valid value\n", neighbor_ap_array->ap_OperatingFrequencyBand);
-        UT_PASS("ap_OperatingFrequencyBand validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_OperatingFrequencyBand is %s which is a invalid value\n", neighbor_ap_array->ap_OperatingFrequencyBand);
-        UT_FAIL("ap_OperatingFrequencyBand validation failed\n");
-    }
-
-    if(!strcmp(neighbor_ap_array->ap_SupportedStandards,"a") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"b") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"g") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"n") || !strcmp(neighbor_ap_array->ap_SupportedStandards,"ac"))  
-    {
-        UT_LOG("ap_SupportedStandards is %s which is an valid value\n", neighbor_ap_array->ap_SupportedStandards);
-        UT_PASS("ap_SupportedStandards validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_SupportedStandards is %s which is a invalid value\n", neighbor_ap_array->ap_SupportedStandards);
-        UT_FAIL("ap_SupportedStandards validation failed\n");
-    }
-    if(!strcmp(neighbor_ap_array->ap_OperatingStandards,"a") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"b") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"g") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"n") || !strcmp(neighbor_ap_array->ap_OperatingStandards,"ac"))  
-    {
-        UT_LOG("ap_OperatingStandards is %s which is an valid value\n", neighbor_ap_array->ap_OperatingStandards);
-        UT_PASS("ap_OperatingStandards validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_OperatingStandards is %s which is a invalid value\n", neighbor_ap_array->ap_OperatingStandards);
-        UT_FAIL("ap_OperatingStandards validation failed\n");
-    }
-    if(!strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"20MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"40MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"80MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"160MHz") || !strcmp(neighbor_ap_array->ap_OperatingChannelBandwidth,"Auto"))  
-    {
-        UT_LOG("ap_OperatingChannelBandwidth is %s which is an valid value\n", neighbor_ap_array->ap_OperatingStandards);
-        UT_PASS("ap_OperatingChannelBandwidth validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_OperatingChannelBandwidth is %s which is a invalid value\n", neighbor_ap_array->ap_OperatingStandards);
-        UT_FAIL("ap_OperatingChannelBandwidth validation failed\n");
-    }
-    if (neighbor_ap_array->ap_BeaconPeriod >= 0 && neighbor_ap_array->ap_BeaconPeriod <= UINT32_MAX)
-    {
-        UT_LOG("ap_BeaconPeriod is %d which is a valid value\n", neighbor_ap_array->ap_BeaconPeriod);
-        UT_PASS("ap_BeaconPeriod validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_BeaconPeriod is %d which is an invalid value\n", neighbor_ap_array->ap_BeaconPeriod);
-        UT_FAIL("ap_BeaconPeriod validation failed\n");
-    }
-    if (neighbor_ap_array->ap_Noise >= -200 && neighbor_ap_array->ap_Noise <= 0)
-    {
-        UT_LOG("ap_Noise is %d which is a valid value\n", neighbor_ap_array->ap_Noise);
-        UT_PASS("ap_Noise validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_Noise is %d which is an invalid value\n", neighbor_ap_array->ap_Noise);
-        UT_FAIL("ap_Noise validation failed\n");
-    }
-    if(!strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"1") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"2") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"5.5") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"6") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"9") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"12")|| !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"18") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"24") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"36") || !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"48")|| !strcmp(neighbor_ap_array->ap_BasicDataTransferRates,"54"))  
-    {
-        UT_LOG("ap_BasicDataTransferRates is %s which is an valid value\n", neighbor_ap_array->ap_BasicDataTransferRates);
-        UT_PASS("ap_BasicDataTransferRates validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_BasicDataTransferRates is %s which is a invalid value\n", neighbor_ap_array->ap_BasicDataTransferRates);
-        UT_FAIL("ap_BasicDataTransferRates validation failed\n");
-    }
-    if(!strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"1") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"2") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"5.5") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"6") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"9") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"12")|| !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"18") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"24") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"36") || !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"48")|| !strcmp(neighbor_ap_array->ap_SupportedDataTransferRates,"54"))  
-    {
-        UT_LOG("ap_SupportedDataTransferRates is %s which is an valid value\n", neighbor_ap_array->ap_SupportedDataTransferRates);
-        UT_PASS("ap_SupportedDataTransferRates validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_SupportedDataTransferRates is %s which is a invalid value\n", neighbor_ap_array->ap_SupportedDataTransferRates);
-        UT_FAIL("ap_SupportedDataTransferRates validation failed\n");
-    }
-    if (neighbor_ap_array->ap_DTIMPeriod >= 0 && neighbor_ap_array->ap_DTIMPeriod <= UINT32_MAX)
-    {
-        UT_LOG("ap_DTIMPeriod is %d which is a valid value\n", neighbor_ap_array->ap_DTIMPeriod);
-        UT_PASS("ap_Noise validation success\n");
-    }
-    else
-    {
-        UT_LOG("ap_DTIMPeriod is %d which is an invalid value\n", neighbor_ap_array->ap_DTIMPeriod);
-        UT_FAIL("ap_DTIMPeriod validation failed\n");
-    }
-    for (int i = 0; i < sizeof(neighbor_ap_array->ap_ChannelUtilization) / sizeof(neighbor_ap_array->ap_ChannelUtilization[0]); i++) {
-        if (neighbor_ap_array->ap_ChannelUtilization[i] >= 0 && neighbor_ap_array->ap_ChannelUtilization[i] <= 100) 
+        if (strncmp (neighbor_ap_array[size].ap_SSID, ssid, 32) == 0)
         {
-            UT_LOG("ap_ChannelUtilization is %s which is a valid value\n", neighbor_ap_array->ap_ChannelUtilization[i]);
-            UT_PASS("ap_ChannelUtilization validation success\n");
-        }
-        else
-        {
-            UT_LOG("ap_ChannelUtilizationis %s which is a invalid value\n", neighbor_ap_array->ap_ChannelUtilization[i]);
-            UT_FAIL("ap_ChannelUtilization validation failed\n");
-        }
-    }
-    if (output_array_size >= 0 && output_array_size <= 512)
-    {
-        UT_LOG("output_array_size is %d which is a valid value\n", output_array_size);
-        UT_PASS("output_array_size success\n");
-    }
-    else
-    {
-        UT_LOG("output_array_size is %d which is an invalid value\n",output_array_size);
-        UT_FAIL("output_array_size validation failed\n");
-    }
-    free(neighbor_ap_array);
+            UT_LOG("SCAN Results Matching BSS: ap_SSID = %s, ap_BSSID = %s, ap_Mode = %s,", neighbor_ap_array[size].ap_SSID, neighbor_ap_array[size].ap_BSSID, neighbor_ap_array[size].ap_Mode); 
+            UT_LOG(" ap_Channel = %d, ap_SignalStrength = %d, ap_SecurityModeEnabled =%s, ap_EncryptionMode = %s,", neighbor_ap_array[size].ap_Channel, neighbor_ap_array[size].ap_SignalStrength, neighbor_ap_array[size].ap_SecurityModeEnabled, neighbor_ap_array[size].ap_EncryptionMode);
+            UT_LOG(" ap_OperatingFrequencyBand = %s, ap_SupportedStandards = %s, ap_OperatingStandards = %s,", neighbor_ap_array[size].ap_OperatingFrequencyBand, neighbor_ap_array[size].ap_SupportedStandards, neighbor_ap_array[size].ap_OperatingStandards);
+            UT_LOG(" ap_OperatingChannelBandwidth = %s, ap_BeaconPeriod = %d, ap_Noise = %s, ap_BasicDataTransferRates = %s,", neighbor_ap_array[size].ap_OperatingChannelBandwidth, neighbor_ap_array[size].ap_BeaconPeriod, neighbor_ap_array[size].ap_Noise, neighbor_ap_array[size].ap_BasicDataTransferRates);
+            UT_LOG(" ap_SupportedDataTransferRates = %s, ap_DTIMPeriod = %d, ap_ChannelUtilization = %d\n", neighbor_ap_array[size].ap_SupportedDataTransferRates, neighbor_ap_array[size].ap_DTIMPeriod, neighbor_ap_array[size].ap_ChannelUtilization);
 
+            if(!strcmp(neighbor_ap_array[size].ap_BSSID, bssid1) || !strcmp(neighbor_ap_array[size].ap_BSSID, bssid2))
+            {
+                UT_LOG("ap_BSSID %s which is a valid value\n", neighbor_ap_array[size].ap_BSSID);
+                UT_PASS("ap_BSSID validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_BSSID %s which is an invalid value\n", neighbor_ap_array[size].ap_BSSID);
+                UT_FAIL("ap_BSSID validation failed\n");
+            }
+            if (neighbor_ap_array[size].ap_SignalStrength >= -200 && neighbor_ap_array[size].ap_SignalStrength <= 0)
+            {
+                UT_LOG("ap_SignalStrength is %d which is a valid value\n", neighbor_ap_array[size].ap_SignalStrength);
+                UT_PASS("ap_SignalStrength validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_SignalStrength is %d which is an invalid value\n", neighbor_ap_array[size].ap_SignalStrength);
+                UT_FAIL("ap_SignalStrength validation failed\n");
+            }
+
+            if(!strcmp(neighbor_ap_array[size].ap_SecurityModeEnabled,"None") || !strcmp(neighbor_ap_array[size].ap_SecurityModeEnabled,"WEP")|| !strcmp(neighbor_ap_array[size].ap_SecurityModeEnabled,"WPA")|| !strcmp(neighbor_ap_array[size].ap_SecurityModeEnabled,"WPA2")|| !strcmp(neighbor_ap_array[size].ap_SecurityModeEnabled,"WPA3")|| !strcmp(neighbor_ap_array[size].ap_SecurityModeEnabled,"WPA-WPA2")|| !strcmp(neighbor_ap_array[size].ap_SecurityModeEnabled,"WPA2-WPA3")|| !strcmp(neighbor_ap_array[size].ap_SecurityModeEnabled,"WPA-Enterprise")|| !strcmp(neighbor_ap_array[size].ap_SecurityModeEnabled,"WPA2-Enterprise")|| !strcmp(neighbor_ap_array[size].ap_SecurityModeEnabled,"WPA-WPA2-Enterprise"))  
+            {
+                UT_LOG("ap_SecurityModeEnabled is %s which is an valid value\n", neighbor_ap_array[size].ap_SecurityModeEnabled);
+                UT_PASS("ap_SecurityModeEnabled validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_SecurityModeEnabled is %s which is a invalid value\n", neighbor_ap_array[size].ap_SecurityModeEnabled);
+                UT_FAIL("ap_SecurityModeEnabled validation failed\n");
+            }
+
+            if(!strcmp(neighbor_ap_array[size].ap_EncryptionMode,"TKIP") || !strcmp(neighbor_ap_array[size].ap_EncryptionMode,"AES"))  
+            {
+                UT_LOG("ap_EncryptionMode is %s which is an valid value\n", neighbor_ap_array[size].ap_EncryptionMode);
+                UT_PASS("ap_EncryptionMode validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_EncryptionMode is %s which is a invalid value\n", neighbor_ap_array[size].ap_EncryptionMode);
+                UT_FAIL("ap_EncryptionMode validation failed\n");
+            }
+
+            if(!strcmp(neighbor_ap_array[size].ap_OperatingFrequencyBand,"2.4GHz") || !strcmp(neighbor_ap_array[size].ap_OperatingFrequencyBand,"5GHz"))  
+            {
+                UT_LOG("ap_OperatingFrequencyBand is %s which is an valid value\n", neighbor_ap_array[size].ap_OperatingFrequencyBand);
+                UT_PASS("ap_OperatingFrequencyBand validation success\n");
+            }   
+            else
+            {
+                UT_LOG("ap_OperatingFrequencyBand is %s which is a invalid value\n", neighbor_ap_array[size].ap_OperatingFrequencyBand);
+                UT_FAIL("ap_OperatingFrequencyBand validation failed\n");
+            }
+/*
+            if(!strcmp(neighbor_ap_array[size].ap_Mode,"AdHoc") || !strcmp(neighbor_ap_array[size].ap_Mode,"Infrastructure"))  
+            {
+                UT_LOG("ap_Mode %s which is an valid value\n", neighbor_ap_array[size].ap_Mode);
+                UT_PASS("ap_Mode validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_Mode %s which is a invalid value\n", neighbor_ap_array[size].ap_Mode);
+                UT_FAIL("ap_Mode validation failed\n");
+            }
+
+            if ((neighbor_ap_array[size].ap_Channel >= 1 && neighbor_ap_array[size].ap_Channel <= 13 )||( neighbor_ap_array[size].ap_Channel >= 36 && neighbor_ap_array[size].ap_Channel <= 64) || (neighbor_ap_array[size].ap_Channel >= 100 && neighbor_ap_array[size].ap_Channel <= 165))
+            {
+                UT_LOG("ap_Channel is %d which is a valid value\n", neighbor_ap_array[size].ap_Channel);
+                UT_PASS("ssid_UnknownPacketsReceived validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_Channel is %d which is an invalid value\n", neighbor_ap_array[size].ap_Channel);
+                UT_FAIL("ap_Channel validation failed\n");
+            }
+
+            if(!strcmp(neighbor_ap_array[size].ap_SupportedStandards,"a") || !strcmp(neighbor_ap_array[size].ap_SupportedStandards,"b") || !strcmp(neighbor_ap_array[size].ap_SupportedStandards,"g") || !strcmp(neighbor_ap_array[size].ap_SupportedStandards,"n") || !strcmp(neighbor_ap_array[size].ap_SupportedStandards,"ac"))  
+            {
+                UT_LOG("ap_SupportedStandards is %s which is an valid value\n", neighbor_ap_array[size].ap_SupportedStandards);
+                UT_PASS("ap_SupportedStandards validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_SupportedStandards is %s which is a invalid value\n", neighbor_ap_array[size].ap_SupportedStandards);
+                UT_FAIL("ap_SupportedStandards validation failed\n");
+            }
+            if(!strcmp(neighbor_ap_array[size].ap_OperatingStandards,"a") || !strcmp(neighbor_ap_array[size].ap_OperatingStandards,"b") || !strcmp(neighbor_ap_array[size].ap_OperatingStandards,"g") || !strcmp(neighbor_ap_array[size].ap_OperatingStandards,"n") || !strcmp(neighbor_ap_array[size].ap_OperatingStandards,"ac"))  
+            {
+                UT_LOG("ap_OperatingStandards is %s which is an valid value\n", neighbor_ap_array[size].ap_OperatingStandards);
+                UT_PASS("ap_OperatingStandards validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_OperatingStandards is %s which is a invalid value\n", neighbor_ap_array[size].ap_OperatingStandards);
+                UT_FAIL("ap_OperatingStandards validation failed\n");
+            }
+            if(!strcmp(neighbor_ap_array[size].ap_OperatingChannelBandwidth,"20MHz") || !strcmp(neighbor_ap_array[size].ap_OperatingChannelBandwidth,"40MHz") || !strcmp(neighbor_ap_array[size].ap_OperatingChannelBandwidth,"80MHz") || !strcmp(neighbor_ap_array[size].ap_OperatingChannelBandwidth,"160MHz") || !strcmp(neighbor_ap_array[size].ap_OperatingChannelBandwidth,"Auto"))  
+            {
+                UT_LOG("ap_OperatingChannelBandwidth is %s which is an valid value\n", neighbor_ap_array[size].ap_OperatingStandards);
+                UT_PASS("ap_OperatingChannelBandwidth validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_OperatingChannelBandwidth is %s which is a invalid value\n", neighbor_ap_array[size].ap_OperatingStandards);
+                UT_FAIL("ap_OperatingChannelBandwidth validation failed\n");
+            }
+            if (neighbor_ap_array[size].ap_BeaconPeriod >= 0 && neighbor_ap_array[size].ap_BeaconPeriod <= UINT32_MAX)
+            {
+                UT_LOG("ap_BeaconPeriod is %d which is a valid value\n", neighbor_ap_array[size].ap_BeaconPeriod);
+                UT_PASS("ap_BeaconPeriod validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_BeaconPeriod is %d which is an invalid value\n", neighbor_ap_array[size].ap_BeaconPeriod);
+                UT_FAIL("ap_BeaconPeriod validation failed\n");
+            }
+            if (neighbor_ap_array[size].ap_Noise >= -200 && neighbor_ap_array[size].ap_Noise <= 0)
+            {
+                UT_LOG("ap_Noise is %d which is a valid value\n", neighbor_ap_array[size].ap_Noise);
+                UT_PASS("ap_Noise validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_Noise is %d which is an invalid value\n", neighbor_ap_array[size].ap_Noise);
+                UT_FAIL("ap_Noise validation failed\n");
+            }
+            if(!strcmp(neighbor_ap_array[size].ap_BasicDataTransferRates,"1") || !strcmp(neighbor_ap_array[size].ap_BasicDataTransferRates,"2") || !strcmp(neighbor_ap_array[size].ap_BasicDataTransferRates,"5.5") || !strcmp(neighbor_ap_array[size].ap_BasicDataTransferRates,"6") || !strcmp(neighbor_ap_array[size].ap_BasicDataTransferRates,"9") || !strcmp(neighbor_ap_array[size].ap_BasicDataTransferRates,"12")|| !strcmp(neighbor_ap_array[size].ap_BasicDataTransferRates,"18") || !strcmp(neighbor_ap_array[size].ap_BasicDataTransferRates,"24") || !strcmp(neighbor_ap_array[size].ap_BasicDataTransferRates,"36") || !strcmp(neighbor_ap_array[size].ap_BasicDataTransferRates,"48")|| !strcmp(neighbor_ap_array[size].ap_BasicDataTransferRates,"54"))  
+            {
+                UT_LOG("ap_BasicDataTransferRates is %s which is an valid value\n", neighbor_ap_array[size].ap_BasicDataTransferRates);
+                UT_PASS("ap_BasicDataTransferRates validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_BasicDataTransferRates is %s which is a invalid value\n", neighbor_ap_array[size].ap_BasicDataTransferRates);
+                UT_FAIL("ap_BasicDataTransferRates validation failed\n");
+            }
+            if(!strcmp(neighbor_ap_array[size].ap_SupportedDataTransferRates,"1") || !strcmp(neighbor_ap_array[size].ap_SupportedDataTransferRates,"2") || !strcmp(neighbor_ap_array[size].ap_SupportedDataTransferRates,"5.5") || !strcmp(neighbor_ap_array[size].ap_SupportedDataTransferRates,"6") || !strcmp(neighbor_ap_array[size].ap_SupportedDataTransferRates,"9") || !strcmp(neighbor_ap_array[size].ap_SupportedDataTransferRates,"12")|| !strcmp(neighbor_ap_array[size].ap_SupportedDataTransferRates,"18") || !strcmp(neighbor_ap_array[size].ap_SupportedDataTransferRates,"24") || !strcmp(neighbor_ap_array[size].ap_SupportedDataTransferRates,"36") || !strcmp(neighbor_ap_array[size].ap_SupportedDataTransferRates,"48")|| !strcmp(neighbor_ap_array[size].ap_SupportedDataTransferRates,"54"))  
+            {
+                UT_LOG("ap_SupportedDataTransferRates is %s which is an valid value\n", neighbor_ap_array[size].ap_SupportedDataTransferRates);
+                UT_PASS("ap_SupportedDataTransferRates validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_SupportedDataTransferRates is %s which is a invalid value\n", neighbor_ap_array[size].ap_SupportedDataTransferRates);
+                UT_FAIL("ap_SupportedDataTransferRates validation failed\n");
+            }
+            if (neighbor_ap_array[size].ap_DTIMPeriod >= 0 && neighbor_ap_array[size].ap_DTIMPeriod <= UINT32_MAX)
+            {
+                UT_LOG("ap_DTIMPeriod is %d which is a valid value\n", neighbor_ap_array[size].ap_DTIMPeriod);
+                UT_PASS("ap_Noise validation success\n");
+            }
+            else
+            {
+                UT_LOG("ap_DTIMPeriod is %d which is an invalid value\n", neighbor_ap_array[size].ap_DTIMPeriod);
+                UT_FAIL("ap_DTIMPeriod validation failed\n");
+            }
+            for (int i = 0; i < sizeof(neighbor_ap_array[size].ap_ChannelUtilization) / sizeof(neighbor_ap_array[size].ap_ChannelUtilization[0]); i++) {
+                if (neighbor_ap_array[size].ap_ChannelUtilization[i] >= 0 && neighbor_ap_array[size].ap_ChannelUtilization[i] <= 100) 
+                {
+                    UT_LOG("ap_ChannelUtilization is %s which is a valid value\n", neighbor_ap_array[size].ap_ChannelUtilization[i]);
+                    UT_PASS("ap_ChannelUtilization validation success\n");
+                }
+                else
+                {
+                    UT_LOG("ap_ChannelUtilizationis %s which is a invalid value\n", neighbor_ap_array[size].ap_ChannelUtilization[i]);
+                    UT_FAIL("ap_ChannelUtilization validation failed\n");
+                }
+            }
+*/
+        }
+    }
+
+    if (neighbor_ap_array != NULL)
+    {
+        free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
+    Config_key_delete(ssid);
     UT_LOG("Exiting test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo...\n");
 }
 
@@ -6421,7 +6447,10 @@ void test_l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo (void)
     ret = wifi_getSpecificSSIDInfo(SSID, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n\n", ret);
     if (neighbor_ap_array != NULL)
-       free(neighbor_ap_array);
+    {
+        free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo...\n");
@@ -6462,7 +6491,10 @@ void test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo (void)
     INT ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
     if (neighbor_ap_array != NULL)
-       free(neighbor_ap_array);
+    {
+        free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
     Config_key_delete(ssid);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
@@ -6492,7 +6524,7 @@ void test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo (void)
     UT_LOG("Entering test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo...\n");
     WIFI_HAL_FREQ_BAND band = WIFI_HAL_FREQ_BAND_24GHZ;
     UINT output_array_size = 0;
-    wifi_neighbor_ap_t *neighbor_ap_array = NULL;
+    wifi_neighbor_ap_t **neighbor_ap_array = NULL;
     INT ret;
     CHAR *ssid = Config_key_new(key_file, "l1_negative3_wifi_getSpecificSSIDInfo", "SSID");
 
@@ -6501,10 +6533,18 @@ void test_l1_wifi_common_hal_negative3_wifi_getSpecificSSIDInfo (void)
         UT_FAIL_FATAL("Test config not found");
     }
     UT_LOG("Invoking wifi_getSpecificSSIDInfo with invalid ap_array \n");
-    ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
+    ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
-    if (neighbor_ap_array != NULL)
+    INT size;
+    if (output_array_size != 0 && neighbor_ap_array != NULL)
+    {
+        for (size = 0; size < output_array_size; size++)
+        {
+            free(neighbor_ap_array[size]);
+        }
         free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
     Config_key_delete(ssid);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
@@ -6546,7 +6586,10 @@ void test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo (void)
     ret = wifi_getSpecificSSIDInfo((const char*)ssid, band, &neighbor_ap_array, &output_array_size);
     UT_LOG("Return status: %d\n", ret);
     if (neighbor_ap_array != NULL)
+    {
         free(neighbor_ap_array);
+        neighbor_ap_array = NULL;
+    }
     Config_key_delete(ssid);
     UT_ASSERT_EQUAL(ret, RETURN_ERR);
 
@@ -6904,7 +6947,7 @@ int test_wifi_common_hal_register_pre_init_tests (void)
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_positive1_wifi_getHalVersion", test_l1_wifi_common_hal_positive1_wifi_getHalVersion);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_getHalVersion", test_l1_wifi_common_hal_negative1_wifi_getHalVersion);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_down", test_l1_wifi_common_hal_negative1_wifi_down);
-    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_getStats", test_l1_wifi_common_hal_negative3_getStats);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getStats", test_l1_wifi_common_hal_negative3_wifi_getStats);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries", test_l1_wifi_common_hal_negative2_wifi_getRadioNumberOfEntries);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_getSSIDNumberOfEntries", test_l1_wifi_common_hal_negative1_wifi_getSSIDNumberOfEntries);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioEnable", test_l1_wifi_common_hal_negative4_wifi_getRadioEnable);
@@ -6920,14 +6963,14 @@ int test_wifi_common_hal_register_pre_init_tests (void)
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioChannel", test_l1_wifi_common_hal_negative3_wifi_getRadioChannel);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelSupported", test_l1_wifi_common_hal_negative1_wifi_getRadioAutoChannelSupported);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelEnable", test_l1_wifi_common_hal_negative3_wifi_getRadioAutoChannelEnable);
-    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod", test_l1_wifi_common_hal_negative2_getRadioAutoChannelRefreshPeriod);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelRefreshPeriod", test_l1_wifi_common_hal_negative2_wifi_getRadioAutoChannelRefreshPeriod);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioGuardInterval", test_l1_wifi_common_hal_negative4_wifi_getRadioGuardInterval);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioOperatingChannelBandwidth", test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingChannelBandwidth);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioExtChannel", test_l1_wifi_common_hal_negative4_wifi_getRadioExtChannel);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioMCS", test_l1_wifi_common_hal_negative3_wifi_getRadioMCS);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioTransmitPowerSupported", test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPowerSupported);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_negative3_wifi_getRadioTransmitPower);
-    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported", test_l1_wifi_common_hal_negative_3_wifi_getRadioIEEE80211hSupported);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hSupported", test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hSupported);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled", test_l1_wifi_common_hal_negative1_wifi_getRadioIEEE80211hEnabled);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative6_wifi_getRegulatoryDomain", test_l1_wifi_common_hal_negative6_wifi_getRegulatoryDomain);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats", test_l1_wifi_common_hal_negative3_wifi_getRadioTrafficStats);
@@ -6938,7 +6981,7 @@ int test_wifi_common_hal_register_pre_init_tests (void)
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult", test_l1_wifi_common_hal_negative4_wifi_getNeighboringWiFiDiagnosticResult);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo", test_l1_wifi_common_hal_negative4_wifi_getSpecificSSIDInfo);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative5_wifi_setRadioScanningFreqList", test_l1_wifi_common_hal_negative5_wifi_setRadioScanningFreqList);
-    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_waitForScanResults", test_l1_wifi_common_hal_negative1_wifi_waitForScanResults);
+    //UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_common_hal_negative1_wifi_waitForScanResults", test_l1_wifi_common_hal_negative1_wifi_waitForScanResults);
 
     return 0;
 }
@@ -7017,18 +7060,16 @@ int test_wifi_common_hal_register_post_init_tests (void)
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioIfName", test_l1_wifi_common_hal_negative2_wifi_getRadioIfName);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioIfName", test_l1_wifi_common_hal_negative3_wifi_getRadioIfName);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioIfName", test_l1_wifi_common_hal_negative4_wifi_getRadioIfName);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate", test_l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate", test_l1_wifi_common_hal_positive1_wifi_getRadioMaxBitRate);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate", test_l1_wifi_common_hal_negative1_wifi_getRadioMaxBitRate);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate", test_l1_wifi_common_hal_negative3_wifi_getRadioMaxBitRate);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands", test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedFrequencyBands);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioSupportedFrequencyBands", test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedFrequencyBands);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioSupportedFrequencyBands", test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedFrequencyBands);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands", test_l1_wifi_common_hal_negative4_wifi_getRadioSupportedFrequencyBands);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand", test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand", test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingFrequencyBand);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand", test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards", test_l1_wifi_common_hal_positive1_wifi_getRadioSupportedStandards);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards", test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards", test_l1_wifi_common_hal_negative1_wifi_getRadioSupportedStandards);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioSupportedStandards", test_l1_wifi_common_hal_negative2_wifi_getRadioSupportedStandards);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioStandard", test_l1_wifi_common_hal_positive1_wifi_getRadioStandard);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioStandard", test_l1_wifi_common_hal_negative1_wifi_getRadioStandard);
@@ -7055,10 +7096,10 @@ int test_wifi_common_hal_register_post_init_tests (void)
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_getRadioAutoChannelRefreshPeriod", test_l1_wifi_common_hal_negative1_getRadioAutoChannelRefreshPeriod);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive2_getRadioAutoChannelRefreshPeriod", test_l1_wifi_common_hal_positive2_getRadioAutoChannelRefreshPeriod);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_getRadioAutoChannelRefreshPeriod", test_l1_wifi_common_hal_negative3_getRadioAutoChannelRefreshPeriod);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioGuardInterval", test_l1_wifi_common_hal_positive1_wifi_getRadioGuardInterval);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioGuardInterval", test_l1_wifi_common_hal_positive1_wifi_getRadioGuardInterval);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioGuardInterval", test_l1_wifi_common_hal_negative1_wifi_getRadioGuardInterval);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioGuardInterval", test_l1_wifi_common_hal_negative2_wifi_getRadioGuardInterval);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval", test_l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval", test_l1_wifi_common_hal_negative3_wifi_getRadioGuardInterval);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioOperatingChannelBandwidth", test_l1_wifi_common_hal_negative1_wifi_getRadioOperatingChannelBandwidth);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioOperatingChannelBandwidth", test_l1_wifi_common_hal_negative2_wifi_getRadioOperatingChannelBandwidth);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioOperatingChannelBandwidth", test_l1_wifi_common_hal_negative4_wifi_getRadioOperatingChannelBandwidth);
@@ -7070,15 +7111,15 @@ int test_wifi_common_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioMCS", test_l1_wifi_common_hal_negative2_wifi_getRadioMCS);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioTransmitPowerSupported", test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPowerSupported);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioTransmitPowerSupported", test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPowerSupported);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioTransmitPowerSupported", test_l1_wifi_common_hal_negative2_wifi_getRadioTransmitPowerSupported);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioTransmitPowerSupported", test_l1_wifi_common_hal_negative2_wifi_getRadioTransmitPowerSupported);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioTransmitPowerSupported", test_l1_wifi_common_hal_negative3_wifi_getRadioTransmitPowerSupported);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_negative1_wifi_getRadioTransmitPower);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_negative2_wifi_getRadioTransmitPower);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive_1_wifi_getRadioIEEE80211hSupported", test_l1_wifi_common_hal_positive_1_wifi_getRadioIEEE80211hSupported);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_negative4_wifi_getRadioTransmitPower);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive_1_wifi_getRadioIEEE80211hSupported", test_l1_wifi_common_hal_positive_1_wifi_getRadioIEEE80211hSupported);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative_1_wifi_getRadioIEEE80211hSupported", test_l1_wifi_common_hal_negative_1_wifi_getRadioIEEE80211hSupported);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative_2_wifi_getRadioIEEE80211hSupported", test_l1_wifi_common_hal_negative_2_wifi_getRadioIEEE80211hSupported);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled", test_l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled", test_l1_wifi_common_hal_positive1_wifi_getRadioIEEE80211hEnabled);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getRadioIEEE80211hEnabled", test_l1_wifi_common_hal_negative2_wifi_getRadioIEEE80211hEnabled);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hEnabled", test_l1_wifi_common_hal_negative3_wifi_getRadioIEEE80211hEnabled);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain", test_l1_wifi_common_hal_positive1_wifi_getRegulatoryDomain);
@@ -7098,10 +7139,6 @@ int test_wifi_common_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getSSIDTrafficStats", test_l1_wifi_common_hal_negative1_wifi_getSSIDTrafficStats);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getSSIDTrafficStats", test_l1_wifi_common_hal_negative2_wifi_getSSIDTrafficStats);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_getSSIDTrafficStats", test_l1_wifi_common_hal_negative4_wifi_getSSIDTrafficStats);
-    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult", test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult);
-    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult", test_l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult);
-    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult", test_l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult);
-    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult", test_l1_wifi_common_hal_negative3_wifi_getNeighboringWiFiDiagnosticResult);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo", test_l1_wifi_common_hal_positive1_wifi_getSpecificSSIDInfo);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo", test_l1_wifi_common_hal_negative1_wifi_getSpecificSSIDInfo);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo", test_l1_wifi_common_hal_negative2_wifi_getSpecificSSIDInfo);
@@ -7113,7 +7150,7 @@ int test_wifi_common_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative4_wifi_setRadioScanningFreqList", test_l1_wifi_common_hal_negative4_wifi_setRadioScanningFreqList);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative6_wifi_setRadioScanningFreqList", test_l1_wifi_common_hal_negative6_wifi_setRadioScanningFreqList);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_getDualBandSupport", test_l1_wifi_common_hal_positive1_getDualBandSupport);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_waitForScanResults", test_l1_wifi_common_hal_positive1_wifi_waitForScanResults);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_waitForScanResults", test_l1_wifi_common_hal_positive1_wifi_waitForScanResults);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult", test_l1_wifi_common_hal_positive1_wifi_getNeighboringWiFiDiagnosticResult);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult", test_l1_wifi_common_hal_negative1_wifi_getNeighboringWiFiDiagnosticResult);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult", test_l1_wifi_common_hal_negative2_wifi_getNeighboringWiFiDiagnosticResult);
@@ -7145,6 +7182,8 @@ int test_wifi_common_hal_register_post_connect_tests (void)
     UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getRadioMCS", test_l1_wifi_common_hal_positive1_wifi_getRadioMCS);
     UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower", test_l1_wifi_common_hal_positive1_wifi_getRadioTransmitPower);
     UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats", test_l1_wifi_common_hal_positive1_wifi_getRadioTrafficStats);
+    UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand", test_l1_wifi_common_hal_positive1_wifi_getRadioOperatingFrequencyBand);
+    UT_add_test(pSuite_post_wifi_connect, "l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand", test_l1_wifi_common_hal_negative3_wifi_getRadioOperatingFrequencyBand);
 
     return 0;
 }

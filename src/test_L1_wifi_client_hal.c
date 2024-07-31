@@ -277,18 +277,24 @@ void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported (voi
     char *method = strtok(methods, ",");
     while (method != NULL) 
     {
+        BOOL isValid = 0;
         for (int i = 0; i < sizeof(validMethods) / sizeof(validMethods[0]); i++) 
         {
             if (strcmp(method, validMethods[i]) == 0) 
             {
-                UT_LOG("WPS supported methods is %s which is a valid value", method);
-                UT_PASS("WPS supported methods  validation success\n");
+                isValid = 1;
+                break;
             }
-            else
-            {
-                UT_LOG("WPS supported methods is %s which is an invalid value", method);
-                UT_FAIL("WPS supported methods validation failed\n");
-            }
+        }
+        if (isValid)
+        {
+            UT_LOG("WPS supported methods is %s which is a valid value", method);
+            UT_PASS("WPS supported methods  validation success\n");
+        }
+        else
+        {
+            UT_LOG("WPS supported methods is %s which is an invalid value", method);
+            UT_FAIL("WPS supported methods validation failed\n");
         }
         method = strtok(NULL, ",");
     }
@@ -328,18 +334,24 @@ void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported (voi
     char *method = strtok(methods, ",");
     while (method != NULL) 
     {
+        BOOL isValid = 0;
         for (int i = 0; i < sizeof(validMethods) / sizeof(validMethods[0]); i++) 
         {
             if (strcmp(method, validMethods[i]) == 0) 
             {
-                UT_LOG("WPS supported methods is %s which is a valid value", method);
-                UT_PASS("WPS supported methods  validation success\n");
+                isValid = 1;
+                break;
             }
-            else
-            {
-                UT_LOG("WPS supported methods is %s which is an invalid value", method);
-                UT_FAIL("WPS supported methods validation failed\n");
-            }
+        }
+        if (isValid)
+        {
+            UT_LOG("WPS supported methods is %s which is a valid value", method);
+            UT_PASS("WPS supported methods  validation success\n");
+        }
+        else
+        {
+            UT_LOG("WPS supported methods is %s which is an invalid value", method);
+            UT_FAIL("WPS supported methods validation failed\n");
         }
         method = strtok(NULL, ",");
     }
@@ -475,18 +487,24 @@ void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled (void)
     char *method = strtok(output_string, ",");
     while (method != NULL) 
     {
+        BOOL isValid = 0;
         for (int i = 0; i < sizeof(validMethods) / sizeof(validMethods[0]); i++) 
         {
             if (strcmp(method, validMethods[i]) == 0) 
             {
-                UT_LOG("current WPS methods is %s which is a valid value", method);
-                UT_PASS("current WPS methods  validation success\n");
+                isValid = 1;
+                break;
             }
-            else
-            {
-                UT_LOG("current WPS methods is %s which is an invalid value", method);
-                UT_FAIL("current WPS methods validation failed\n");
-            }
+        }
+        if (isValid)
+        {
+            UT_LOG("WPS supported methods is %s which is a valid value", method);
+            UT_PASS("WPS supported methods  validation success\n");
+        }
+        else
+        {
+            UT_LOG("WPS supported methods is %s which is an invalid value", method);
+            UT_FAIL("WPS supported methods validation failed\n");
         }
         method = strtok(NULL, ",");
     }
@@ -527,18 +545,24 @@ void test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled (void)
     char *method = strtok(output_string, ",");
     while (method != NULL) 
     {
+        BOOL isValid = 0;
         for (int i = 0; i < sizeof(validMethods) / sizeof(validMethods[0]); i++) 
         {
             if (strcmp(method, validMethods[i]) == 0) 
             {
-                UT_LOG("WPS supported methods is %s which is a valid value\n", method);
-                UT_PASS("WPS supported methods  validation success\n");
+                isValid = 1;
+                break;
             }
-            else
-            {
-                UT_LOG("WPS supported methods is %s which is an invalid value", method);
-                UT_FAIL("WPS supported methods validation failed\n");
-            }
+        }
+        if (isValid)
+        {
+            UT_LOG("WPS supported methods is %s which is a valid value", method);
+            UT_PASS("WPS supported methods  validation success\n");
+        }
+        else
+        {
+            UT_LOG("WPS supported methods is %s which is an invalid value", method);
+            UT_FAIL("WPS supported methods validation failed\n");
         }
         method = strtok(NULL, ",");
     }
@@ -1327,7 +1351,7 @@ void test_l1_wifi_client_hal_positive2_wifi_connectEndpoint (void)
 */
 void test_l1_wifi_client_hal_positive3_wifi_connectEndpoint (void)
 {
-    UT_LOG("Entering test_l1_wifi_client_hal_positive3_validInputs...\n");
+    UT_LOG("Entering test_l1_wifi_client_hal_positive3_wifi_connectEndpoint...\n");
     wifiSecurityMode_t AP_security_mode = WIFI_SECURITY_WPA2_PSK_AES;   
     INT saveSSID = 0;
     wifi_connectEndpoint_test_config_t *l1_config = Config_new(key_file, "POSITIVE3_WPA2_PSK_AES_SECURITY_MODE");
@@ -1466,7 +1490,7 @@ void test_l1_wifi_client_hal_negative2_wifi_connectEndpoint (void)
     Config_delete(l1_config);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
-    UT_LOG("Exiting ttest_l1_wifi_client_hal_negative2_wifi_connectEndpoint...\n");
+    UT_LOG("Exiting test_l1_wifi_client_hal_negative2_wifi_connectEndpoint...\n");
 }
 
 /**
@@ -1506,7 +1530,7 @@ void test_l1_wifi_client_hal_negative3_wifi_connectEndpoint (void)
     Config_delete(l1_config);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
-    UT_LOG("Exiting ttest_l1_wifi_client_hal_negative3_wifi_connectEndpoint...\n");
+    UT_LOG("Exiting test_l1_wifi_client_hal_negative3_wifi_connectEndpoint...\n");
 }
 
 /**
@@ -1548,7 +1572,7 @@ void test_l1_wifi_client_hal_negative4_wifi_connectEndpoint (void)
     Config_delete(l1_config);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
-    UT_LOG("Exiting ttest_l1_wifi_client_hal_negative4_wifi_connectEndpoint...\n");
+    UT_LOG("Exiting test_l1_wifi_client_hal_negative4_wifi_connectEndpoint...\n");
 }
 
 /**
@@ -1588,7 +1612,7 @@ void test_l1_wifi_client_hal_negative5_wifi_connectEndpoint (void)
     Config_delete(l1_config);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
-    UT_LOG("Exiting ttest_l1_wifi_client_hal_negative5_wifi_connectEndpoint...\n");
+    UT_LOG("Exiting test_l1_wifi_client_hal_negative5_wifi_connectEndpoint...\n");
 }
 /**
  * @brief Test case to verify the behavior of the wifi_connectEndpoint function when an invalid saveSSID value is provided.
@@ -1627,7 +1651,7 @@ void test_l1_wifi_client_hal_negative6_wifi_connectEndpoint (void)
     Config_delete(l1_config);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
-    UT_LOG("Exiting ttest_l1_wifi_client_hal_negative6_wifi_connectEndpoint...\n");
+    UT_LOG("Exiting test_l1_wifi_client_hal_negative6_wifi_connectEndpoint...\n");
 } 
 
 /**
@@ -1667,7 +1691,7 @@ void test_l1_wifi_client_hal_negative7_wifi_connectEndpoint (void)
     Config_delete(l1_config);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
-    UT_LOG("Exiting ttest_l1_wifi_client_hal_negative7_wifi_connectEndpoint...\n");
+    UT_LOG("Exiting test_l1_wifi_client_hal_negative7_wifi_connectEndpoint...\n");
 } 
 
 /**
@@ -1708,7 +1732,7 @@ void test_l1_wifi_client_hal_negative8_wifi_connectEndpoint (void)
     Config_delete(l1_config);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
-    UT_LOG("Exiting ttest_l1_wifi_client_hal_negative8_wifi_connectEndpoint...\n");
+    UT_LOG("Exiting test_l1_wifi_client_hal_negative8_wifi_connectEndpoint...\n");
 }
 
 /**
@@ -1748,7 +1772,7 @@ void test_l1_wifi_client_hal_negative9_wifi_connectEndpoint (void)
     Config_delete(l1_config);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
-    UT_LOG("Exiting ttest_l1_wifi_client_hal_negative9_wifi_connectEndpoint...\n");
+    UT_LOG("Exiting test_l1_wifi_client_hal_negative9_wifi_connectEndpoint...\n");
 }
 
 /**
@@ -1788,7 +1812,7 @@ void test_l1_wifi_client_hal_negative10_wifi_connectEndpoint (void)
     Config_delete(l1_config);
     UT_ASSERT_EQUAL(result, RETURN_ERR);
 
-    UT_LOG("Exiting ttest_l1_wifi_client_hal_negative10_wifi_connectEndpoint...\n");
+    UT_LOG("Exiting test_l1_wifi_client_hal_negative10_wifi_connectEndpoint...\n");
 }
 
 /**
@@ -1826,7 +1850,7 @@ void test_l1_wifi_client_hal_negative11_wifi_connectEndpoint (void)
                     l1_config->carootcert, l1_config->clientcert, l1_config->privatekey);
     UT_LOG("The API wifi_connectEndpoint returns: %d\n", result);
     Config_delete(l1_config);
-    UT_ASSERT_EQUAL(result, RETURN_OK);
+    UT_ASSERT_EQUAL(result, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_client_hal_negative11_wifi_connectEndpoint...\n");
 }
@@ -2031,10 +2055,10 @@ void test_l1_wifi_client_hal_negative3_wifi_disconnectEndpoint (void)
 * | :---------------: | ---------------| ------------ |------------| --------------- |
 * | 01 | Invoke wifi_disconnectEndpoint() without calling wifi_init() or wifi_initWithConfig() and wifi_connectEndpoint_callback_register()| ssidIndex = 1, AP_SSID = "valid_value" | RETURN_ERR | Should Fail |
 */
-void test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint (void)
+void test_l1_wifi_client_hal_negative4_wifi_disconnectEndpoint (void)
 {
-    UT_LOG("Entering test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint...\n");
-    char *ssid = Config_key_new(key_file, "l1_negaitive4_wifi_disconnectEndpoint", SSID);
+    UT_LOG("Entering test_l1_wifi_client_hal_negative4_wifi_disconnectEndpoint...\n");
+    char *ssid = Config_key_new(key_file, "l1_negative4_wifi_disconnectEndpoint", SSID);
 
     if (NULL == ssid)
     {
@@ -2046,7 +2070,7 @@ void test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint (void)
     Config_key_delete(ssid);
     UT_ASSERT_EQUAL(status, RETURN_ERR);
 
-    UT_LOG("Exiting test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint...\n");
+    UT_LOG("Exiting test_l1_wifi_client_hal_negative4_wifi_disconnectEndpoint...\n");
 }
 
 /**
@@ -2894,7 +2918,7 @@ void test_l1_wifi_client_hal_positive1_wifi_getRoamingControl (void)
         UT_LOG("Post-association AP steer control threshold is %d which is a invalid value\n", pRoamingCtrl_data.postAssnAPctrlThreshold);
         UT_FAIL("Post-association AP steer control threshold validation failed\n");
     }
-    if ( pRoamingCtrl_data.postAssnAPctrlTimeframe >= -100 && pRoamingCtrl_data.postAssnAPctrlTimeframe <= 0 )
+    if ( pRoamingCtrl_data.postAssnAPctrlTimeframe >= 0 && pRoamingCtrl_data.postAssnAPctrlTimeframe <= 60 )
     {
         UT_LOG("Post-association AP steer control time frame is %d which is a valid value\n", pRoamingCtrl_data.postAssnAPctrlTimeframe);
         UT_PASS("Post-association AP steer control time frame validation success\n");
@@ -3039,7 +3063,7 @@ void test_l1_wifi_client_hal_positive2_wifi_getRoamingControl (void)
         UT_LOG("Post-association self steer timeframe is  %d which is a invalid value\n", pRoamingCtrl_data.postAssnSelfSteerTimeframe);
         UT_FAIL("Post-association self steer timeframe validation failed\n");
     }
-    if ( pRoamingCtrl_data.postAssnBackOffTime >= 0 && pRoamingCtrl_data. postAssnBackOffTime >= 36000 )
+    if ( pRoamingCtrl_data.postAssnBackOffTime >= 0 && pRoamingCtrl_data.postAssnBackOffTime <= 3600 )
     {
         UT_LOG("Post-association backoff time is %d which is a valid value\n", pRoamingCtrl_data.postAssnBackOffTime);
         UT_PASS("Post-association backoff time validation success\n");
@@ -3059,7 +3083,7 @@ void test_l1_wifi_client_hal_positive2_wifi_getRoamingControl (void)
         UT_LOG("Post-association AP steer control threshold is %d which is a invalid value\n", pRoamingCtrl_data.postAssnAPctrlThreshold);
         UT_FAIL("Post-association AP steer control threshold validation failed\n");
     }
-    if ( pRoamingCtrl_data.postAssnAPctrlTimeframe >= -100 && pRoamingCtrl_data.postAssnAPctrlTimeframe <= 0 )
+    if ( pRoamingCtrl_data.postAssnAPctrlTimeframe >= 0 && pRoamingCtrl_data.postAssnAPctrlTimeframe <= 60 )
     {
         UT_LOG("Post-association AP steer control time frame is %d which is a valid value\n", pRoamingCtrl_data.postAssnAPctrlTimeframe);
         UT_PASS("Post-association AP steer control time frame validation success\n");
@@ -3256,7 +3280,7 @@ void test_l1_wifi_client_hal_negative1_wifi_cancelWpsPairing (void)
     UT_LOG("Invoking wifi_cancelWpsPairing API.\n");
     INT status = wifi_cancelWpsPairing();
     UT_LOG("wifi_cancelWpsPairing API returns : %d\n",status);
-    UT_ASSERT_EQUAL(status, RETURN_OK);
+    UT_ASSERT_EQUAL(status, RETURN_ERR);
 
     UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_cancelWpsPairing...\n");
 }
@@ -3280,6 +3304,8 @@ void test_l1_wifi_client_hal_negative1_wifi_cancelWpsPairing (void)
 */
 void test_l1_wifi_client_hal_positive1_wifi_connectEndpoint_callback_register() 
 {
+    UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_connectEndpoint_callback_register...\n");
+
     connectCallbackInvoked = 0;
     wifi_connectEndpoint_callback_register(test_connect_callback);
 
@@ -3300,6 +3326,7 @@ void test_l1_wifi_client_hal_positive1_wifi_connectEndpoint_callback_register()
     sleep(1);
 
     UT_ASSERT_EQUAL(connectCallbackInvoked, 1);
+    UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_connectEndpoint_callback_register...\n");
 }
 
 /**
@@ -3321,6 +3348,7 @@ void test_l1_wifi_client_hal_positive1_wifi_connectEndpoint_callback_register()
 */
 void test_l1_wifi_client_hal_negative1_wifi_connectEndpoint_callback_register() 
 {
+    UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_connectEndpoint_callback_register...\n");
     connectCallbackInvoked = 0;
     wifi_connectEndpoint_callback_register(NULL);
 
@@ -3340,6 +3368,7 @@ void test_l1_wifi_client_hal_negative1_wifi_connectEndpoint_callback_register()
     Config_delete(l1_config);
 
     UT_ASSERT_EQUAL(connectCallbackInvoked, 0);
+    UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_connectEndpoint_callback_register...\n");
 }
 
 /**
@@ -3361,6 +3390,7 @@ void test_l1_wifi_client_hal_negative1_wifi_connectEndpoint_callback_register()
 */
 void test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint_callback_register()
 {
+    UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint_callback_register...\n");
     disconnectCallbackInvoked = 0;
     wifi_disconnectEndpoint_callback_register(test_disconnect_callback);
     char *ssid = Config_key_new(key_file, "l1_positive1_wifi_disconnectEndpoint_callback", SSID);
@@ -3376,6 +3406,7 @@ void test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint_callback_register
     sleep(1);
 
     UT_ASSERT_EQUAL(disconnectCallbackInvoked, 1);
+    UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint_callback_register...\n");
 }
 
 /**
@@ -3397,6 +3428,7 @@ void test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint_callback_register
 */
 void test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint_callback_register()
 {
+    UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint_callback_register...\n");
     disconnectCallbackInvoked = 0;
     wifi_disconnectEndpoint_callback_register(NULL);
     char *ssid = Config_key_new(key_file, "l1_negative1_wifi_disconnectEndpoint_callback", SSID);
@@ -3412,6 +3444,7 @@ void test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint_callback_register
     sleep(1);
 
     UT_ASSERT_EQUAL(disconnectCallbackInvoked, 0);
+    UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint_callback_register...\n");
 }
 
 /**
@@ -3432,6 +3465,7 @@ void test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint_callback_register
 */
 void test_l1_wifi_client_hal_positive1_wifi_telemetry_callback_register()
 {
+    UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_telemetry_callback_register...\n");
     eventSCallbackInvoked = 0;
     wifi_telemetry_ops_t telemetry_ops = {
         .init = test_init,
@@ -3451,6 +3485,7 @@ void test_l1_wifi_client_hal_positive1_wifi_telemetry_callback_register()
     } else {
         UT_FAIL("Callback functions were not invoked as expected\n");
     }
+    UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_telemetry_callback_register...\n");
 }
 
 /**
@@ -3471,6 +3506,7 @@ void test_l1_wifi_client_hal_positive1_wifi_telemetry_callback_register()
 */
 void test_l1_wifi_client_hal_negative1_wifi_telemetry_callback_register()
 {
+    UT_LOG("Entering test_l1_wifi_client_hal_negative1_wifi_telemetry_callback_register...\n");
     eventSCallbackInvoked = 0;
     wifi_telemetry_ops_t telemetry_ops = {
         .init = NULL,
@@ -3488,6 +3524,7 @@ void test_l1_wifi_client_hal_negative1_wifi_telemetry_callback_register()
     if (eventSCallbackInvoked == 0) {
         UT_PASS("Callback functions were not invoked as expected\n");
     }
+    UT_LOG("Exiting test_l1_wifi_client_hal_negative1_wifi_telemetry_callback_register...\n");
 }
 
 static UT_test_suite_t * pSuite_with_no_wifi_init = NULL;
@@ -3512,7 +3549,7 @@ int test_wifi_client_hal_register_pre_init_tests (void)
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_negative3_wifi_setCliWpsEnrolleePin);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative1_wifi_setCliWpsButtonPush", test_l1_wifi_client_hal_negative1_wifi_setCliWpsButtonPush);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative11_wifi_connectEndpoint", test_l1_wifi_client_hal_negative11_wifi_connectEndpoint);
-    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negaitive4_wifi_disconnectEndpoint);
+    UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative4_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negative4_wifi_disconnectEndpoint);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative3_wifi_clearSSIDInfo", test_l1_wifi_client_hal_negative3_wifi_clearSSIDInfo);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_negative2_wifi_lastConnected_Endpoint);
     UT_add_test(pSuite_with_no_wifi_init, "l1_wifi_client_hal_negative2_wifi_setRoamingControl", test_l1_wifi_client_hal_negative2_wifi_setRoamingControl);
@@ -3534,17 +3571,17 @@ int test_wifi_client_hal_register_post_init_with_config_tests (void)
         return -1;
     }
 
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive4_wifi_connectEndpoint", test_l1_wifi_client_hal_positive4_wifi_connectEndpoint);
     UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsSupported);
-    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled);
     UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive2_wifi_setCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive2_wifi_getCliWpsConfigMethodsEnabled);
     UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_setCliWpsEnrolleePin", test_l1_wifi_client_hal_positive2_wifi_setCliWpsEnrolleePin);
     UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_setCliWpsButtonPush", test_l1_wifi_client_hal_positive2_wifi_setCliWpsButtonPush);
-    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive4_wifi_connectEndpoint", test_l1_wifi_client_hal_positive4_wifi_connectEndpoint);
-    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_disconnectEndpoint", test_l1_wifi_client_hal_positive2_wifi_disconnectEndpoint);
-    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_clearSSIDInfo", test_l1_wifi_client_hal_positive2_wifi_clearSSIDInfo);
-    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_positive2_wifi_lastConnected_Endpoint);
     UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_setRoamingControl", test_l1_wifi_client_hal_positive2_wifi_setRoamingControl);
     UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_getRoamingControl", test_l1_wifi_client_hal_positive2_wifi_getRoamingControl);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_disconnectEndpoint", test_l1_wifi_client_hal_positive2_wifi_disconnectEndpoint);
+    UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_clearSSIDInfo", test_l1_wifi_client_hal_positive2_wifi_clearSSIDInfo);
     UT_add_test(pSuite_with_wifi_init_with_config, "l1_wifi_client_hal_positive2_wifi_cancelWpsPairing", test_l1_wifi_client_hal_positive2_wifi_cancelWpsPairing);
 
     return 0;
@@ -3566,11 +3603,11 @@ int test_wifi_client_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsEnabled);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive1_wifi_setCliWpsConfigMethodsEnabled);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive3_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive3_wifi_setCliWpsConfigMethodsEnabled);
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative1_wifi_setCliWpsConfigMethodsEnabled);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative2_wifi_setCliWpsConfigMethodsEnabled);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative3_wifi_setCliWpsConfigMethodsEnabled", test_l1_wifi_client_hal_negative3_wifi_setCliWpsConfigMethodsEnabled);
