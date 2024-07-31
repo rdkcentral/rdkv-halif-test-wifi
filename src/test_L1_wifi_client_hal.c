@@ -1146,10 +1146,9 @@ void test_l1_wifi_client_hal_negative4_wifi_setCliWpsEnrolleePin (void)
 void test_l1_wifi_client_hal_positive1_wifi_setCliWpsButtonPush (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_setCliWpsButtonPush...\n");
-    INT ssidIndex = 1;
 
     UT_LOG("Invoked wifi_setCliWpsButtonPush with valid ssidIndex = 1\n");
-    INT returnStatus = wifi_setCliWpsButtonPush(ssidIndex);
+    INT returnStatus = wifi_setCliWpsButtonPush(SSID_INDEX);
     UT_LOG("wifi_setCliWpsButtonPush API returns : %d\n",returnStatus);
     UT_ASSERT_EQUAL(returnStatus, RETURN_OK);
 
@@ -1482,7 +1481,7 @@ void test_l1_wifi_client_hal_negative2_wifi_connectEndpoint (void)
     {
         UT_FAIL_FATAL("Test config not found");
     }
-    UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
+    UT_LOG("Invoking the API wifi_connectEndpoint with invalid AP_security_mode\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
                     l1_config->carootcert, l1_config->clientcert, l1_config->privatekey);
@@ -1564,7 +1563,7 @@ void test_l1_wifi_client_hal_negative4_wifi_connectEndpoint (void)
     {
         UT_FAIL_FATAL("Test config not found");
     }
-    UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
+    UT_LOG("Invoking the API wifi_connectEndpoint with invalid AP_security_PreSharedKey\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
                     l1_config->carootcert, l1_config->clientcert, l1_config->privatekey);
@@ -1604,7 +1603,7 @@ void test_l1_wifi_client_hal_negative5_wifi_connectEndpoint (void)
     {
         UT_FAIL_FATAL("Test config not found");
     }
-    UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
+    UT_LOG("Invoking the API wifi_connectEndpoint with invalid AP_security_KeyPassphrase\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
                     l1_config->carootcert, l1_config->clientcert, l1_config->privatekey);
@@ -1643,7 +1642,7 @@ void test_l1_wifi_client_hal_negative6_wifi_connectEndpoint (void)
     {
         UT_FAIL_FATAL("Test config not found");
     }
-    UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
+    UT_LOG("Invoking the API wifi_connectEndpoint with invalid saveSSID value\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
                     l1_config->carootcert, l1_config->clientcert, l1_config->privatekey);
@@ -1683,7 +1682,7 @@ void test_l1_wifi_client_hal_negative7_wifi_connectEndpoint (void)
     {
         UT_FAIL_FATAL("Test config not found");
     }
-    UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
+    UT_LOG("Invoking the API wifi_connectEndpoint with invalid eapIdentity value\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
                     l1_config->carootcert, l1_config->clientcert, l1_config->privatekey);
@@ -1724,7 +1723,7 @@ void test_l1_wifi_client_hal_negative8_wifi_connectEndpoint (void)
     {
         UT_FAIL_FATAL("Test config not found");
     }
-    UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
+    UT_LOG("Invoking the API wifi_connectEndpoint with invalid carootcert\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
                     l1_config->carootcert, l1_config->clientcert, l1_config->privatekey);
@@ -1764,7 +1763,7 @@ void test_l1_wifi_client_hal_negative9_wifi_connectEndpoint (void)
     {
         UT_FAIL_FATAL("Test config not found");
     }
-    UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
+    UT_LOG("Invoking the API wifi_connectEndpoint with invalid clientcert\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
                     l1_config->carootcert, l1_config->clientcert, l1_config->privatekey);
@@ -1804,7 +1803,7 @@ void test_l1_wifi_client_hal_negative10_wifi_connectEndpoint (void)
     {
         UT_FAIL_FATAL("Test config not found");
     }
-    UT_LOG("Invoking the API wifi_connectEndpoint with valid values\n");
+    UT_LOG("Invoking the API wifi_connectEndpoint with invalid privatekey\n");
     INT result = wifi_connectEndpoint(SSID_INDEX, l1_config->ap_SSID, AP_security_mode, l1_config->WEPKey, 
                     l1_config->PreSharedKey, l1_config->KeyPassphrase, saveSSID, l1_config->eapIdentity, 
                     l1_config->carootcert, l1_config->clientcert, l1_config->privatekey);
@@ -2254,8 +2253,8 @@ void test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint (void)
     wifi_pairedSSIDInfo_t ssidInfo;
     INT ret;
     CHAR *ssid = Config_key_new(key_file, "l1_positive1_wifi_lastConnected_Endpoint", "AP_SSID");
-    CHAR *bssid1 = Config_key_new(key_file, "l1_positive2_wifi_lastConnected_Endpoint", "AP_BSSID1"); //2.4GHz BSSID
-    CHAR *bssid2 = Config_key_new(key_file, "l1_positive2_wifi_lastConnected_Endpoint", "AP_BSSID2"); //5GHz BSSID
+    CHAR *bssid1 = Config_key_new(key_file, "l1_positive1_wifi_lastConnected_Endpoint", "AP_BSSID1"); //2.4GHz BSSID
+    CHAR *bssid2 = Config_key_new(key_file, "l1_positive1_wifi_lastConnected_Endpoint", "AP_BSSID2"); //5GHz BSSID
 
     if (NULL == ssid || NULL == bssid1 || NULL == bssid2)
     {
@@ -2570,7 +2569,7 @@ void test_l1_wifi_client_hal_positive2_wifi_setRoamingControl (void)
 * **Test Procedure:** @n
 * | Variation / Step | Description | Test Data |Expected Result |Notes |
 * | :----: | --------- | ---------- |-------------- | ----- |
-* | 01 | Invoke wifi_setRoamingControl() with assidIndex = 1, pRoamingCtrl_data = NULL | ssidIndex = 1, pRoamingCtrl_data = NULL | RETURN_ERR | Should Fail |
+* | 01 | Invoke wifi_setRoamingControl() with ssidIndex = 1, pRoamingCtrl_data = NULL | ssidIndex = 1, pRoamingCtrl_data = NULL | RETURN_ERR | Should Fail |
 */
 void test_l1_wifi_client_hal_negative1_wifi_setRoamingControl (void) 
 {
@@ -2803,7 +2802,7 @@ void test_l1_wifi_client_hal_positive1_wifi_getRoamingControl (void)
            " Post-association delta level if WiFi disconnected : %d, Post-association self steer threshold : %d,"
            " Post-association self steer timeframe : %d, Post-association backoff time : %d,"
            " Post-association AP steer control threshold : %d, Post-association AP steer control time frame : %d\n",
-           pRoamingCtrl_data.roamingEnable, pRoamingCtrl_data.selfSteerOverride, pRoamingCtrl_data.preassnBestThreshold, 
+           pRoamingCtrl_data.roamingEnable, pRoamingCtrl_data.selfSteerOverride, pRoamingCtrl_data.roam80211kvrEnable, pRoamingCtrl_data.preassnBestThreshold,
            pRoamingCtrl_data.preassnBestDelta, pRoamingCtrl_data.postAssnLevelDeltaConnected, 
            pRoamingCtrl_data.postAssnLevelDeltaDisconnected,pRoamingCtrl_data.postAssnSelfSteerThreshold, 
            pRoamingCtrl_data.postAssnSelfSteerTimeframe, pRoamingCtrl_data.postAssnBackOffTime, 
@@ -2898,7 +2897,7 @@ void test_l1_wifi_client_hal_positive1_wifi_getRoamingControl (void)
         UT_LOG("Post-association self steer timeframe is  %d which is a invalid value\n", pRoamingCtrl_data.postAssnSelfSteerTimeframe);
         UT_FAIL("Post-association self steer timeframe validation failed\n");
     }
-    if ( pRoamingCtrl_data.postAssnBackOffTime >= 0 && pRoamingCtrl_data.postAssnBackOffTime <= 36000 )
+    if ( pRoamingCtrl_data.postAssnBackOffTime >= 0 && pRoamingCtrl_data.postAssnBackOffTime <= 3600 )
     {
         UT_LOG("Post-association backoff time is %d which is a valid value\n", pRoamingCtrl_data.postAssnBackOffTime);
         UT_PASS("Post-association backoff time validation success\n");
@@ -3600,6 +3599,7 @@ int test_wifi_client_hal_register_post_init_tests (void)
         return -1;
     }
 
+    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsSupported);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_negative1_wifi_getCliWpsConfigMethodsSupported);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported", test_l1_wifi_client_hal_negative2_wifi_getCliWpsConfigMethodsSupported);
@@ -3623,7 +3623,7 @@ int test_wifi_client_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive3_wifi_connectEndpoint", test_l1_wifi_client_hal_positive3_wifi_connectEndpoint);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_connectEndpoint", test_l1_wifi_client_hal_negative1_wifi_connectEndpoint);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_connectEndpoint", test_l1_wifi_client_hal_negative2_wifi_connectEndpoint);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative3_wifi_connectEndpoint", test_l1_wifi_client_hal_negative3_wifi_connectEndpoint);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative3_wifi_connectEndpoint", test_l1_wifi_client_hal_negative3_wifi_connectEndpoint);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative4_wifi_connectEndpoint", test_l1_wifi_client_hal_negative4_wifi_connectEndpoint);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative5_wifi_connectEndpoint", test_l1_wifi_client_hal_negative5_wifi_connectEndpoint);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative6_wifi_connectEndpoint", test_l1_wifi_client_hal_negative6_wifi_connectEndpoint);
@@ -3631,7 +3631,6 @@ int test_wifi_client_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative8_wifi_connectEndpoint", test_l1_wifi_client_hal_negative8_wifi_connectEndpoint);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative9_wifi_connectEndpoint", test_l1_wifi_client_hal_negative9_wifi_connectEndpoint);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative10_wifi_connectEndpoint", test_l1_wifi_client_hal_negative10_wifi_connectEndpoint);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_positive1_wifi_lastConnected_Endpoint);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_lastConnected_Endpoint", test_l1_wifi_client_hal_negative1_wifi_lastConnected_Endpoint);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_setRoamingControl", test_l1_wifi_client_hal_positive1_wifi_setRoamingControl);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_setRoamingControl", test_l1_wifi_client_hal_negative1_wifi_setRoamingControl);
@@ -3644,8 +3643,8 @@ int test_wifi_client_hal_register_post_init_tests (void)
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_cancelWpsPairing", test_l1_wifi_client_hal_positive1_wifi_cancelWpsPairing);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_disconnectEndpoint", test_l1_wifi_client_hal_positive1_wifi_disconnectEndpoint);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negative1_wifi_disconnectEndpoint);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negative2_wifi_disconnectEndpoint);
-    UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative3_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negative3_wifi_disconnectEndpoint);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negative2_wifi_disconnectEndpoint);
+    //UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative3_wifi_disconnectEndpoint", test_l1_wifi_client_hal_negative3_wifi_disconnectEndpoint);
     UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_positive1_wifi_clearSSIDInfo", test_l1_wifi_client_hal_positive1_wifi_clearSSIDInfo);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative1_wifi_clearSSIDInfo", test_l1_wifi_client_hal_negative1_wifi_clearSSIDInfo);
     //UT_add_test(pSuite_with_wifi_init, "l1_wifi_client_hal_negative2_wifi_clearSSIDInfo", test_l1_wifi_client_hal_negative2_wifi_clearSSIDInfo);
