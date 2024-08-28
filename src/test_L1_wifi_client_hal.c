@@ -477,7 +477,7 @@ void test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsSupported (voi
 void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled...\n");
-    CHAR output_string[19] = {"\0"};
+    CHAR output_string[256] = {"\0"};
 
     UT_LOG("Invoking wifi_getCliWpsConfigMethodsEnabled with input parameter ssidIndex=1 and valid output_string buffer\n");
     INT return_val = wifi_getCliWpsConfigMethodsEnabled(SSID_INDEX, output_string);
@@ -485,26 +485,36 @@ void test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled (void)
     UT_ASSERT_EQUAL(return_val, RETURN_OK);
     const char *validMethods[] = {"USBFlashDrive", "Ethernet", "ExternalNFCToken","IntegratedNFCToken", "NFCInterface", "PushButton", "PIN"};
 
-    BOOL isValid = 0;
-    for (int i = 0; i < sizeof(validMethods) / sizeof(validMethods[0]); i++)
+    char *token = strtok(output_string, ",");
+    while (token != NULL)
     {
-        if (strcmp(output_string, validMethods[i]) == 0)
-        {
-            isValid = 1;
-            break;
-        }
-    }
-    if (isValid)
-    {
-        UT_LOG("WPS supported methods is %s which is a valid value", output_string);
-        UT_PASS("WPS supported methods  validation success\n");
-    }
-    else
-    {
-        UT_LOG("WPS supported methods is %s which is an invalid value", output_string);
-        UT_FAIL("WPS supported methods validation failed\n");
-    }
+        char *start = token;
+        while (*start == ' ') start++;
+        char *end = start + strlen(start) - 1;
+        while (end > start && *end == ' ') end--;
+        *(end + 1) = '\0';
 
+        BOOL isValid = 0;
+        for (int i = 0; i < sizeof(validMethods) / sizeof(validMethods[0]); i++)
+        {
+            if (strcmp(start, validMethods[i]) == 0)
+            {
+                isValid = 1;
+                break;
+            }
+        }
+        if (isValid)
+        {
+            UT_LOG("WPS supported methods is %s which is a valid value", output_string);
+            UT_PASS("WPS supported methods  validation success\n");
+        }
+        else
+        {
+            UT_LOG("WPS supported methods is %s which is an invalid value", output_string);
+            UT_FAIL("WPS supported methods validation failed\n");
+        }
+        token = strtok(NULL, ",");
+    }
     UT_LOG("Exiting test_l1_wifi_client_hal_positive1_wifi_getCliWpsConfigMethodsEnabled...\n");
 }
 
@@ -677,7 +687,7 @@ void test_l1_wifi_client_hal_negative3_wifi_getCliWpsConfigMethodsEnabled (void)
 void test_l1_wifi_client_hal_positive1_wifi_setCliWpsConfigMethodsEnabled (void)
 {
     UT_LOG("Entering test_l1_wifi_client_hal_positive1_wifi_setCliWpsConfigMethodsEnabled...\n");
-    CHAR* methodString = "PIN";
+    CHAR* methodString = "PIN,PushButton";
 
     UT_LOG("Invoking wifi_setCliWpsConfigMethodsEnabled with ssidIndex 1 and methodString \"PIN\".\n");
     INT returnStatus = wifi_setCliWpsConfigMethodsEnabled(SSID_INDEX, methodString);
